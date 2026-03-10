@@ -1,0 +1,2842 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WAR ROOM — Monitoreo Político · LIVE</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-deep:    #070a0f;
+    --bg-panel:   #0c1118;
+    --bg-card:    #111820;
+    --bg-hover:   #161f2a;
+    --border:     #1e2d3d;
+    --border-dim: #152030;
+    --accent:     #00d4ff;
+    --accent-dim: rgba(0,212,255,0.12);
+    --accent-glow:rgba(0,212,255,0.4);
+    --green:      #00ff88;
+    --green-dim:  rgba(0,255,136,0.12);
+    --yellow:     #ffd600;
+    --yellow-dim: rgba(255,214,0,0.12);
+    --red:        #ff3b5c;
+    --red-dim:    rgba(255,59,92,0.12);
+    --neutral:    #8ba3b8;
+    --text-main:  #d4e4f0;
+    --text-dim:   #5a7a94;
+    --text-faint: #2a4a5e;
+    --font-display: 'Bebas Neue', sans-serif;
+    --font-ui:      'Rajdhani', sans-serif;
+    --font-mono:    'JetBrains Mono', monospace;
+    --orange:     #ff8c00;
+    --purple:     #b060ff;
+    --purple-dim: rgba(176,96,255,0.10);
+    --purple-brd: rgba(176,96,255,0.25);
+    --accent-brd: rgba(0,212,255,0.25);
+    --yellow-brd: rgba(255,214,0,0.3);
+    --red-brd:    rgba(255,59,92,0.35);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background: var(--bg-deep);
+    color: var(--text-main);
+    font-family: var(--font-ui);
+    font-size: 15px;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  body::before {
+    content:''; position:fixed; inset:0; z-index:0;
+    background-image:
+      linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+    background-size:40px 40px; pointer-events:none;
+  }
+  body::after {
+    content:''; position:fixed; inset:0; z-index:0;
+    background: repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.08) 2px,rgba(0,0,0,0.08) 4px);
+    pointer-events:none;
+  }
+  .wrapper { position:relative; z-index:1; max-width:1680px; margin:0 auto; padding:16px 20px 30px; }
+
+  /* HEADER */
+  header {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 20px; background:var(--bg-panel);
+    border:1px solid var(--border); border-top:2px solid var(--accent);
+    margin-bottom:16px; position:relative;
+  }
+  header::before { content:''; position:absolute; left:0; top:0; bottom:0; width:3px; background:linear-gradient(to bottom,var(--accent),transparent); }
+  .header-left { display:flex; align-items:center; gap:18px; }
+  .header-logo { font-family:var(--font-display); font-size:28px; letter-spacing:4px; color:var(--accent); text-shadow:0 0 20px var(--accent-glow); }
+  .header-divider { width:1px; height:36px; background:var(--border); }
+  .header-subject .label { font-family:var(--font-mono); font-size:10px; color:var(--text-dim); letter-spacing:2px; }
+  .header-subject .name  { font-family:var(--font-display); font-size:22px; letter-spacing:2px; color:var(--text-main); }
+  .header-subject .sub   { font-size:12px; color:var(--text-dim); font-family:var(--font-mono); }
+  .header-right { display:flex; align-items:center; gap:16px; }
+  .live-badge { display:flex; align-items:center; gap:7px; font-family:var(--font-mono); font-size:11px; color:var(--green); letter-spacing:1px; }
+  .live-dot { width:7px; height:7px; border-radius:50%; background:var(--green); animation:blink 1.4s ease-in-out infinite; box-shadow:0 0 8px var(--green); }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+  /* PAGE NAV DROPDOWN */
+  .page-nav { position:relative; }
+  .page-selector {
+    font-family:var(--font-mono); font-size:10px; letter-spacing:2px;
+    padding:5px 12px; border:1px solid rgba(0,212,255,0.3);
+    background:var(--accent-dim); color:var(--accent);
+    cursor:pointer; display:flex; align-items:center; gap:8px;
+    transition: all 0.2s;
+  }
+  .page-selector:hover { border-color:var(--accent-glow); }
+  .page-chevron { font-size:9px; transition:transform 0.2s; }
+  .page-nav.open .page-chevron { transform:rotate(180deg); }
+  .page-menu {
+    display:none; position:absolute; top:calc(100% + 4px); right:0;
+    background:var(--bg-panel); border:1px solid var(--border);
+    min-width:190px; z-index:200;
+  }
+  .page-nav.open .page-menu { display:block; }
+  .page-menu-item {
+    display:block; width:100%; text-align:left;
+    font-family:var(--font-mono); font-size:10px; letter-spacing:2px;
+    padding:8px 14px; border:none; background:transparent; color:var(--text-dim);
+    cursor:pointer; transition: all 0.15s;
+  }
+  .page-menu-item:hover { background:var(--bg-hover); color:var(--accent); }
+  .page-menu-item.active { color:var(--accent); background:var(--accent-dim); }
+
+  /* PAGE SECTIONS */
+  .page-section { display:none; }
+  .page-section.active { display:contents; }
+
+  /* DATE FILTER BAR */
+  .filter-bar {
+    display:flex; align-items:center; gap:12px;
+    padding:10px 16px; background:var(--bg-panel);
+    border:1px solid var(--border); margin-bottom:16px;
+  }
+  .filter-label { font-family:var(--font-mono); font-size:10px; color:var(--text-dim); letter-spacing:2px; white-space:nowrap; }
+  .filter-input {
+    background:var(--bg-card); border:1px solid var(--border);
+    color:var(--text-main); font-family:var(--font-mono); font-size:12px;
+    padding:6px 10px; outline:none; cursor:pointer;
+    transition: border-color 0.2s;
+  }
+  .filter-input:focus { border-color:var(--accent); }
+  .filter-input::-webkit-calendar-picker-indicator { filter:invert(0.4); cursor:pointer; }
+  .filter-sep { color:var(--text-faint); font-family:var(--font-mono); font-size:12px; }
+  .filter-btn {
+    background:var(--accent-dim); border:1px solid rgba(0,212,255,0.4);
+    color:var(--accent); font-family:var(--font-mono); font-size:11px;
+    padding:6px 14px; cursor:pointer; letter-spacing:2px;
+    transition: all 0.2s;
+  }
+  .filter-btn:hover { background:rgba(0,212,255,0.2); }
+  .filter-btn.reset { background:transparent; border-color:var(--border); color:var(--text-dim); }
+  .filter-btn.reset:hover { border-color:var(--red); color:var(--red); }
+  .filter-btn.preset { background:transparent; border-color:var(--border); color:var(--text-dim); }
+  .filter-btn.preset:hover { border-color:var(--accent); color:var(--accent); background:var(--accent-dim); }
+  .filter-count { margin-left:auto; font-family:var(--font-mono); font-size:11px; color:var(--text-dim); }
+  .filter-count span { color:var(--accent); }
+
+  /* ICS ROW */
+  .ics-row { display:grid; grid-template-columns:300px 360px 1fr; gap:16px; margin-bottom:16px; }
+  .ics-panel {
+    background:var(--bg-panel); border:1px solid var(--border);
+    padding:20px; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    position:relative; overflow:hidden;
+  }
+  .ics-panel::before { content:'ICS'; position:absolute; font-family:var(--font-display); font-size:120px; color:rgba(0,212,255,0.03); top:50%; left:50%; transform:translate(-50%,-50%); letter-spacing:10px; }
+  .ics-label { font-family:var(--font-mono); font-size:10px; color:var(--text-dim); letter-spacing:3px; margin-bottom:6px; }
+  .ics-number { font-family:var(--font-display); font-size:88px; line-height:1; color:var(--yellow); text-shadow:0 0 30px rgba(255,214,0,0.5); letter-spacing:4px; transition:all 0.5s; }
+  .ics-status { font-family:var(--font-display); font-size:20px; letter-spacing:6px; color:var(--yellow); margin-top:4px; }
+  .ics-bar-container { width:100%; margin-top:16px; }
+  .ics-bar-track { height:6px; background:var(--border); position:relative; overflow:visible; }
+  .ics-bar-segments { position:absolute; inset:0; display:flex; }
+  .ics-bar-segments span { flex:1; height:100%; }
+  .seg-estable { background:var(--green); opacity:0.7; }
+  .seg-tension  { background:var(--yellow); opacity:0.7; }
+  .seg-riesgo   { background:#ff8c00; opacity:0.7; }
+  .seg-crisis   { background:var(--red); opacity:0.7; }
+  .ics-bar-indicator { position:absolute; top:-4px; width:2px; height:14px; background:#fff; transform:translateX(-50%); box-shadow:0 0 8px #fff; transition:left 0.5s; }
+  .ics-scale { display:flex; justify-content:space-between; margin-top:6px; }
+  .ics-scale span { font-family:var(--font-mono); font-size:9px; color:var(--text-faint); }
+  .semaforo { display:flex; gap:6px; margin-top:14px; }
+  .sem-item { flex:1; height:4px; }
+  .sem-item.active { height:6px; }
+  .sem-estable { background:var(--green); opacity:0.4; }
+  .sem-tension { background:var(--yellow); opacity:0.7; }
+  .sem-riesgo  { background:#ff8c00; opacity:0.3; }
+  .sem-crisis  { background:var(--red); opacity:0.3; }
+  .sem-tension.active { opacity:1; box-shadow:0 0 10px var(--yellow); }
+
+  /* KPI CARDS */
+  .kpi-row { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; }
+  .kpi-card {
+    background:var(--bg-panel); border:1px solid var(--border);
+    padding:12px 14px; position:relative; overflow:hidden;
+    transition:border-color 0.2s; cursor:pointer;
+  }
+  .kpi-card:hover { border-color:var(--accent); }
+  .kpi-card::after { content:''; position:absolute; bottom:0; left:0; right:0; height:2px; }
+  .kpi-card.total::after  { background:var(--accent); }
+  .kpi-card.pos::after    { background:var(--green); }
+  .kpi-card.neg::after    { background:var(--red); }
+  .kpi-card.neutral::after{ background:var(--neutral); }
+  .kpi-label { font-family:var(--font-mono); font-size:10px; letter-spacing:2px; color:var(--text-dim); margin-bottom:4px; }
+  .kpi-value { font-family:var(--font-display); font-size:36px; line-height:1; letter-spacing:2px; transition:all 0.4s; }
+  .kpi-card.total .kpi-value  { color:var(--accent); text-shadow:0 0 20px var(--accent-glow); }
+  .kpi-card.pos .kpi-value    { color:var(--green); }
+  .kpi-card.neg .kpi-value    { color:var(--red); }
+  .kpi-card.neutral .kpi-value{ color:var(--neutral); }
+  .kpi-sub  { font-family:var(--font-mono); font-size:11px; color:var(--text-dim); margin-top:2px; }
+  .kpi-trend { position:absolute; top:14px; right:14px; font-family:var(--font-mono); font-size:11px; }
+  .trend-up   { color:var(--green); }
+  .trend-down { color:var(--red); }
+  .trend-flat { color:var(--text-dim); }
+
+  /* INFO BADGE */
+  .info-badge {
+    position:absolute; top:10px; right:10px;
+    width:16px; height:16px; border-radius:50%;
+    background:var(--bg-card); border:1px solid var(--border);
+    display:flex; align-items:center; justify-content:center;
+    font-family:var(--font-mono); font-size:9px; color:var(--text-dim);
+    cursor:pointer; z-index:10; transition:all 0.2s;
+  }
+  .info-badge:hover { border-color:var(--accent); color:var(--accent); background:var(--accent-dim); }
+
+  /* MAIN GRID */
+  .main-grid { display:grid; grid-template-columns:1fr 1fr 340px; gap:16px; margin-bottom:16px; }
+  .panel { background:var(--bg-panel); border:1px solid var(--border); padding:16px 18px; position:relative; }
+  .panel-title {
+    font-family:var(--font-mono); font-size:10px; letter-spacing:3px;
+    color:var(--text-dim); margin-bottom:14px; padding-bottom:10px;
+    border-bottom:1px solid var(--border-dim); display:flex; align-items:center; gap:8px;
+  }
+  .panel-title::before { content:''; width:3px; height:10px; background:var(--accent); display:inline-block; box-shadow:0 0 6px var(--accent); }
+
+  /* EXPAND BUTTON */
+  .expand-btn {
+    margin-left:auto; cursor:pointer;
+    width:22px; height:22px;
+    background:var(--bg-card); border:1px solid var(--border);
+    display:flex; align-items:center; justify-content:center;
+    font-size:12px; color:var(--text-dim);
+    transition:all 0.2s; flex-shrink:0;
+  }
+  .expand-btn:hover { border-color:var(--accent); color:var(--accent); background:var(--accent-dim); }
+
+  .chart-container { position:relative; height:260px; }
+
+  /* DONUT */
+  .donut-wrap { display:flex; align-items:center; gap:20px; }
+  .donut-container { position:relative; width:200px; height:200px; flex-shrink:0; }
+  .donut-center { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); text-align:center; }
+  .donut-center-val { font-family:var(--font-display); font-size:38px; color:var(--yellow); line-height:1; transition:all 0.4s; }
+  .donut-center-label { font-family:var(--font-mono); font-size:9px; color:var(--text-dim); letter-spacing:1px; }
+  .donut-legend { flex:1; }
+  .legend-item { display:flex; align-items:center; gap:10px; padding:7px 0; border-bottom:1px solid var(--border-dim); }
+  .legend-item:last-child { border-bottom:none; }
+  .legend-dot { width:8px; height:8px; border-radius:1px; flex-shrink:0; }
+  .legend-name { flex:1; font-size:13px; color:var(--text-dim); letter-spacing:1px; }
+  .legend-val  { font-family:var(--font-mono); font-size:13px; color:var(--text-main); transition:all 0.3s; }
+  .legend-pct  { font-family:var(--font-mono); font-size:11px; color:var(--text-dim); width:36px; text-align:right; transition:all 0.3s; }
+
+  /* ACCEL */
+  .accel-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px; }
+  .mini-stat { background:var(--bg-card); border:1px solid var(--border-dim); padding:12px; }
+  .mini-stat-label { font-family:var(--font-mono); font-size:9px; color:var(--text-dim); letter-spacing:2px; margin-bottom:6px; }
+  .mini-stat-val { font-family:var(--font-display); font-size:30px; color:var(--text-main); line-height:1; transition:all 0.4s; }
+  .mini-stat-val.up   { color:var(--green); }
+  .mini-stat-val.down { color:var(--red); }
+  .mini-stat-val.warn { color:var(--yellow); }
+
+  /* BOTTOM GRID */
+  .bottom-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; }
+
+  /* SOURCES */
+  .source-item { display:flex; align-items:center; gap:10px; padding:6px 0; border-bottom:1px solid var(--border-dim); cursor:pointer; transition:background 0.15s; }
+  .source-item:last-child { border-bottom:none; }
+  .source-item:hover { background:var(--bg-hover); margin:0 -18px; padding:6px 18px; }
+  .source-rank { font-family:var(--font-mono); font-size:10px; color:var(--text-faint); width:16px; text-align:center; }
+  .source-icon { width:22px; height:22px; border-radius:3px; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:bold; flex-shrink:0; }
+  .source-name { flex:1; font-size:13px; color:var(--text-main); font-family:var(--font-mono); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .source-bar-wrap { width:80px; height:4px; background:var(--border); }
+  .source-bar-fill { height:100%; background:var(--accent); opacity:0.7; transition:width 0.4s; }
+  .source-count { font-family:var(--font-mono); font-size:12px; color:var(--accent); width:24px; text-align:right; }
+
+  /* MENTIONS FEED */
+  .mention-item { padding:10px 0; border-bottom:1px solid var(--border-dim); cursor:pointer; transition:background 0.15s; }
+  .mention-item:last-child { border-bottom:none; }
+  .mention-item:hover { background:var(--bg-hover); margin:0 -18px; padding:10px 18px; }
+  .mention-header { display:flex; align-items:center; gap:8px; margin-bottom:4px; }
+  .mention-sentiment { width:6px; height:6px; border-radius:50%; flex-shrink:0; }
+  .sent-positive { background:var(--green); box-shadow:0 0 6px var(--green); }
+  .sent-neutral  { background:var(--neutral); }
+  .sent-negative { background:var(--red); box-shadow:0 0 6px var(--red); }
+  .mention-domain { font-family:var(--font-mono); font-size:10px; color:var(--accent); flex:1; }
+  .mention-time   { font-family:var(--font-mono); font-size:10px; color:var(--text-faint); }
+  .mention-title  { font-size:13px; color:var(--text-main); font-weight:500; margin-bottom:3px; line-height:1.3; }
+  .mention-preview{ font-size:12px; color:var(--text-dim); line-height:1.4; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+  .mention-cat { display:inline-block; font-family:var(--font-mono); font-size:9px; padding:2px 6px; border:1px solid var(--border); color:var(--text-faint); margin-top:5px; letter-spacing:1px; }
+
+  /* KEYWORDS */
+  .kw-tag {
+    font-family:var(--font-mono); font-size:11px;
+    background:rgba(255,255,255,0.03); border:1px solid var(--border-dim);
+    padding:4px 10px; cursor:pointer; transition:all 0.15s;
+    display:inline-block; margin:3px;
+  }
+  .kw-tag:hover, .kw-tag.active { background:var(--accent-dim); border-color:var(--accent); color:var(--accent); }
+  .kw-tag.active { box-shadow:0 0 8px var(--accent-glow); }
+
+  /* DRAWER */
+  .drawer-overlay {
+    position:fixed; inset:0; z-index:100;
+    background:rgba(7,10,15,0.7);
+    backdrop-filter:blur(4px);
+    opacity:0; pointer-events:none;
+    transition:opacity 0.3s;
+  }
+  .drawer-overlay.open { opacity:1; pointer-events:all; }
+  .drawer {
+    position:fixed; top:0; right:0; bottom:0; z-index:101;
+    width:480px; max-width:95vw;
+    background:var(--bg-panel);
+    border-left:1px solid var(--border);
+    border-top:2px solid var(--accent);
+    display:flex; flex-direction:column;
+    transform:translateX(100%);
+    transition:transform 0.35s cubic-bezier(0.22,1,0.36,1);
+  }
+  .drawer.open { transform:translateX(0); }
+  .drawer-header {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 20px; border-bottom:1px solid var(--border);
+    flex-shrink:0;
+  }
+  .drawer-title { font-family:var(--font-display); font-size:20px; letter-spacing:2px; color:var(--accent); }
+  .drawer-subtitle { font-family:var(--font-mono); font-size:10px; color:var(--text-dim); margin-top:2px; }
+  .drawer-close {
+    width:32px; height:32px; background:var(--bg-card); border:1px solid var(--border);
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer; font-size:16px; color:var(--text-dim);
+    transition:all 0.2s;
+  }
+  .drawer-close:hover { border-color:var(--red); color:var(--red); }
+  .drawer-body { flex:1; overflow-y:auto; padding:16px 20px; }
+  .drawer-body::-webkit-scrollbar { width:4px; }
+  .drawer-body::-webkit-scrollbar-track { background:var(--border-dim); }
+  .drawer-body::-webkit-scrollbar-thumb { background:var(--accent); }
+  .drawer-mention {
+    padding:12px; background:var(--bg-card); border:1px solid var(--border-dim);
+    margin-bottom:10px; cursor:pointer; transition:all 0.15s;
+  }
+  .drawer-mention:hover { border-color:var(--accent); background:var(--bg-hover); }
+  .drawer-mention-header { display:flex; align-items:center; gap:8px; margin-bottom:6px; }
+  .drawer-mention-domain { font-family:var(--font-mono); font-size:10px; color:var(--accent); flex:1; }
+  .drawer-mention-time   { font-family:var(--font-mono); font-size:10px; color:var(--text-faint); }
+  .drawer-mention-title  { font-size:13px; color:var(--text-main); font-weight:500; margin-bottom:4px; line-height:1.3; }
+  .drawer-mention-preview{ font-size:12px; color:var(--text-dim); line-height:1.5; }
+  .drawer-mention-footer { display:flex; align-items:center; gap:8px; margin-top:8px; }
+  .drawer-mention-link {
+    font-family:var(--font-mono); font-size:10px; color:var(--accent);
+    text-decoration:none; border:1px solid rgba(0,212,255,0.3); padding:3px 8px;
+    transition:all 0.2s;
+  }
+  .drawer-mention-link:hover { background:var(--accent-dim); }
+  .drawer-highlight { background:rgba(255,214,0,0.2); color:var(--yellow); padding:0 2px; }
+  .drawer-empty { text-align:center; padding:40px 20px; font-family:var(--font-mono); font-size:12px; color:var(--text-faint); }
+
+  /* MODAL */
+  .modal-overlay {
+    position:fixed; inset:0; z-index:200;
+    background:rgba(7,10,15,0.85);
+    backdrop-filter:blur(6px);
+    display:flex; align-items:center; justify-content:center;
+    opacity:0; pointer-events:none;
+    transition:opacity 0.3s;
+  }
+  .modal-overlay.open { opacity:1; pointer-events:all; }
+  .modal {
+    background:var(--bg-panel); border:1px solid var(--border);
+    border-top:2px solid var(--accent);
+    width:90vw; max-width:1200px; max-height:85vh;
+    display:flex; flex-direction:column;
+    transform:scale(0.96) translateY(10px);
+    transition:transform 0.35s cubic-bezier(0.22,1,0.36,1);
+  }
+  .modal-overlay.open .modal { transform:scale(1) translateY(0); }
+  .modal-header {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 20px; border-bottom:1px solid var(--border); flex-shrink:0;
+  }
+  .modal-title { font-family:var(--font-display); font-size:22px; letter-spacing:3px; color:var(--accent); }
+  .modal-close {
+    width:32px; height:32px; background:var(--bg-card); border:1px solid var(--border);
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer; font-size:16px; color:var(--text-dim); transition:all 0.2s;
+  }
+  .modal-close:hover { border-color:var(--red); color:var(--red); }
+  .modal-body { padding:24px; flex:1; }
+  .modal-chart-wrap { height:420px; position:relative; }
+
+  /* TOOLTIP */
+  .calc-tooltip {
+    position:fixed; z-index:300;
+    background:var(--bg-panel); border:1px solid var(--accent);
+    padding:14px 16px; width:300px;
+    opacity:0; pointer-events:none;
+    transition:opacity 0.2s;
+    box-shadow:0 0 20px rgba(0,212,255,0.15);
+  }
+  .calc-tooltip.visible { opacity:1; }
+  .calc-tooltip-title { font-family:var(--font-mono); font-size:10px; color:var(--accent); letter-spacing:2px; margin-bottom:8px; }
+  .calc-tooltip-formula {
+    font-family:var(--font-mono); font-size:12px; color:var(--yellow);
+    background:var(--bg-card); padding:8px; margin-bottom:8px; line-height:1.5;
+  }
+  .calc-tooltip-body { font-size:12px; color:var(--text-dim); line-height:1.5; }
+
+  /* PLATFORM BARS */
+  .plat-bar { display:flex; align-items:center; gap:8px; margin-bottom:6px; }
+  .plat-bar-label { font-family:var(--font-mono); font-size:10px; color:var(--text-dim); width:80px; }
+  .plat-bar-track { flex:1; height:4px; background:var(--border); }
+  .plat-bar-fill  { height:100%; transition:width 0.5s; }
+  .plat-bar-count { font-family:var(--font-mono); font-size:10px; color:var(--text-dim); width:20px; text-align:right; }
+
+  /* ALERTS */
+  .alert-item { padding:10px 12px; margin-bottom:8px; }
+  .alert-item:last-child { margin-bottom:0; }
+  .alert-label { font-family:var(--font-mono); font-size:10px; letter-spacing:1px; margin-bottom:3px; }
+  .alert-text  { font-size:13px; color:var(--text-main); }
+
+  /* FOOTER */
+  footer { margin-top:16px; display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-top:1px solid var(--border-dim); }
+  footer span { font-family:var(--font-mono); font-size:10px; color:var(--text-faint); letter-spacing:1px; }
+
+  @keyframes fadeSlideIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+  .ics-row   { animation:fadeSlideIn 0.4s ease both; }
+  .main-grid { animation:fadeSlideIn 0.4s ease 0.1s both; }
+  .bottom-grid{ animation:fadeSlideIn 0.4s ease 0.2s both; }
+
+  .filtered .kpi-value { opacity:0.6; }
+  .no-results { text-align:center; padding:20px; font-family:var(--font-mono); font-size:11px; color:var(--text-faint); }
+
+  /* LOADING OVERLAY */
+  @keyframes loadSlide {
+    0%   { left:-60%; width:60%; }
+    100% { left:100%; width:60%; }
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 1200px) {
+    .main-grid { grid-template-columns: 1fr 1fr; }
+    .main-grid > .panel:nth-child(3) { grid-column: 1 / -1; }
+    .bottom-grid { grid-template-columns: 1fr 1fr; }
+    .bottom-grid > .panel:nth-child(3) { grid-column: 1 / -1; }
+    .ics-row { grid-template-columns: 260px 1fr 1fr; }
+    .accel-grid { grid-template-columns: repeat(4, 1fr); }
+  }
+  @media (max-width: 768px) {
+    .wrapper { padding: 10px 12px 20px; }
+    .filter-bar { flex-wrap: wrap; gap: 8px; }
+    .main-grid { grid-template-columns: 1fr; }
+    .main-grid > .panel:nth-child(3) { grid-column: auto; }
+    .bottom-grid { grid-template-columns: 1fr; }
+    .bottom-grid > .panel:nth-child(3) { grid-column: auto; }
+    .ics-row { grid-template-columns: 1fr; }
+    .kpi-row { grid-template-columns: repeat(2, 1fr); }
+    .drawer { width: 100vw; max-width: 100vw; }
+    .chart-container { height: 160px; }
+    .modal-chart-wrap { height: 260px; }
+    .accel-grid { grid-template-columns: 1fr 1fr; }
+    .header-logo { font-size: 20px; letter-spacing: 2px; }
+    .header-subject .name { font-size: 18px; }
+    .ics-number { font-size: 64px; }
+    .kpi-value { font-size: 38px; }
+    .donut-wrap { flex-direction: column; align-items: flex-start; }
+    .donut-container { width: 140px; height: 140px; }
+  }
+  @media (max-width: 480px) {
+    .header-logo { font-size: 16px; }
+    .kpi-value { font-size: 30px; }
+    .ics-number { font-size: 50px; }
+    .filter-bar { flex-wrap: wrap; gap: 8px; }
+    .filter-count { width: 100%; margin-left: 0; margin-top: 4px; }
+    .filter-btn { font-size:10px; padding:5px 10px; letter-spacing:1px; }
+    .page-selector { font-size:9px; padding:4px 8px; letter-spacing:1px; }
+    .header-subject .sub { display: none; }
+    .header-right { flex-direction: column-reverse; align-items: flex-end; gap: 6px; }
+    /* ── Header overflow fix ─────────────────────── */
+    header { padding: 10px 12px; }
+    .header-left { flex: 1; min-width: 0; gap: 8px; }
+    .header-right { flex-shrink: 0; }
+    .header-divider { display: none; }
+    .header-logo { letter-spacing: 0; }
+    .header-subject { min-width: 0; overflow: hidden; }
+    .header-subject .name {
+      font-size: 15px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    /* ── Wrapper más ajustado en mobile ─────────── */
+    .wrapper { padding: 8px 10px 20px; }
+    /* ── Filter inputs más compactos ─────────────── */
+    .filter-input { font-size: 11px; padding: 5px 6px; }
+    /* ── Page 2 layout fixes ─────────────────────── */
+    #page2 .row-1,
+    #page2 .row-3 { grid-template-columns: 1fr; }
+    #page2 .ica-layout { grid-template-columns: 1fr; }
+    #page2 .ica-number { font-size: 56px; }
+    #page2 .ind02-layout { grid-template-columns: 1fr; }
+    #page2 .cards-grid { grid-template-columns: repeat(2, 1fr); }
+    #page2 .stats-row { grid-template-columns: repeat(2, 1fr); }
+    #page2 .panel-title { letter-spacing: 1px; }
+    #page2 .inf-bar-track { width: 60px; }
+    #page2 .page-title { font-size: 20px; letter-spacing: 2px; }
+  }
+
+  /* ── PAGE 2: LISTENING ─────────────────────────────────────────── */
+  #page2 .page-header { position:relative; z-index:1; display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; padding-bottom:12px; border-bottom:1px solid var(--border-dim); }
+  #page2 .page-header-left { display:flex; align-items:center; gap:12px; }
+  #page2 .page-tag { font-family:var(--font-mono); font-size:9px; letter-spacing:3px; color:var(--accent); padding:3px 10px; border:1px solid var(--accent-brd); background:var(--accent-dim); }
+  #page2 .page-title { font-family:var(--font-display); font-size:28px; color:var(--text-main); letter-spacing:4px; }
+  #page2 .page-subtitle { font-family:var(--font-mono); font-size:9px; letter-spacing:2px; color:var(--text-dim); }
+  #page2 .page-period { font-family:var(--font-mono); font-size:9px; letter-spacing:2px; color:var(--text-faint); text-align:right; }
+  #page2 .listening-grid { position:relative; z-index:1; display:grid; grid-template-columns:1fr; gap:16px; }
+  #page2 .row-1 { display:grid; grid-template-columns:3fr 2fr; gap:16px; }
+  #page2 .row-3 { display:grid; grid-template-columns:3fr 2fr; gap:16px; }
+  #page2 .panel { background:var(--bg-panel); border:1px solid var(--border); padding:16px 18px; }
+  #page2 .panel-header { display:flex; align-items:center; gap:8px; margin-bottom:14px; padding-bottom:10px; border-bottom:1px solid var(--border-dim); }
+  #page2 .panel-title { font-family:var(--font-mono); font-size:10px; letter-spacing:3px; color:var(--text-dim); flex:1; }
+  #page2 .panel-header[data-color="yellow"]::before { content:''; width:3px; height:10px; flex-shrink:0; background:var(--yellow); box-shadow:0 0 6px var(--yellow); }
+  #page2 .panel-header[data-color="purple"]::before { content:''; width:3px; height:10px; flex-shrink:0; background:var(--purple); }
+  #page2 .panel-header[data-color="green"]::before  { content:''; width:3px; height:10px; flex-shrink:0; background:var(--green); box-shadow:0 0 6px var(--green); }
+  #page2 .panel-header[data-color="red"]::before    { content:''; width:3px; height:10px; flex-shrink:0; background:var(--red); }
+  #page2 .panel-header[data-color="accent"]::before { content:''; width:3px; height:10px; flex-shrink:0; background:var(--purple); }
+  /* Help btn */
+  #page2 .help-btn { width:18px; height:18px; border-radius:50%; background:var(--bg-card); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:9px; color:var(--text-dim); cursor:default; flex-shrink:0; position:relative; transition:all 0.15s; }
+  #page2 .help-btn.y:hover { border-color:var(--yellow); color:var(--yellow); background:var(--yellow-dim); }
+  #page2 .help-btn.p:hover { border-color:var(--purple); color:var(--purple); background:var(--purple-dim); }
+  #page2 .help-btn.g:hover { border-color:var(--green);  color:var(--green);  background:var(--green-dim); }
+  #page2 .help-btn.r:hover { border-color:var(--red);    color:var(--red);    background:var(--red-dim); }
+  #page2 .help-btn.a:hover { border-color:var(--purple); color:var(--purple); background:var(--purple-dim); }
+  #page2 .help-tooltip { visibility:hidden; opacity:0; position:absolute; top:calc(100% + 6px); right:0; width:260px; background:var(--bg-card); border:1px solid var(--border-dim); padding:10px 12px; z-index:600; box-shadow:0 6px 20px rgba(0,0,0,0.9); transition:opacity 0.15s,visibility 0.15s; pointer-events:none; }
+  #page2 .help-btn:hover .help-tooltip { visibility:visible; opacity:1; }
+  #page2 .help-tt-title { font-family:var(--font-mono); font-size:9px; letter-spacing:2px; margin-bottom:6px; padding-bottom:5px; border-bottom:1px solid var(--border-dim); }
+  #page2 .help-btn.y .help-tt-title { color:var(--yellow); border-top:2px solid var(--yellow); }
+  #page2 .help-btn.p .help-tt-title { color:var(--purple); border-top:2px solid var(--purple); }
+  #page2 .help-btn.g .help-tt-title { color:var(--green);  border-top:2px solid var(--green); }
+  #page2 .help-btn.r .help-tt-title { color:var(--red);    border-top:2px solid var(--red); }
+  #page2 .help-btn.a .help-tt-title { color:var(--purple); border-top:2px solid var(--purple); }
+  #page2 .help-tooltip p { font-family:var(--font-mono); font-size:9px; color:var(--text-dim); line-height:1.6; margin-bottom:4px; }
+  #page2 .help-formula { background:var(--bg-deep); border:1px solid var(--border-dim); padding:4px 7px; margin:5px 0; font-family:var(--font-mono); font-size:8px; color:var(--accent); }
+  #page2 .help-zones { display:flex; flex-direction:column; gap:3px; margin-top:5px; }
+  #page2 .help-zone { display:flex; align-items:center; gap:6px; font-family:var(--font-mono); font-size:8px; color:var(--text-dim); }
+  #page2 .hz-dot { width:7px; height:7px; border-radius:1px; flex-shrink:0; }
+  /* Insight */
+  #page2 .insight-bar { padding:8px 12px; background:var(--bg-card); border:1px solid var(--border-dim); font-family:var(--font-mono); font-size:10px; color:var(--text-dim); line-height:1.6; margin-top:14px; }
+  #page2 .hl   { color:var(--green); }
+  #page2 .hl-y { color:var(--yellow); }
+  #page2 .hl-r { color:var(--red); }
+  #page2 .hl-a { color:var(--accent); }
+  #page2 .hl-p { color:var(--purple); }
+  /* Section label */
+  #page2 .section-label { font-family:var(--font-mono); font-size:9px; letter-spacing:3px; color:var(--text-faint); margin-bottom:8px; display:flex; align-items:center; gap:8px; }
+  #page2 .section-label::after { content:''; flex:1; height:1px; background:var(--border-dim); }
+  /* Sort btn */
+  #page2 .sort-btn { font-family:var(--font-mono); font-size:8px; letter-spacing:1px; padding:2px 7px; border:1px solid var(--border); color:var(--text-faint); background:transparent; cursor:pointer; transition:all 0.15s; }
+  #page2 .sort-btn.active, #page2 .sort-btn:hover { border-color:var(--accent); color:var(--accent); background:var(--accent-dim); }
+  /* IND.01 ICA */
+  #page2 .ica-layout { display:grid; grid-template-columns:200px 1fr; gap:20px; }
+  #page2 .ica-gauge { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; padding:8px 0; }
+  #page2 .ica-sublabel { font-family:var(--font-mono); font-size:9px; color:var(--text-dim); letter-spacing:2px; }
+  #page2 .ica-number { font-family:var(--font-display); font-size:72px; line-height:1; color:var(--yellow); text-shadow:0 0 30px rgba(255,214,0,0.5); letter-spacing:4px; transition:all 0.5s; }
+  #page2 .ica-pct { font-size:32px; color:var(--text-dim); }
+  #page2 .ica-status { font-family:var(--font-mono); font-size:10px; padding:3px 10px; border:1px solid; letter-spacing:2px; margin-top:4px; }
+  #page2 .status-alta  { border-color:var(--red);    color:var(--red);    background:var(--red-dim); }
+  #page2 .status-media { border-color:var(--yellow);  color:var(--yellow); background:var(--yellow-dim); }
+  #page2 .status-baja  { border-color:var(--green);   color:var(--green);  background:var(--green-dim); }
+  #page2 .ica-scale-wrap { width:100%; margin-top:12px; }
+  #page2 .ica-scale-track { height:8px; position:relative; overflow:visible; background:linear-gradient(90deg,var(--green) 0%,var(--yellow) 45%,var(--orange) 70%,var(--red) 100%); opacity:0.6; }
+  #page2 .ica-scale-pin { position:absolute; top:-5px; width:2px; height:18px; background:#fff; transform:translateX(-50%); box-shadow:0 0 8px #fff; transition:left 0.5s; }
+  #page2 .ica-scale-labels { display:flex; justify-content:space-between; margin-top:6px; }
+  #page2 .ica-scale-labels span { font-family:var(--font-mono); font-size:8px; color:var(--text-faint); }
+  #page2 .rank-header { font-family:var(--font-mono); font-size:9px; color:var(--text-dim); letter-spacing:2px; margin-bottom:10px; display:flex; align-items:center; justify-content:space-between; }
+  #page2 .rank-sort { display:flex; gap:6px; }
+  #page2 .inf-list { display:flex; flex-direction:column; gap:8px; }
+  #page2 .inf-item { display:flex; align-items:center; gap:10px; padding:6px 8px; transition:background 0.15s; cursor:pointer; }
+  #page2 .inf-item:hover { background:var(--bg-hover); }
+  #page2 .inf-rank { font-family:var(--font-mono); font-size:11px; color:var(--text-faint); width:18px; text-align:center; flex-shrink:0; }
+  #page2 .inf-icon { width:26px; height:26px; border-radius:3px; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:bold; flex-shrink:0; color:#fff; }
+  #page2 .inf-info { flex:1; min-width:0; }
+  #page2 .inf-name { font-size:13px; color:var(--text-main); font-family:var(--font-mono); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  #page2 .inf-sub  { font-family:var(--font-mono); font-size:9px; color:var(--text-dim); margin-top:1px; }
+  #page2 .inf-bar-track { width:100px; height:5px; background:var(--border); flex-shrink:0; }
+  #page2 .inf-bar-fill  { height:100%; transition:width 0.5s; }
+  #page2 .inf-val { font-family:var(--font-mono); font-size:12px; width:54px; text-align:right; flex-shrink:0; }
+  #page2 .inf-others { display:flex; align-items:center; gap:10px; padding:6px 8px; cursor:pointer; border:1px dashed var(--border-dim); transition:all 0.15s; margin-top:4px; }
+  #page2 .inf-others:hover { border-color:var(--accent); background:var(--accent-dim); }
+  #page2 .inf-others:hover .inf-others-label { color:var(--accent); }
+  #page2 .inf-others-icon { width:26px; height:26px; background:var(--bg-card); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:10px; color:var(--text-faint); }
+  #page2 .inf-others-label { flex:1; font-family:var(--font-mono); font-size:10px; color:var(--text-dim); letter-spacing:1px; transition:color 0.15s; }
+  #page2 .inf-others-cta { font-family:var(--font-mono); font-size:9px; color:var(--accent); opacity:0.7; letter-spacing:1px; }
+  #page2 .inf-others:hover .inf-others-cta { opacity:1; }
+  /* IND.02 */
+  #page2 .ind02-layout { display:grid; grid-template-columns:180px 1fr; gap:20px; align-items:center; }
+  #page2 .donut-wrap { position:relative; width:180px; height:180px; flex-shrink:0; margin:0 auto; }
+  #page2 .donut-center { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); text-align:center; pointer-events:none; }
+  #page2 .donut-center-val { font-family:var(--font-display); font-size:34px; line-height:1; color:var(--accent); letter-spacing:2px; }
+  #page2 .donut-center-label { font-family:var(--font-mono); font-size:8px; letter-spacing:2px; color:var(--text-dim); margin-top:3px; }
+  #page2 .soc-list { display:flex; flex-direction:column; gap:5px; }
+  #page2 .soc-item { display:flex; align-items:center; gap:10px; padding:8px 10px; cursor:pointer; transition:all 0.15s; border:1px solid transparent; }
+  #page2 .soc-item:hover { background:var(--bg-hover); border-color:var(--border-dim); }
+  #page2 .soc-dot { width:9px; height:9px; border-radius:2px; flex-shrink:0; }
+  #page2 .soc-name { flex:1; font-family:var(--font-mono); font-size:11px; color:var(--text-main); letter-spacing:1px; }
+  #page2 .soc-perfiles { font-family:var(--font-mono); font-size:9px; color:var(--text-faint); width:56px; text-align:right; }
+  #page2 .soc-reach { font-family:var(--font-mono); font-size:12px; color:var(--text-main); width:48px; text-align:right; }
+  #page2 .soc-pct { font-family:var(--font-mono); font-size:12px; width:42px; text-align:right; font-weight:600; }
+  #page2 .soc-arrow { font-family:var(--font-mono); font-size:9px; color:var(--text-faint); width:16px; text-align:right; opacity:0; transition:opacity 0.15s; }
+  #page2 .soc-item:hover .soc-arrow { opacity:1; color:var(--accent); }
+  /* IND.03 */
+  #page2 .ind03-subtitle { font-family:var(--font-mono); font-size:9px; color:var(--text-faint); letter-spacing:1px; margin-bottom:14px; }
+  #page2 .filter-bar { display:flex; align-items:center; gap:6px; margin-bottom:14px; flex-wrap:wrap; }
+  #page2 .filter-label { font-family:var(--font-mono); font-size:9px; color:var(--text-faint); letter-spacing:2px; }
+  #page2 .filter-btn { font-family:var(--font-mono); font-size:9px; letter-spacing:1px; padding:4px 12px; border:1px solid var(--border); color:var(--text-dim); background:transparent; cursor:pointer; transition:all 0.15s; display:flex; align-items:center; gap:5px; }
+  #page2 .filter-btn .fb-dot { width:6px; height:6px; border-radius:1px; }
+  #page2 .filter-btn.active { color:var(--current-color,var(--accent)); border-color:var(--current-color,var(--accent)); background:rgba(0,0,0,0.3); }
+  #page2 .filter-btn:hover  { color:var(--current-color,var(--accent)); border-color:var(--current-color,var(--accent)); }
+  #page2 .cards-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:10px; margin-bottom:14px; }
+  #page2 .eff-card { background:var(--bg-card); border:1px solid var(--border-dim); padding:12px 12px 10px; display:flex; flex-direction:column; gap:6px; }
+  #page2 .eff-card.rank1 { border-top:2px solid var(--green); }
+  #page2 .eff-card.rank2 { border-top:2px solid rgba(0,255,136,0.5); }
+  #page2 .eff-card.rank3 { border-top:2px solid rgba(0,255,136,0.25); }
+  #page2 .eff-platform { display:flex; align-items:center; gap:6px; }
+  #page2 .eff-icon { width:16px; height:16px; border-radius:2px; display:flex; align-items:center; justify-content:center; font-size:9px; flex-shrink:0; }
+  #page2 .eff-platform-name { font-family:var(--font-mono); font-size:8px; letter-spacing:2px; }
+  #page2 .eff-rank { font-family:var(--font-mono); font-size:8px; color:var(--text-faint); margin-left:auto; }
+  #page2 .eff-name { font-family:var(--font-ui); font-size:14px; font-weight:600; color:var(--text-main); line-height:1.2; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  #page2 .eff-score { font-family:var(--font-display); font-size:34px; line-height:1; }
+  #page2 .eff-score.high { color:var(--green); text-shadow:0 0 12px rgba(0,255,136,0.4); }
+  #page2 .eff-score.mid  { color:var(--yellow); }
+  #page2 .eff-score.low  { color:var(--red); }
+  #page2 .eff-bar-wrap { height:2px; background:var(--border-dim); width:100%; }
+  #page2 .eff-bar-fill { height:100%; }
+  #page2 .eff-sub { font-family:var(--font-mono); font-size:9px; color:var(--text-dim); line-height:1.4; }
+  #page2 .eff-interp { font-family:var(--font-mono); font-size:8px; letter-spacing:1px; padding:2px 5px; display:inline-block; margin-top:2px; }
+  #page2 .interp-high { color:var(--green); background:var(--green-dim); }
+  #page2 .interp-mid  { color:var(--yellow); background:var(--yellow-dim); }
+  #page2 .interp-low  { color:var(--text-faint); background:var(--red-dim); }
+  /* IND.04 */
+  #page2 .stats-row { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:18px; }
+  #page2 .stat-box { background:var(--bg-card); border:1px solid var(--border-dim); padding:10px 14px; }
+  #page2 .stat-label { font-family:var(--font-mono); font-size:8px; letter-spacing:2px; color:var(--text-faint); margin-bottom:4px; }
+  #page2 .stat-val { font-family:var(--font-display); font-size:28px; line-height:1; }
+  #page2 .stat-val.red    { color:var(--red); }
+  #page2 .stat-val.yellow { color:var(--yellow); }
+  #page2 .stat-val.accent { color:var(--accent); }
+  #page2 .stat-sub { font-family:var(--font-mono); font-size:9px; color:var(--text-faint); margin-top:3px; }
+  #page2 .op-list { display:flex; flex-direction:column; gap:6px; margin-bottom:16px; }
+  #page2 .op-card { background:var(--bg-card); border:1px solid var(--border-dim); border-left:3px solid transparent; padding:10px 14px; transition:background 0.15s; }
+  #page2 .op-card:hover { background:var(--bg-hover); }
+  #page2 .op-card.size3 { border-left-color:var(--border); }
+  #page2 .op-card.size2 { border-left-color:var(--border); }
+  #page2 .op-top { display:flex; align-items:flex-start; gap:10px; margin-bottom:7px; }
+  #page2 .op-size { flex-shrink:0; width:36px; height:36px; display:flex; flex-direction:column; align-items:center; justify-content:center; border:1px solid var(--border-dim); }
+  #page2 .op-size.s3 { border-color:var(--border-dim); background:transparent; }
+  #page2 .op-size.s2 { border-color:var(--border-dim); background:transparent; }
+  #page2 .op-size-num { font-family:var(--font-display); font-size:20px; line-height:1; }
+  #page2 .op-size.s3 .op-size-num { color:var(--text-dim); }
+  #page2 .op-size.s2 .op-size-num { color:var(--text-dim); }
+  #insight04 .hl-r { color:var(--text-main); }
+  #page2 .op-size-label { font-family:var(--font-mono); font-size:7px; color:var(--text-faint); letter-spacing:1px; }
+  #page2 .op-meta { flex:1; min-width:0; }
+  #page2 .op-title { font-family:var(--font-ui); font-size:13px; font-weight:600; color:var(--text-main); line-height:1.3; margin-bottom:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  #page2 .op-date { font-family:var(--font-mono); font-size:9px; color:var(--text-faint); }
+  #page2 .op-badges { display:flex; align-items:center; gap:6px; flex-wrap:wrap; flex-shrink:0; }
+  #page2 .sentiment-badge { font-family:var(--font-mono); font-size:8px; letter-spacing:1px; padding:2px 7px; border:1px solid; }
+  #page2 .s-neutral  { color:var(--text-dim); border-color:var(--border); }
+  #page2 .s-negative { color:var(--red); border-color:var(--red-brd); background:var(--red-dim); }
+  #page2 .s-positive { color:var(--green); border-color:rgba(0,255,136,0.3); background:var(--green-dim); }
+  #page2 .category-badge { font-family:var(--font-mono); font-size:8px; letter-spacing:1px; padding:2px 7px; border:1px solid var(--border-dim); color:var(--text-faint); }
+  #page2 .op-domains { display:flex; align-items:center; gap:5px; flex-wrap:wrap; margin-top:7px; }
+  #page2 .domain-tag { font-family:var(--font-mono); font-size:9px; color:var(--accent); background:var(--accent-dim); padding:2px 8px; border:1px solid rgba(0,212,255,0.15); }
+  #page2 .domain-tag.recurrent { color:var(--red); background:var(--red-dim); border-color:var(--red-brd); }
+  #page2 .rec-grid { display:flex; flex-direction:column; gap:6px; margin-bottom:16px; }
+  #page2 .rec-row { display:flex; align-items:center; gap:12px; padding:8px 12px; background:var(--bg-card); border:1px solid var(--red-brd); }
+  #page2 .rec-domain { font-family:var(--font-mono); font-size:11px; color:var(--red); flex:1; }
+  #page2 .rec-count  { font-family:var(--font-display); font-size:22px; color:var(--red); width:32px; text-align:right; }
+  #page2 .rec-label  { font-family:var(--font-mono); font-size:9px; color:var(--text-faint); }
+  #page2 .rec-ops    { font-family:var(--font-mono); font-size:9px; color:var(--text-dim); flex:2; }
+  /* IND.05 */
+  #page2 .total-block { text-align:center; padding:10px 0 14px; border-bottom:1px solid var(--border-dim); margin-bottom:14px; }
+  #page2 .total-label { font-family:var(--font-mono); font-size:9px; letter-spacing:3px; color:var(--text-faint); margin-bottom:4px; }
+  #page2 .total-val { font-family:var(--font-display); font-size:48px; color:var(--text-main); line-height:1; }
+  #page2 .total-sub { font-family:var(--font-mono); font-size:9px; color:var(--text-main); margin-top:3px; }
+  #page2 .cards-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px; }
+  #page2 .reach-card { background:var(--bg-card); border:1px solid var(--border-dim); padding:12px 14px; }
+  #page2 .reach-card.social    { border-top:2px solid var(--purple); }
+  #page2 .reach-card.nonsocial { border-top:2px solid var(--accent); }
+  #page2 .rc-label { font-family:var(--font-mono); font-size:8px; letter-spacing:2px; margin-bottom:6px; }
+  #page2 .reach-card.social    .rc-label { color:var(--purple); }
+  #page2 .reach-card.nonsocial .rc-label { color:var(--accent); }
+  #page2 .rc-val { font-family:var(--font-display); font-size:32px; line-height:1; margin-bottom:4px; }
+  #page2 .reach-card.social    .rc-val { color:var(--purple); }
+  #page2 .reach-card.nonsocial .rc-val { color:var(--accent); }
+  #page2 .rc-pct { font-family:var(--font-mono); font-size:11px; margin-bottom:8px; }
+  #page2 .reach-card.social    .rc-pct { color:rgba(176,96,255,0.7); }
+  #page2 .reach-card.nonsocial .rc-pct { color:rgba(0,212,255,0.7); }
+  #page2 .rc-sub { font-family:var(--font-mono); font-size:9px; color:var(--text-faint); }
+  #page2 .rc-bar-wrap { height:3px; background:var(--border-dim); margin-top:10px; }
+  #page2 .rc-bar-fill { height:100%; }
+  #page2 .reach-card.social    .rc-bar-fill { background:var(--purple); }
+  #page2 .reach-card.nonsocial .rc-bar-fill { background:var(--accent); }
+  #page2 .stacked-bar-wrap { height:20px; display:flex; overflow:hidden; border:1px solid var(--border-dim); margin-bottom:8px; }
+  #page2 .stacked-social    { background:var(--purple); height:100%; display:flex; align-items:center; justify-content:center; }
+  #page2 .stacked-nonsocial { background:var(--accent);  height:100%; flex:1; display:flex; align-items:center; justify-content:center; }
+  #page2 .stacked-label { font-family:var(--font-mono); font-size:8px; color:rgba(0,0,0,0.7); font-weight:700; white-space:nowrap; padding:0 6px; }
+  #page2 .bar-legend { display:flex; justify-content:space-between; margin-bottom:14px; }
+  #page2 .bar-leg-item { display:flex; align-items:center; gap:5px; }
+  #page2 .bar-leg-dot  { width:8px; height:8px; flex-shrink:0; }
+  #page2 .bar-leg-text { font-family:var(--font-mono); font-size:9px; color:var(--text-dim); }
+  #page2 .sparkline-wrap { position:relative; margin-bottom:6px; }
+  #page2 .peak-row { display:flex; gap:8px; margin-bottom:14px; }
+  #page2 .peak-card { flex:1; background:var(--bg-card); border:1px solid var(--border-dim); padding:8px 10px; }
+  #page2 .peak-label { font-family:var(--font-mono); font-size:8px; letter-spacing:1px; color:var(--text-faint); margin-bottom:3px; }
+  #page2 .peak-val   { font-family:var(--font-display); font-size:18px; }
+  #page2 .peak-val.p { color:var(--purple); }
+  #page2 .peak-val.a { color:var(--accent); }
+  #page2 .peak-date  { font-family:var(--font-mono); font-size:9px; color:var(--text-faint); margin-top:2px; }
+  /* Modal P2 */
+  #p2ModalOverlay { display:none; position:fixed; inset:0; z-index:800; background:rgba(7,10,15,0.88); backdrop-filter:blur(4px); align-items:flex-start; justify-content:center; padding:40px 20px; overflow-y:auto; }
+  #p2ModalOverlay.open { display:flex; }
+  #p2ModalOverlay .lp-modal { background:var(--bg-panel); border:1px solid var(--border); border-top:2px solid var(--accent); width:100%; max-width:860px; max-height:90vh; display:flex; flex-direction:column; }
+  #p2ModalOverlay .lp-modal-header { display:flex; align-items:center; justify-content:space-between; padding:14px 20px; border-bottom:1px solid var(--border-dim); flex-shrink:0; }
+  #p2ModalOverlay .lp-modal-title { font-family:var(--font-mono); font-size:10px; letter-spacing:3px; }
+  #p2ModalOverlay .lp-modal-subtitle { font-family:var(--font-mono); font-size:9px; color:var(--text-dim); margin-top:3px; }
+  #p2ModalOverlay .lp-modal-close { width:28px; height:28px; background:var(--bg-card); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:14px; color:var(--text-dim); cursor:pointer; transition:all 0.15s; }
+  #p2ModalOverlay .lp-modal-close:hover { border-color:var(--red); color:var(--red); }
+  #p2ModalOverlay .lp-modal-controls { display:flex; align-items:center; gap:8px; padding:10px 20px; border-bottom:1px solid var(--border-dim); background:var(--bg-card); flex-shrink:0; flex-wrap:wrap; }
+  #p2ModalOverlay .lp-modal-sort-label { font-family:var(--font-mono); font-size:9px; color:var(--text-dim); letter-spacing:2px; }
+  #p2ModalOverlay .lp-modal-sort-btn { font-family:var(--font-mono); font-size:9px; letter-spacing:1px; padding:3px 10px; border:1px solid var(--border); color:var(--text-dim); background:transparent; cursor:pointer; transition:all 0.15s; }
+  #p2ModalOverlay .lp-modal-sort-btn.active, #p2ModalOverlay .lp-modal-sort-btn:hover { border-color:var(--accent); color:var(--accent); background:var(--accent-dim); }
+  #p2ModalOverlay .lp-modal-plat-filter { margin-left:auto; display:flex; gap:6px; align-items:center; }
+  #p2ModalOverlay .lp-plat-btn { font-family:var(--font-mono); font-size:8px; letter-spacing:1px; padding:3px 8px; border:1px solid var(--border); color:var(--text-faint); background:transparent; cursor:pointer; transition:all 0.15s; }
+  #p2ModalOverlay .lp-plat-btn.fb.active { border-color:#1877f2; background:rgba(24,119,242,0.15); color:#fff; }
+  #p2ModalOverlay .lp-plat-btn.tt.active { border-color:#aaa; background:rgba(200,200,200,0.1); color:#fff; }
+  #p2ModalOverlay .lp-plat-btn.ig.active { border-color:#e1306c; background:rgba(225,48,108,0.15); color:#fff; }
+  #p2ModalOverlay .lp-plat-btn.x.active  { border-color:#1da1f2; background:rgba(29,161,242,0.15); color:#fff; }
+  #p2ModalOverlay .lp-plat-btn.all.active { border-color:var(--accent); background:var(--accent-dim); color:var(--accent); }
+  #p2ModalOverlay .lp-modal-body { overflow-y:auto; flex:1; }
+  #p2ModalOverlay .lp-modal-body::-webkit-scrollbar { width:4px; }
+  #p2ModalOverlay .lp-modal-body::-webkit-scrollbar-track { background:var(--bg-deep); }
+  #p2ModalOverlay .lp-modal-body::-webkit-scrollbar-thumb { background:var(--accent); }
+  #p2ModalOverlay .lp-modal-body::-webkit-scrollbar-thumb:hover { background:var(--text-main); }
+  #p2ModalOverlay .lp-modal-table { width:100%; border-collapse:collapse; }
+  #p2ModalOverlay .lp-modal-table thead th { position:sticky; top:0; background:var(--bg-card); padding:8px 14px; font-family:var(--font-mono); font-size:9px; letter-spacing:2px; color:var(--text-dim); text-align:left; border-bottom:1px solid var(--border); cursor:pointer; white-space:nowrap; }
+  #p2ModalOverlay .lp-modal-table thead th:hover, #p2ModalOverlay .lp-modal-table thead th.sorted { color:var(--accent); }
+  #p2ModalOverlay .lp-modal-table tbody tr { border-bottom:1px solid var(--border-dim); cursor:pointer; transition:background 0.1s; }
+  #p2ModalOverlay .lp-modal-table tbody tr:hover { background:var(--bg-hover); }
+  #p2ModalOverlay .lp-modal-table tbody td { padding:9px 14px; font-family:var(--font-mono); font-size:11px; vertical-align:middle; }
+  #p2ModalOverlay .lp-modal-footer { padding:10px 20px; border-top:1px solid var(--border-dim); flex-shrink:0; display:flex; align-items:center; gap:12px; font-family:var(--font-mono); font-size:9px; color:var(--text-dim); flex-wrap:wrap; }
+  #p2ModalOverlay .lp-modal-stat-val { color:var(--accent); }
+  #p2ModalOverlay .lp-plat-chip { display:inline-flex; align-items:center; gap:5px; padding:2px 7px; border-radius:2px; font-family:var(--font-mono); font-size:9px; letter-spacing:1px; }
+  #p2ModalOverlay .lp-plat-chip.fb { background:rgba(24,119,242,0.15); color:#1877f2; border:1px solid rgba(24,119,242,0.3); }
+  #p2ModalOverlay .lp-plat-chip.tt { background:rgba(200,200,200,0.08); color:#ccc; border:1px solid rgba(200,200,200,0.2); }
+  #p2ModalOverlay .lp-plat-chip.ig { background:rgba(225,48,108,0.15); color:#e1306c; border:1px solid rgba(225,48,108,0.3); }
+  #p2ModalOverlay .lp-plat-chip.x  { background:rgba(29,161,242,0.12); color:#1da1f2; border:1px solid rgba(29,161,242,0.3); }
+  #p2ModalOverlay .lp-eff-high { color:var(--green); }
+  #p2ModalOverlay .lp-eff-mid  { color:var(--yellow); }
+  #p2ModalOverlay .lp-eff-low  { color:var(--red); }
+  /* Responsive P2 */
+  @media (max-width:1100px) {
+    #page2 .row-1, #page2 .row-3 { grid-template-columns:1fr; }
+    #page2 .ica-layout { grid-template-columns:180px 1fr; }
+    #page2 .ind02-layout { grid-template-columns:160px 1fr; }
+    #page2 .cards-grid { grid-template-columns:repeat(3,1fr); }
+  }
+  @media (max-width:640px) {
+    #page2 .row-1, #page2 .row-3 { grid-template-columns:1fr; }
+    #page2 .ica-layout { grid-template-columns:1fr; }
+    #page2 .stats-row { grid-template-columns:repeat(2,1fr); }
+    #page2 .cards-row { grid-template-columns:1fr; }
+    #page2 .ind02-layout { grid-template-columns:1fr; }
+    #page2 .cards-grid { grid-template-columns:repeat(2,1fr); }
+    /* Fix min-width:auto cascade on nested grids */
+    #page2 .listening-grid > *,
+    #page2 .row-1 > *,
+    #page2 .row-3 > * { min-width: 0; }
+    #page2 .panel { overflow: hidden; }
+    /* Contain inf-others-label */
+    #page2 .inf-others-label { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    /* Sort buttons wrap at narrow widths */
+    #page2 .rank-sort { flex-wrap: wrap; gap: 4px; }
+    #page2 .panel-title { letter-spacing: 1px; }
+    #page2 .ica-number { font-size: 56px; }
+    #page2 .inf-bar-track { width: 60px; }
+    #page2 .page-title { font-size: 20px; letter-spacing: 2px; }
+  }
+  /* ── Narrativa Dominante ────────────────────────────── */
+  .narrativa-section { display:flex; flex-direction:column; gap:0; height:100%; }
+  .narrativa-week { flex:1; padding:8px 0; border-bottom:1px solid var(--border-dim); overflow:hidden; position:relative; }
+  .narrativa-week:last-child { border-bottom:none; }
+  .narrativa-week-hdr { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:5px; }
+  .narrativa-week-label { font-family:var(--font-mono); font-size:8px; color:var(--text-dim); letter-spacing:2px; }
+  .narrativa-week-dates { font-family:var(--font-mono); font-size:7px; color:var(--accent); }
+  .narrativa-cloud { line-height:1.6; }
+  .nterm { display:inline-block; margin:2px 3px; padding:2px 7px; border:1px solid currentColor; font-family:var(--font-mono); cursor:pointer; transition:opacity 0.2s; }
+  .nterm:hover { opacity:0.7; }
+  .narrativa-more { font-family:var(--font-mono); font-size:8px; color:var(--accent); cursor:pointer; margin-top:4px; display:block; }
+  /* Modal Narrativa */
+  #narrativaModal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:1000; align-items:flex-start; justify-content:center; padding-top:0; }
+  #narrativaModal.open { display:flex; }
+  .narrativa-modal-box { background:var(--bg-panel); border:1px solid var(--border); padding:24px; max-width:600px; width:90%; max-height:92vh; overflow-y:auto; }
+  .narrativa-modal-box::-webkit-scrollbar { width:4px; }
+  .narrativa-modal-box::-webkit-scrollbar-track { background:var(--bg-deep); }
+  .narrativa-modal-box::-webkit-scrollbar-thumb { background:var(--accent); }
+  .narrativa-modal-box::-webkit-scrollbar-thumb:hover { background:var(--text-main); }
+  .narrativa-modal-title { font-family:var(--font-mono); font-size:11px; color:var(--accent); letter-spacing:3px; margin-bottom:16px; }
+  .narrativa-modal-week { margin-bottom:20px; }
+  .narrativa-modal-close { font-family:var(--font-mono); font-size:9px; color:var(--text-dim); cursor:pointer; float:right; }
+  /* Panel & Modal Briefing IA */
+  #briefingPanel { overflow-y:auto; max-height:260px; }
+  #briefingBody p { font-family:var(--font-mono); font-size:11px; color:#c9d9e8; line-height:1.6; margin:0 0 8px; }
+  .briefing-link { font-family:var(--font-mono); font-size:9px; color:var(--accent); cursor:pointer; letter-spacing:1px; display:block; }
+  .briefing-link:hover { opacity:0.7; }
+  #briefingModal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); z-index:1000; align-items:center; justify-content:center; }
+  #briefingModal.open { display:flex; }
+  .briefing-modal-box { background:var(--bg-panel); border:1px solid var(--border); padding:24px; max-width:640px; width:92%; max-height:92vh; overflow-y:auto; margin:auto; }
+  .briefing-modal-box::-webkit-scrollbar { width:4px; }
+  .briefing-modal-box::-webkit-scrollbar-track { background:var(--bg-deep); }
+  .briefing-modal-box::-webkit-scrollbar-thumb { background:var(--accent); }
+  .briefing-modal-title { font-family:var(--font-mono); font-size:11px; color:var(--accent); letter-spacing:3px; margin-bottom:16px; }
+  .briefing-modal-section { font-family:var(--font-mono); font-size:9px; color:var(--text-dim); letter-spacing:2px; margin:14px 0 6px; border-bottom:1px solid var(--border); padding-bottom:4px; }
+  .briefing-modal-close { font-family:var(--font-mono); font-size:9px; color:var(--text-dim); cursor:pointer; float:right; }
+  .briefing-modal-box p { font-family:var(--font-mono); font-size:13px; color:#c9d9e8; line-height:1.6; margin:0 0 8px; }
+  .briefing-modal-box ul { margin:0; padding-left:16px; }
+  .briefing-modal-box li { font-family:var(--font-mono); font-size:12px; color:#c9d9e8; line-height:1.7; }
+  #briefingModalDateRange { font-family:var(--font-mono); font-size:9px; color:var(--text-dim); margin-bottom:12px; letter-spacing:1px; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-left">
+      <div class="header-logo">WAR ROOM DIGITAL</div>
+      <div class="header-divider"></div>
+      <div class="header-subject">
+        <div class="label">// CLIENTE</div>
+        <div class="name">HORACIO RODRÍGUEZ LARRETA</div>
+        <div class="sub"></div>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="page-nav" id="pageNav">
+        <button class="page-selector" onclick="togglePageMenu()">
+          <span id="pageSelectorLabel">PÁG. 01 / OVERVIEW</span>
+          <span class="page-chevron">▾</span>
+        </button>
+        <div class="page-menu" id="pageMenu">
+          <button class="page-menu-item active" onclick="switchPage(1)">PÁG. 01 / OVERVIEW</button>
+          <button class="page-menu-item" onclick="switchPage(2)">PÁG. 02 / RADAR</button>
+        </div>
+      </div>
+      <div class="live-badge"><div class="live-dot"></div>LIVE · BBDD ACTIVA</div>
+    </div>
+  </header>
+
+  <!-- DATE FILTER BAR -->
+  <div class="filter-bar">
+    <div class="filter-label">// FILTRO PERÍODO</div>
+    <input type="date" class="filter-input" id="dateFrom" min="2026-01-01">
+    <div class="filter-sep">→</div>
+    <input type="date" class="filter-input" id="dateTo" min="2026-01-01">
+    <button class="filter-btn" onclick="applyFilter()">APLICAR</button>
+    <button class="filter-btn reset" onclick="resetFilter()">RESET</button>
+    <button class="filter-btn preset" onclick="filterCurrentMonth()">MES ACTUAL</button>
+    <button class="filter-btn preset" onclick="filterPrevMonth()">MES ANT.</button>
+    <div class="filter-count">Mostrando <span id="filteredCount">0</span> menciones</div>
+  </div>
+
+  <!-- PÁGINA 1: OVERVIEW -->
+  <div id="page1" class="page-section active">
+
+  <!-- ICS ROW -->
+  <div class="ics-row">
+    <div class="ics-panel">
+      <div style="position:absolute;top:10px;right:10px" class="info-badge" data-calc="ics">?</div>
+      <div class="ics-label">// ÍNDICE CLIMA SOCIAL</div>
+      <div class="ics-number" id="icsNumber">—</div>
+      <div class="ics-status" id="icsStatus">CARGANDO</div>
+      <div class="semaforo">
+        <div class="sem-item sem-estable" id="sem0"></div>
+        <div class="sem-item sem-tension" id="sem1"></div>
+        <div class="sem-item sem-riesgo" id="sem2"></div>
+        <div class="sem-item sem-crisis" id="sem3"></div>
+      </div>
+      <div class="ics-bar-container">
+        <div class="ics-bar-track">
+          <div class="ics-bar-segments">
+            <span class="seg-estable"></span><span class="seg-tension"></span>
+            <span class="seg-riesgo"></span><span class="seg-crisis"></span>
+          </div>
+          <div class="ics-bar-indicator" id="icsIndicator" style="left:0%"></div>
+        </div>
+        <div class="ics-scale">
+          <span>0 ESTABLE</span><span>25</span><span>50 RIESGO</span><span>75</span><span>100 POSIBLE CRISIS</span>
+        </div>
+      </div>
+    </div>
+    <div class="kpi-row">
+      <div class="kpi-card total">
+        <div class="info-badge" data-calc="total">?</div>
+        <div class="kpi-label">// MENCIONES TOTALES</div>
+        <div class="kpi-value" id="kpiTotal">0</div>
+        <div class="kpi-sub" id="kpiTotalSub">Período</div>
+        <div class="kpi-trend trend-up" id="kpiTotalTrend"></div>
+      </div>
+      <div class="kpi-card neutral">
+        <div class="info-badge" data-calc="neutral">?</div>
+        <div class="kpi-label">// NEUTRAS</div>
+        <div class="kpi-value" id="kpiNeutral">0</div>
+        <div class="kpi-sub" id="kpiNeutralPct">—</div>
+      </div>
+      <div class="kpi-card neg">
+        <div class="info-badge" data-calc="negativo">?</div>
+        <div class="kpi-label">// NEGATIVAS</div>
+        <div class="kpi-value" id="kpiNeg">0</div>
+        <div class="kpi-sub" id="kpiNegPct">—</div>
+      </div>
+      <div class="kpi-card pos">
+        <div class="info-badge" data-calc="positivo">?</div>
+        <div class="kpi-label">// POSITIVAS</div>
+        <div class="kpi-value" id="kpiPos">0</div>
+        <div class="kpi-sub" id="kpiPosPct">—</div>
+      </div>
+    </div>
+    <div class="panel nuevo-indicador-panel" id="briefingPanel">
+      <div class="panel-title">
+        BRIEFING
+        <span id="briefingRefreshBtn" onclick="loadBriefing(true)" title="Regenerar análisis"
+              style="float:right;cursor:pointer;font-size:11px;opacity:.5">↺</span>
+      </div>
+      <div id="briefingDateLabel" style="font-size:9px;color:#8ba3b8;margin-bottom:6px"></div>
+      <div id="briefingBody">
+        <div style="font-family:var(--font-mono);font-size:11px;color:#8ba3b8">—</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN GRID -->
+  <div class="main-grid">
+
+    <!-- TIMELINE -->
+    <div class="panel">
+      <div class="panel-title">
+        EVOLUCIÓN TEMPORAL DE MENCIONES
+        <div class="info-badge" style="position:static;margin-left:4px" data-calc="timeline">?</div>
+        <div class="expand-btn" onclick="openModal()" title="Expandir gráfico">⛶</div>
+      </div>
+      <div class="chart-container">
+        <canvas id="timelineChart"></canvas>
+      </div>
+    </div>
+
+    <!-- DONUT -->
+    <div class="panel">
+      <div class="panel-title">
+        DISTRIBUCIÓN DE SENTIMIENTO + POLARIZACIÓN
+        <div class="info-badge" style="position:static;margin-left:4px" data-calc="polarizacion">?</div>
+      </div>
+      <div class="donut-wrap">
+        <div class="donut-container">
+          <canvas id="donutChart"></canvas>
+          <div class="donut-center">
+            <div class="donut-center-val" id="donutCenter">—</div>
+            <div class="donut-center-label">ICS</div>
+          </div>
+        </div>
+        <div class="donut-legend">
+          <div class="legend-item">
+            <div class="legend-dot" style="background:var(--neutral)"></div>
+            <div class="legend-name">NEUTRAL</div>
+            <div class="legend-val" id="legNeutral">0</div>
+            <div class="legend-pct" id="legNeutralPct">—</div>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:var(--red)"></div>
+            <div class="legend-name">NEGATIVO</div>
+            <div class="legend-val" id="legNeg">0</div>
+            <div class="legend-pct" id="legNegPct">—</div>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:var(--green)"></div>
+            <div class="legend-name">POSITIVO</div>
+            <div class="legend-val" id="legPos">0</div>
+            <div class="legend-pct" id="legPosPct">—</div>
+          </div>
+          <div style="margin-top:14px;padding-top:10px;border-top:1px solid var(--border-dim)">
+            <div class="mini-stat-label">ÍNDICE POLARIZACIÓN (|%POS − %NEG|)</div>
+            <div style="font-family:var(--font-display);font-size:28px;color:var(--yellow)"><span id="polarVal">—</span><span style="font-size:14px;color:var(--text-dim)"> pts</span></div>
+            <div id="polarDesc" style="font-family:var(--font-mono);font-size:10px;color:var(--text-dim);margin-top:3px">Cargando datos...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ACCEL -->
+    <div class="panel">
+      <div class="panel-title">ACELERACIÓN Y PICOS</div>
+      <div class="accel-grid">
+        <div class="mini-stat">
+          <div class="mini-stat-label">PICO DIARIO</div>
+          <div class="mini-stat-val warn" id="accelPeak">—</div>
+          <div style="font-family:var(--font-mono);font-size:9px;color:var(--text-dim);margin-top:2px" id="accelPeakDate">—</div>
+        </div>
+        <div class="mini-stat">
+          <div class="mini-stat-label">PROMEDIO/DÍA</div>
+          <div class="mini-stat-val" id="accelAvg">—</div>
+          <div style="font-family:var(--font-mono);font-size:9px;color:var(--text-dim);margin-top:2px">menciones/día</div>
+        </div>
+        <div class="mini-stat">
+          <div class="mini-stat-label">FUENTES ÚNICAS</div>
+          <div class="mini-stat-val up" id="accelSources">—</div>
+          <div style="font-family:var(--font-mono);font-size:9px;color:var(--text-dim);margin-top:2px">dominios</div>
+        </div>
+        <div class="mini-stat">
+          <div class="info-badge" style="position:static;float:right;margin:-4px -4px 0 0" data-calc="aceleracion">?</div>
+          <div class="mini-stat-label">ACELERACIÓN</div>
+          <div class="mini-stat-val warn" id="accelRate">—</div>
+          <div style="font-family:var(--font-mono);font-size:9px;color:var(--text-dim);margin-top:2px">sem. reciente vs ant.</div>
+        </div>
+      </div>
+      <div>
+        <div class="panel-title" style="font-size:9px;margin-bottom:10px">PLATAFORMAS</div>
+        <div id="platformBars"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM GRID -->
+  <div class="bottom-grid">
+
+    <!-- NARRATIVA DOMINANTE -->
+    <div class="panel" id="narrativaPanel">
+      <div class="panel-title">NARRATIVA DOMINANTE</div>
+      <div class="narrativa-section" id="narrativaBody">
+        <div style="font-family:var(--font-mono);font-size:9px;color:var(--text-dim);">Cargando...</div>
+      </div>
+    </div>
+
+    <!-- Modal Narrativa -->
+    <div id="narrativaModal">
+      <div class="narrativa-modal-box">
+        <span class="narrativa-modal-close" onclick="closeNarrativaModal()">[ CERRAR ]</span>
+        <div class="narrativa-modal-title">NARRATIVA DOMINANTE — DETALLE</div>
+        <div id="narrativaModalBody"></div>
+      </div>
+    </div>
+
+
+    <!-- FEED -->
+    <div class="panel">
+      <div class="panel-title">ÚLTIMAS MENCIONES <span id="feedFilter" style="color:var(--accent);margin-left:6px;font-size:9px"></span></div>
+      <div id="mentionFeed"></div>
+    </div>
+
+    <!-- ALERTAS + DOMINIOS + MIX -->
+    <div class="panel">
+      <div class="panel-title">ALERTAS ACTIVAS</div>
+      <div class="alert-item" style="background:var(--red-dim);border:1px solid rgba(255,59,92,0.3)">
+        <div class="alert-label" style="color:var(--red)">⚠ DOMINIO CRÍTICO</div>
+        <div class="alert-text" id="alertDominio">Calculando dominio con mayor concentración negativa...</div>
+      </div>
+      <div class="alert-item" style="background:var(--yellow-dim);border:1px solid rgba(255,214,0,0.3)">
+        <div class="alert-label" style="color:var(--yellow)">↑ PICO DETECTADO</div>
+        <div class="alert-text" id="alertPico">Calculando pico de menciones...</div>
+      </div>
+      <div class="alert-item" style="background:var(--accent-dim);border:1px solid rgba(0,212,255,0.2)">
+        <div class="alert-label" style="color:var(--accent)">◉ OBSERVACIÓN</div>
+        <div class="alert-text" id="alertObservacion">Cargando análisis...</div>
+      </div>
+      <div style="border-top:1px solid var(--border-dim);padding-top:14px;margin-top:14px">
+        <div class="panel-title" style="margin-bottom:10px">RANKING DE DOMINIOS</div>
+        <div id="domainsList"></div>
+      </div>
+      <div style="border-top:1px solid var(--border-dim);padding-top:14px;margin-top:14px">
+        <div class="panel-title" style="margin-bottom:10px">MIX PLATAFORMAS (COMPLETO)</div>
+        <div id="miniPlatBars"></div>
+      </div>
+    </div>
+  </div>
+
+  </div><!-- /page1 -->
+
+  <!-- PÁGINA 2: LISTENING -->
+  <div id="page2" class="page-section">
+
+    <div class="listening-grid">
+
+      <!-- FILA 1: IND01 + IND02 -->
+      <div class="row-1">
+
+        <!-- IND.01 -->
+        <div class="panel" id="panel-ind01">
+          <div class="panel-header" data-color="yellow">
+            <div class="panel-title">IND. 01 — CONCENTRACIÓN DE AMPLIFICACIÓN (ICA)</div>
+            <div class="help-btn y">?
+              <div class="help-tooltip">
+                <div class="help-tt-title">// ICA — ÍNDICE CONCENTRACIÓN</div>
+                <p>% del reach total concentrado en los <span style="color:var(--yellow)">Top 3 perfiles</span>. Un ICA alto = dependencia de pocos actores.</p>
+                <div class="help-formula">ICA = Σ reach(top 3) ÷ Σ reach(total) × 100</div>
+                <div class="help-zones">
+                  <div class="help-zone"><div class="hz-dot" style="background:var(--green)"></div>0–33% Distribuido · bajo riesgo</div>
+                  <div class="help-zone"><div class="hz-dot" style="background:var(--yellow)"></div>33–66% Moderado · monitorear</div>
+                  <div class="help-zone"><div class="hz-dot" style="background:var(--orange)"></div>66–85% Alta dependencia · riesgo</div>
+                  <div class="help-zone"><div class="hz-dot" style="background:var(--red)"></div>85–100% Crítico · vulnerabilidad máxima</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="ica-layout">
+            <div class="ica-gauge">
+              <div class="ica-sublabel">% REACH · TOP 3</div>
+              <div class="ica-number" id="icaNumber">—<span class="ica-pct">%</span></div>
+              <div class="ica-status" id="icaStatus">CARGANDO</div>
+              <div class="ica-scale-wrap">
+                <div class="ica-scale-track"><div class="ica-scale-pin" id="icaPin" style="left:0%"></div></div>
+                <div class="ica-scale-labels"><span>DISTRIBUIDO</span><span>33%</span><span>66%</span><span>CRÍTICO</span></div>
+              </div>
+            </div>
+            <div>
+              <div class="rank-header">
+                <span>TOP INFLUENCERS</span>
+                <div class="rank-sort">
+                  <button class="sort-btn active" id="sortReach2"     onclick="lpInd01SortBy('reach')">REACH</button>
+                  <button class="sort-btn"         id="sortFollowers2" onclick="lpInd01SortBy('followers')">FOLLOWERS</button>
+                  <button class="sort-btn"         id="sortSov2"       onclick="lpInd01SortBy('sov')">SoV %</button>
+                  <button class="sort-btn"         id="sortEff2"       onclick="lpInd01SortBy('eff')">ALCANCE</button>
+                </div>
+              </div>
+              <div class="inf-list" id="infList"></div>
+              <div class="inf-others" id="othersBtn2" onclick="lpOpenModal01()">
+                <div class="inf-others-icon">···</div>
+                <div class="inf-others-label" id="othersLabel2">otros perfiles · reach combinado</div>
+                <div class="inf-others-cta">VER TODOS →</div>
+              </div>
+            </div>
+          </div>
+          <div class="insight-bar" id="insight01">⚡ Cargando datos…</div>
+        </div>
+
+        <!-- IND.02 -->
+        <div class="panel" id="panel-ind02">
+          <div class="panel-header" data-color="purple">
+            <div class="panel-title">IND. 02 — REACH POR RED SOCIAL</div>
+            <div class="help-btn p">?
+              <div class="help-tooltip">
+                <div class="help-tt-title">// ¿QUÉ MUESTRA?</div>
+                <p>Distribución del reach total generado por influencers, agrupado por plataforma.</p>
+                <p>El centro muestra las <span style="color:var(--accent)">menciones totales</span>. Click en cualquier red para filtrar el modal.</p>
+              </div>
+            </div>
+          </div>
+          <div class="ind02-layout">
+            <div>
+              <div class="donut-wrap">
+                <canvas id="socialDonut"></canvas>
+                <div class="donut-center">
+                  <div class="donut-center-val" id="centerVal">—</div>
+                  <div class="donut-center-label">MENCIONES</div>
+                </div>
+              </div>
+            </div>
+            <div class="soc-list" id="socList"></div>
+          </div>
+          <div class="insight-bar" id="insight02">⚡ Cargando datos…</div>
+        </div>
+
+      </div><!-- /row-1 -->
+
+      <!-- FILA 2: IND03 (ancho completo) -->
+      <div class="panel" id="panel-ind03">
+        <div class="panel-header" data-color="green">
+          <div class="panel-title">IND. 03 — EFICIENCIA DE AMPLIFICACIÓN (ALCANCE Nx)</div>
+          <div class="help-btn g">?
+            <div class="help-tooltip">
+              <div class="help-tt-title">// ¿QUÉ ES EL ALCANCE Nx?</div>
+              <p><strong style="color:var(--text-main)">Nx = reach ÷ followers</strong></p>
+              <p>Cuántas veces multiplicó su audiencia propia.</p>
+              <div style="margin:6px 0 4px;">
+                <div class="help-zone"><div class="hz-dot" style="background:var(--green)"></div><div style="font-family:var(--font-mono);font-size:8px;color:var(--text-dim);">≥ 2.0x — VIRAL</div></div>
+                <div class="help-zone"><div class="hz-dot" style="background:var(--yellow)"></div><div style="font-family:var(--font-mono);font-size:8px;color:var(--text-dim);">0.5x – 2.0x — NORMAL</div></div>
+                <div class="help-zone"><div class="hz-dot" style="background:var(--red)"></div><div style="font-family:var(--font-mono);font-size:8px;color:var(--text-dim);">&lt; 0.5x — BAJO</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="ind03-subtitle">↑ Mayor = convierte mejor su audiencia en alcance efectivo · Nx = reach ÷ followers · top 5 por red</div>
+        <div class="filter-bar" id="filterBar03"></div>
+        <div class="cards-grid" id="cardsGrid03"></div>
+        <div class="insight-bar" id="insight03">⚡ Cargando datos…</div>
+      </div>
+
+      <!-- FILA 3: IND04 + IND05 -->
+      <div class="row-3">
+
+        <!-- IND.04 -->
+        <div class="panel" id="panel-ind04">
+          <div class="panel-header" data-color="red">
+            <div class="panel-title">IND. 04 — POSIBLES NARRATIVAS COORDINADAS</div>
+            <div class="help-btn r">?
+              <div class="help-tooltip">
+                <div class="help-tt-title">// ¿QUÉ ES UNA OPERACIÓN?</div>
+                <p>Una nota replicada por 2+ medios con contenido idéntico (mismo <span style="color:var(--accent)">content_hash</span>).</p>
+                <p>Un operador <strong style="color:var(--red)">recurrente</strong> aparece en 2+ operaciones distintas.</p>
+              </div>
+            </div>
+          </div>
+          <div class="stats-row" id="stats04">
+            <div class="stat-box"><div class="stat-label">COORDINACIONES ACTIVAS</div><div class="stat-val" id="s04-ops">—</div><div class="stat-sub">narrativas coordinadas</div></div>
+            <div class="stat-box"><div class="stat-label">ACTORES INVOLUCRADOS</div><div class="stat-val" id="s04-media">—</div><div class="stat-sub">operadores únicos</div></div>
+            <div class="stat-box"><div class="stat-label">POSIBLES OPERADORES RECURRENTES</div><div class="stat-val" id="s04-recur">—</div><div class="stat-sub">en 2+ operaciones</div></div>
+            <div class="stat-box"><div class="stat-label">MAYOR ALCANCE</div><div class="stat-val" id="s04-max">—</div><div class="stat-sub" id="s04-maxsub">medios</div></div>
+          </div>
+          <div class="section-label">// OPERACIONES DETECTADAS</div>
+          <div class="op-list" id="opList04"></div>
+          <div class="section-label">// POSIBLES OPERADORES RECURRENTES</div>
+          <div class="rec-grid" id="recGrid04"></div>
+          <div class="insight-bar" id="insight04">⚡ Cargando datos…</div>
+        </div>
+
+        <!-- IND.05 -->
+        <div class="panel" id="panel-ind05">
+          <div class="panel-header" data-color="accent">
+            <div class="panel-title">IND. 05 — REACH · SOCIAL vs NO SOCIAL</div>
+            <div class="help-btn a">?
+              <div class="help-tooltip">
+                <div class="help-tt-title">// CANALES DE REACH</div>
+                <p><span style="color:var(--purple)">SOCIAL</span> — reach en redes sociales (Facebook, TikTok, Instagram, X).</p>
+                <p><span style="color:var(--accent)">NO SOCIAL</span> — reach en medios digitales, portales y blogs.</p>
+              </div>
+            </div>
+          </div>
+          <div class="total-block">
+            <div class="total-label">REACH TOTAL ACUMULADO</div>
+            <div class="total-val" id="i05-total">—</div>
+            <div class="total-sub" id="i05-period">Cargando…</div>
+          </div>
+          <div class="cards-row">
+            <div class="reach-card social">
+              <div class="rc-label">SOCIAL MEDIA</div>
+              <div class="rc-val" id="i05-social">—</div>
+              <div class="rc-pct" id="i05-social-pct">—</div>
+              <div class="rc-sub">Redes sociales</div>
+              <div class="rc-bar-wrap"><div class="rc-bar-fill" id="i05-social-bar" style="width:0%"></div></div>
+            </div>
+            <div class="reach-card nonsocial">
+              <div class="rc-label">NO SOCIAL</div>
+              <div class="rc-val" id="i05-nonsocial">—</div>
+              <div class="rc-pct" id="i05-nonsocial-pct">—</div>
+              <div class="rc-sub">Portales y medios</div>
+              <div class="rc-bar-wrap"><div class="rc-bar-fill" id="i05-nonsocial-bar" style="width:0%"></div></div>
+            </div>
+          </div>
+          <div class="section-label">// DISTRIBUCIÓN</div>
+          <div class="stacked-bar-wrap">
+            <div class="stacked-social" id="i05-stacked-s" style="width:50%"><span class="stacked-label" id="i05-stacked-slabel">SOCIAL —</span></div>
+            <div class="stacked-nonsocial"><span class="stacked-label" id="i05-stacked-nlabel">NO SOCIAL —</span></div>
+          </div>
+          <div class="bar-legend">
+            <div class="bar-leg-item"><div class="bar-leg-dot" style="background:var(--purple)"></div><span class="bar-leg-text">Social Media</span></div>
+            <div class="bar-leg-item"><div class="bar-leg-dot" style="background:var(--accent)"></div><span class="bar-leg-text">Portales / Medios</span></div>
+          </div>
+          <div class="section-label">// EVOLUCIÓN DIARIA</div>
+          <div class="sparkline-wrap">
+            <canvas id="spark05"></canvas>
+          </div>
+          <div class="peak-row">
+            <div class="peak-card"><div class="peak-label">PICO SOCIAL</div><div class="peak-val p" id="i05-pk-sval">—</div><div class="peak-date" id="i05-pk-sdate">—</div></div>
+            <div class="peak-card"><div class="peak-label">PICO NO SOCIAL</div><div class="peak-val a" id="i05-pk-nval">—</div><div class="peak-date" id="i05-pk-ndate">—</div></div>
+            <div class="peak-card"><div class="peak-label">DÍAS ACTIVOS</div><div class="peak-val" style="color:var(--text-main)" id="i05-dias">—</div><div class="peak-date" id="i05-dias-total">de — totales</div></div>
+          </div>
+          <div class="insight-bar" id="insight05">⚡ Cargando datos…</div>
+        </div>
+
+      </div><!-- /row-3 -->
+
+    </div><!-- /listening-grid -->
+
+  </div><!-- /page2 -->
+
+  <footer>
+    <span>// WAR ROOM DIGITAL · INTELIGENCIA NARRATIVA, OPORTUNIDADES Y RIESGO POLÍTICO</span>
+    <span>FUENTE: BRAND24 + INGESTA AUTOMATIZADA + GOOGLE TRENDS · IA ESTRATEGICA</span>
+    <span id="timestamp"></span>
+  </footer>
+</div>
+
+<!-- MODAL P2: FUENTES AMPLIFICADORAS -->
+<div id="p2ModalOverlay" onclick="if(event.target===this)lpCloseModal()">
+  <div class="lp-modal" onclick="event.stopPropagation()">
+    <div class="lp-modal-header">
+      <div>
+        <div class="lp-modal-title" id="lpModalTitle" style="color:var(--accent)">INFLUENCERS</div>
+        <div class="lp-modal-subtitle" id="lpModalSubtitle"></div>
+      </div>
+      <div class="lp-modal-close" onclick="lpCloseModal()">✕</div>
+    </div>
+    <div class="lp-modal-controls">
+      <div class="lp-modal-sort-label">ORDENAR:</div>
+      <button class="lp-modal-sort-btn active" onclick="lpModalSort('reach',this)">REACH ↓</button>
+      <button class="lp-modal-sort-btn" onclick="lpModalSort('followers',this)">FOLLOWERS</button>
+      <button class="lp-modal-sort-btn" onclick="lpModalSort('eff',this)">ALCANCE</button>
+      <button class="lp-modal-sort-btn" onclick="lpModalSort('sov',this)">SoV %</button>
+      <div class="lp-modal-plat-filter">
+        <button class="lp-plat-btn all active" onclick="lpFilterPlat('all',this)">TODOS</button>
+        <button class="lp-plat-btn fb" onclick="lpFilterPlat('facebook.com',this)">FB</button>
+        <button class="lp-plat-btn tt" onclick="lpFilterPlat('tiktok.com',this)">TK</button>
+        <button class="lp-plat-btn ig" onclick="lpFilterPlat('instagram.com',this)">IG</button>
+        <button class="lp-plat-btn x"  onclick="lpFilterPlat('x.com',this)">X</button>
+      </div>
+    </div>
+    <div class="lp-modal-body">
+      <table class="lp-modal-table">
+        <thead>
+          <tr>
+            <th class="col-mob-hide">#</th>
+            <th onclick="lpModalSort('name',this)">PERFIL ↕</th>
+            <th onclick="lpModalSort('plat',this)">RED ↕</th>
+            <th onclick="lpModalSort('reach',this)" class="sorted">REACH ↓</th>
+            <th onclick="lpModalSort('followers',this)">FOLLOWERS ↕</th>
+            <th onclick="lpModalSort('eff',this)">ALCANCE ↕</th>
+            <th onclick="lpModalSort('sov',this)" class="col-mob-hide">SoV % ↕</th>
+            <th class="col-mob-hide">MENS.</th>
+          </tr>
+        </thead>
+        <tbody id="lpModalTbody"></tbody>
+      </table>
+    </div>
+    <div class="lp-modal-footer">
+      <div>REACH TOTAL: <span class="lp-modal-stat-val" id="lpModalTotalReach"></span></div>
+      <div>PERFILES: <span class="lp-modal-stat-val" id="lpModalCount"></span></div>
+      <div>REACH PROM: <span class="lp-modal-stat-val" id="lpModalAvgReach"></span></div>
+      <div>ALCANCE PROM: <span class="lp-modal-stat-val" id="lpModalAvgEff"></span></div>
+      <div style="margin-left:auto;color:var(--text-faint);font-family:var(--font-mono);font-size:8px;">📅 ÚLTIMO SNAPSHOT</div>
+    </div>
+  </div>
+</div>
+
+<!-- DRAWER -->
+<div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-header">
+    <div>
+      <div class="drawer-title" id="drawerTitle">MENCIONES</div>
+      <div class="drawer-subtitle" id="drawerSubtitle"></div>
+    </div>
+    <div class="drawer-close" onclick="closeDrawer()">✕</div>
+  </div>
+  <div class="drawer-body" id="drawerBody"></div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="e=>e.target===this&&closeModal()">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <div class="modal-title">EVOLUCIÓN TEMPORAL DE MENCIONES</div>
+      <div class="modal-close" onclick="closeModal()">✕</div>
+    </div>
+    <div class="modal-body">
+      <div class="modal-chart-wrap">
+        <canvas id="timelineModalChart"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CALC TOOLTIP -->
+<div class="calc-tooltip" id="calcTooltip"></div>
+
+<!-- LOADING OVERLAY -->
+<div id="loadingOverlay" style="
+  position:fixed; inset:0; z-index:500;
+  background:rgba(7,10,15,0.97);
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  font-family:'JetBrains Mono',monospace;
+">
+  <div style="color:#00d4ff;font-size:13px;letter-spacing:4px;margin-bottom:6px">WAR ROOM</div>
+  <div style="color:#5a7a94;font-size:10px;letter-spacing:2px;margin-bottom:24px">CARGANDO DATOS...</div>
+  <div style="width:280px;height:3px;background:#1e2d3d;overflow:hidden;position:relative;border-radius:2px">
+    <div style="position:absolute;height:100%;background:#00d4ff;animation:loadSlide 1.4s ease-in-out infinite;border-radius:2px"></div>
+  </div>
+  <div id="loadingError" style="display:none;margin-top:32px;text-align:center;max-width:340px">
+    <div style="color:#ff3b5c;font-size:12px;letter-spacing:2px;margin-bottom:10px">ERROR AL CARGAR DATOS</div>
+    <div id="loadingErrorMsg" style="color:#5a7a94;font-size:11px;margin-bottom:18px;line-height:1.6;word-break:break-all"></div>
+    <button onclick="loadData()" style="
+      background:rgba(0,212,255,0.12); border:1px solid rgba(0,212,255,0.4);
+      color:#00d4ff; font-family:'JetBrains Mono',monospace; font-size:11px;
+      padding:8px 22px; cursor:pointer; letter-spacing:2px;
+    ">REINTENTAR</button>
+  </div>
+</div>
+
+<!-- Modal Briefing IA — hijo directo de body, fuera de cualquier contenedor con transform -->
+<div id="briefingModal">
+  <div class="briefing-modal-box">
+    <span class="briefing-modal-close" onclick="closeBriefingModal()">[ CERRAR ]</span>
+    <div class="briefing-modal-title">BRIEFING — ANÁLISIS COMPLETO</div>
+    <div id="briefingModalDateRange"></div>
+    <div class="briefing-modal-section">// 1. BRIEFING</div>
+    <div id="briefingModalBriefing"></div>
+    <div class="briefing-modal-section">// 2. RIESGO REPUTACIONAL</div>
+    <div id="briefingModalRiesgo"></div>
+    <div class="briefing-modal-section">// 3. EFICIENCIA DE AMPLIFICACIÓN</div>
+    <div id="briefingModalEficiencia"></div>
+    <div class="briefing-modal-section">// 4. NARRATIVAS Y TEMAS</div>
+    <div id="briefingModalNarrativas"></div>
+    <div class="briefing-modal-section">// 5. PRIORIDADES DE ACCIÓN</div>
+    <ul id="briefingModalPrioridades"></ul>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════
+// CONFIG
+// ══════════════════════════════════════════
+const CONFIG = {
+  apiUrl: 'https://warroom-b24.catconsultores.com.ar',
+  projectId:   1397424302,
+};
+
+// ══════════════════════════════════════════
+// DATA (poblado por loadData())
+// ══════════════════════════════════════════
+let ALL_MENTIONS = [];
+let MENTION_BY_ID = {};
+let KEYWORDS_DEF = [];
+let DATA_LOADED  = false;
+
+// ══════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════
+let filteredData = [];
+let activeKw = null;
+let tlChart = null, donutChart = null, modalChart = null;
+
+// ══════════════════════════════════════════
+// LOAD DATA FROM API
+// ══════════════════════════════════════════
+function switchPage(n) {
+  document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
+  document.getElementById('page' + n).classList.add('active');
+  const items = document.querySelectorAll('.page-menu-item');
+  items.forEach((t, i) => t.classList.toggle('active', i === n - 1));
+  document.getElementById('pageSelectorLabel').textContent = items[n - 1].textContent;
+  document.getElementById('pageNav').classList.remove('open');
+  document.querySelector('.filter-count').style.display = n === 1 ? '' : 'none';
+  if (n === 2 && !p2Initialized) { p2Initialized = true; p2Init(); }
+}
+function togglePageMenu() {
+  document.getElementById('pageNav').classList.toggle('open');
+}
+// Cierra el dropdown al hacer click fuera
+document.addEventListener('click', function(e) {
+  const nav = document.getElementById('pageNav');
+  if (nav && !nav.contains(e.target)) nav.classList.remove('open');
+});
+
+async function loadData() {
+  const overlay = document.getElementById('loadingOverlay');
+  const errBox  = document.getElementById('loadingError');
+  overlay.style.display = 'flex';
+  errBox.style.display  = 'none';
+
+  const today    = new Date().toISOString().slice(0, 10);
+  const pastDate = '2026-01-01';
+  const url = `${CONFIG.apiUrl}/api/v1/data?project_id=${CONFIG.projectId}&from_date=${pastDate}&to_date=${today}`;
+
+  try {
+    const resp = await fetch(url, {
+  headers: { 
+    Accept: 'application/json',
+    'ngrok-skip-browser-warning': 'true'
+      },
+  mode: 'cors',
+});
+    if (!resp.ok) throw new Error(`HTTP ${resp.status} — ${resp.statusText}`);
+    const data = await resp.json();
+
+    ALL_MENTIONS = data.mentions || [];
+    MENTION_BY_ID = Object.fromEntries(ALL_MENTIONS.map(m => [String(m.mention_id), m]));
+    KEYWORDS_DEF = (data.keywords || []).map(k => ({
+      word:  k.word,
+      col:   k.color,
+      terms: k.terms,
+    }));
+    DATA_LOADED = true;
+
+    // Default: últimos 7 días usando fecha LOCAL (evita desfase UTC en Argentina)
+    const _localToday = (d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`)(new Date());
+    const _localFrom  = (d => { d.setDate(d.getDate()-7); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; })(new Date());
+    document.getElementById('dateFrom').value = _localFrom;
+    document.getElementById('dateTo').value   = _localToday;
+    document.getElementById('dateFrom').max   = _localToday;
+    document.getElementById('dateTo').max     = _localToday;
+
+    filteredData = ALL_MENTIONS.filter(m => m.date >= _localFrom && m.date <= _localToday);
+    overlay.style.display = 'none';
+    renderKeywords();
+    updateAll();
+    loadNarrativa();
+    loadBriefing();
+
+  } catch (err) {
+    console.error('loadData error:', err);
+    errBox.style.display = 'block';
+    document.getElementById('loadingErrorMsg').textContent = err.message;
+  }
+}
+
+// ══════════════════════════════════════════
+// FILTER
+// ══════════════════════════════════════════
+function applyFilter() {
+  const from = document.getElementById('dateFrom').value;
+  const to   = document.getElementById('dateTo').value;
+  filteredData = ALL_MENTIONS.filter(m => m.date >= from && m.date <= to);
+  if (activeKw) filteredData = filteredData.filter(m => matchKw(m, activeKw));
+  updateAll();
+  if (p2Initialized) p2LoadData();
+  loadBriefing();
+}
+function resetFilter() {
+  const _localToday = (d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`)(new Date());
+  const _localFrom  = (d => { d.setDate(d.getDate()-7); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; })(new Date());
+  document.getElementById('dateFrom').value = _localFrom;
+  document.getElementById('dateTo').value   = _localToday;
+  activeKw = null;
+  document.querySelectorAll('.kw-tag').forEach(t => t.classList.remove('active'));
+  document.getElementById('feedFilter').textContent = '';
+  filteredData = ALL_MENTIONS.filter(m => m.date >= _localFrom && m.date <= _localToday);
+  updateAll();
+  if (p2Initialized) p2LoadData();
+}
+function filterCurrentMonth() {
+  const now = new Date();
+  const y = now.getFullYear();
+  const m = String(now.getMonth() + 1).padStart(2, '0');
+  const d = String(now.getDate()).padStart(2, '0');
+  document.getElementById('dateFrom').value = `${y}-${m}-01`;
+  document.getElementById('dateTo').value   = `${y}-${m}-${d}`;
+  applyFilter();
+}
+function filterPrevMonth() {
+  const last = new Date(new Date().getFullYear(), new Date().getMonth(), 0);
+  const y = last.getFullYear();
+  const m = String(last.getMonth() + 1).padStart(2, '0');
+  const d = String(last.getDate()).padStart(2, '0');
+  document.getElementById('dateFrom').value = `${y}-${m}-01`;
+  document.getElementById('dateTo').value   = `${y}-${m}-${d}`;
+  applyFilter();
+}
+function clearKwFilter() {
+  activeKw = null;
+  document.querySelectorAll('.kw-tag').forEach(t => t.classList.remove('active'));
+  document.getElementById('feedFilter').textContent = '';
+  const from = document.getElementById('dateFrom').value;
+  const to   = document.getElementById('dateTo').value;
+  filteredData = ALL_MENTIONS.filter(m => m.date >= from && m.date <= to);
+  updateAll();
+}
+function matchKw(m, kwDef) {
+  const txt = ((m.title||'')+(m.content||'')).toLowerCase();
+  return kwDef.terms.some(t => txt.includes(t));
+}
+
+// ══════════════════════════════════════════
+// UPDATE ALL WIDGETS
+// ══════════════════════════════════════════
+function updateAll() {
+  const d = filteredData;
+  const total = d.length;
+  const pos = d.filter(m=>m.sentiment==='positive').length;
+  const neg = d.filter(m=>m.sentiment==='negative').length;
+  const neu = d.filter(m=>m.sentiment==='neutral').length;
+
+  document.getElementById('filteredCount').textContent = total;
+
+  // KPIs
+  document.getElementById('kpiTotal').textContent = total;
+  document.getElementById('kpiNeutral').textContent = neu;
+  document.getElementById('kpiNeg').textContent = neg;
+  document.getElementById('kpiPos').textContent = pos;
+
+  const dates = [...new Set(d.map(m=>m.date))].sort();
+  if (dates.length >= 2) {
+    const diffDays = Math.round((new Date(dates[dates.length-1]) - new Date(dates[0])) / 86400000) + 1;
+    document.getElementById('kpiTotalSub').textContent = `Período ${diffDays} días`;
+  } else if (dates.length === 1) {
+    document.getElementById('kpiTotalSub').textContent = `Período: ${dates[0]}`;
+  } else {
+    document.getElementById('kpiTotalSub').textContent = 'Sin datos';
+  }
+
+  if (total > 0) {
+    document.getElementById('kpiNeutralPct').textContent = (neu/total*100).toFixed(1)+'% del total';
+    document.getElementById('kpiNegPct').textContent = (neg/total*100).toFixed(1)+'% del total';
+    document.getElementById('kpiPosPct').textContent = (pos/total*100).toFixed(1)+'% del total';
+  } else {
+    document.getElementById('kpiNeutralPct').textContent = '—';
+    document.getElementById('kpiNegPct').textContent = '—';
+    document.getElementById('kpiPosPct').textContent = '—';
+  }
+
+  // ICS
+  const ics = calcICS(d);
+  document.getElementById('icsNumber').textContent = ics.score;
+  document.getElementById('icsStatus').textContent = ics.status;
+  document.getElementById('icsIndicator').style.left = ics.score + '%';
+  document.getElementById('donutCenter').textContent = ics.score;
+
+  // Semáforo
+  ['sem0','sem1','sem2','sem3'].forEach(id => document.getElementById(id).classList.remove('active'));
+  if (ics.score < 25)      document.getElementById('sem0').classList.add('active');
+  else if (ics.score < 50) document.getElementById('sem1').classList.add('active');
+  else if (ics.score < 75) document.getElementById('sem2').classList.add('active');
+  else                     document.getElementById('sem3').classList.add('active');
+
+  // Polarización
+  const pPct = total > 0 ? pos/total*100 : 0;
+  const nPct = total > 0 ? neg/total*100 : 0;
+  const polar = Math.abs(pPct - nPct).toFixed(2);
+  document.getElementById('polarVal').textContent = total > 0 ? polar : '—';
+
+  let polarDesc = '';
+  if (total === 0) {
+    polarDesc = 'Sin datos';
+  } else if (parseFloat(polar) >= 20) {
+    polarDesc = 'Alta polarización · Debate intenso';
+  } else if (parseFloat(polar) >= 10) {
+    polarDesc = 'Polarización moderada';
+  } else {
+    polarDesc = 'Tensión baja · Narrativa principalmente neutra';
+  }
+  document.getElementById('polarDesc').textContent = polarDesc;
+
+  // Donut legend
+  document.getElementById('legNeutral').textContent = neu;
+  document.getElementById('legNeg').textContent = neg;
+  document.getElementById('legPos').textContent = pos;
+  document.getElementById('legNeutralPct').textContent = total > 0 ? (neu/total*100).toFixed(1)+'%' : '—';
+  document.getElementById('legNegPct').textContent     = total > 0 ? (neg/total*100).toFixed(1)+'%' : '—';
+  document.getElementById('legPosPct').textContent     = total > 0 ? (pos/total*100).toFixed(1)+'%' : '—';
+
+  // Accel stats
+  const maxDay = dates.length > 0 ? dates.reduce((a,dt) => {
+    const c = d.filter(m=>m.date===dt).length;
+    return c > (a.count||0) ? {date:dt,count:c} : a;
+  }, {date:'',count:0}) : {date:'-',count:0};
+  const avgDay = dates.length > 0 ? (total/dates.length).toFixed(1) : '—';
+  const domains = [...new Set(d.map(m=>m.domain))].length;
+  document.getElementById('accelPeak').textContent = maxDay.count || '—';
+  document.getElementById('accelPeakDate').textContent = maxDay.date ? formatDate(maxDay.date) : '—';
+  document.getElementById('accelAvg').textContent = avgDay;
+  document.getElementById('accelSources').textContent = domains || '—';
+
+  // Aceleración — inmune al filtro de fechas, siempre calcula sobre ALL_MENTIONS
+  {
+    const _allDates = [...new Set(ALL_MENTIONS.map(m=>m.date))].sort();
+    if (_allDates.length > 0) {
+      const _last  = _allDates[_allDates.length - 1];
+      const _refTs = new Date(_last).getTime();
+      const _w1from = new Date(_refTs - 7*86400000).toISOString().slice(0,10);
+      const _w2from = new Date(_refTs - 14*86400000).toISOString().slice(0,10);
+      const _recent = ALL_MENTIONS.filter(m => m.date > _w1from && m.date <= _last).length;
+      const _prev   = ALL_MENTIONS.filter(m => m.date > _w2from && m.date <= _w1from).length;
+      if (_prev > 0) {
+        const delta = Math.round((_recent - _prev) / _prev * 100);
+        document.getElementById('accelRate').textContent = (delta >= 0 ? '+' : '') + delta + '%';
+      } else {
+        document.getElementById('accelRate').textContent = _recent > 0 ? '+∞%' : '—';
+      }
+    } else {
+      document.getElementById('accelRate').textContent = '—';
+    }
+  }
+
+  // Alerts (dynamic)
+  updateAlerts(d, neg, pos, total, maxDay);
+
+  // Charts
+  updateTimelineChart(d);
+  updateDonutChart(neu, neg, pos);
+  updatePlatformBars(d);
+  renderDomains(d);
+  renderFeed(d);
+}
+
+function updateAlerts(d, neg, pos, total, maxDay) {
+  // Dominio crítico (mayor concentración negativa)
+  const domNeg = {};
+  d.filter(m=>m.sentiment==='negative').forEach(m => {
+    domNeg[m.domain] = (domNeg[m.domain]||0) + 1;
+  });
+  const topNegDom = Object.entries(domNeg).sort((a,b)=>b[1]-a[1])[0];
+  const alertDom = document.getElementById('alertDominio');
+  if (topNegDom && neg > 0) {
+    const pct = (topNegDom[1]/neg*100).toFixed(1);
+    alertDom.textContent = `${topNegDom[0]} concentra el ${pct}% de notas negativas`;
+  } else {
+    alertDom.textContent = 'Sin menciones negativas en el período';
+  }
+
+  // Pico
+  const alertPico = document.getElementById('alertPico');
+  if (maxDay.count > 0) {
+    const nPct = total > 0 ? (neg/total*100).toFixed(1) : 0;
+    alertPico.textContent = `${maxDay.count} menciones el ${maxDay.date ? formatDate(maxDay.date) : '—'} · Negatividad ${nPct}%`;
+  } else {
+    alertPico.textContent = 'Sin picos detectados en el período';
+  }
+
+  // Observación
+  const alertObs = document.getElementById('alertObservacion');
+  const posPct = total > 0 ? pos/total*100 : 0;
+  if (posPct < 5 && total > 0) {
+    alertObs.textContent = `Positivas ≈ ${posPct.toFixed(1)}% · Déficit de narrativa favorable`;
+  } else if (posPct >= 30) {
+    alertObs.textContent = `Positivas ≈ ${posPct.toFixed(1)}% · Narrativa favorable consolidada`;
+  } else {
+    alertObs.textContent = `Positivas ≈ ${posPct.toFixed(1)}% del total`;
+  }
+}
+
+function calcICS(d) {
+  if (!d.length) return {score:0, status:'SIN DATOS'};
+  const total = d.length;
+  const neg = d.filter(m=>m.sentiment==='negative').length;
+  const pos = d.filter(m=>m.sentiment==='positive').length;
+  const pPct = pos/total*100;
+  const nPct = neg/total*100;
+  const volNorm = Math.min(total/80*40, 40);
+  const polar = Math.abs(pPct - nPct);
+  const polarScore = Math.min(polar*1.5, 30);
+  const negScore = Math.min(nPct*3, 30);
+  const score = Math.round(volNorm*0.3 + polarScore*0.3 + negScore*0.4);
+  const clamped = Math.max(0, Math.min(100, score));
+  let status = 'ESTABLE';
+  if (clamped >= 75) status = 'POSIBLE CRISIS';
+  else if (clamped >= 50) status = 'RIESGO';
+  else if (clamped >= 25) status = 'MONITOREAR';
+  return {score: clamped, status};
+}
+
+function formatDate(d) {
+  const m = ['ENE','FEB','MAR','ABR','MAY','JUN','JUL','AGO','SEP','OCT','NOV','DIC'];
+  const parts = d.split('-');
+  return parseInt(parts[2]) + ' ' + m[parseInt(parts[1])-1];
+}
+
+// ══════════════════════════════════════════
+// CHARTS
+// ══════════════════════════════════════════
+function getTimelineData(d) {
+  const dates = [...new Set(d.map(m=>m.date))].sort();
+  return {
+    labels: dates.map(dt => {
+      const p = dt.split('-');
+      const ms = ['e','f','m','a','m','j','j','a','s','o','n','d'];
+      return parseInt(p[2])+ms[parseInt(p[1])-1];
+    }),
+    pos:     dates.map(dt => d.filter(m=>m.date===dt&&m.sentiment==='positive').length),
+    neu:     dates.map(dt => d.filter(m=>m.date===dt&&m.sentiment==='neutral').length),
+    neg:     dates.map(dt => d.filter(m=>m.date===dt&&m.sentiment==='negative').length),
+    rawDates: dates,
+  };
+}
+
+function makeTimelineDatasets(td) {
+  return [
+    {label:'Positivo', data:td.pos, backgroundColor:'rgba(0,255,136,0.7)', borderWidth:0},
+    {label:'Neutro',   data:td.neu, backgroundColor:'rgba(138,163,184,0.4)', borderWidth:0},
+    {label:'Negativo', data:td.neg, backgroundColor:'rgba(255,59,92,0.75)', borderWidth:0},
+  ];
+}
+
+const tlOptions = (onClickFn) => ({
+  responsive:true, maintainAspectRatio:false,
+  plugins:{
+    legend:{display:true,position:'top',align:'end',labels:{color:'#5a7a94',font:{family:'JetBrains Mono',size:9},boxWidth:10,boxHeight:6,padding:12}},
+    tooltip:{backgroundColor:'#0c1118',borderColor:'#1e2d3d',borderWidth:1,titleColor:'#00d4ff',bodyColor:'#8ba3b8',titleFont:{family:'JetBrains Mono',size:11},bodyFont:{family:'JetBrains Mono',size:11}},
+  },
+  onClick: onClickFn,
+  scales:{
+    x:{stacked:true,grid:{color:'rgba(30,45,61,0.5)',drawTicks:false},border:{color:'#1e2d3d'},ticks:{color:'#2a4a5e',font:{family:'JetBrains Mono',size:9},maxRotation:0}},
+    y:{stacked:true,grid:{color:'rgba(30,45,61,0.5)',drawTicks:false},border:{color:'#1e2d3d',dash:[3,3]},ticks:{color:'#2a4a5e',font:{family:'JetBrains Mono',size:9},stepSize:5},beginAtZero:true},
+  }
+});
+
+let tlRawDates = [];
+
+function updateTimelineChart(d) {
+  const td = getTimelineData(d);
+  tlRawDates = td.rawDates;
+  if (tlChart) {
+    tlChart.data.labels = td.labels;
+    tlChart.data.datasets[0].data = td.pos;
+    tlChart.data.datasets[1].data = td.neu;
+    tlChart.data.datasets[2].data = td.neg;
+    tlChart.update();
+  }
+}
+
+function updateDonutChart(neu, neg, pos) {
+  if (donutChart) {
+    donutChart.data.datasets[0].data = [neu, neg, pos];
+    donutChart.update();
+  }
+}
+
+function updatePlatformBars(d) {
+  const cats = {};
+  d.forEach(m => cats[m.category] = (cats[m.category]||0)+1);
+  const sorted = Object.entries(cats).sort((a,b)=>b[1]-a[1]);
+  const max = sorted[0]?.[1]||1;
+  const colors = {'Noticias':'var(--accent)','X (Twitter)':'#1d9bf0','Facebook':'#1877f2','TikTok':'#ff0050','Web':'var(--neutral)','Blogs':'var(--text-faint)'};
+  const container = document.getElementById('platformBars');
+  container.innerHTML = sorted.map(([cat,cnt]) => `
+    <div class="plat-bar">
+      <div class="plat-bar-label">${cat.toUpperCase()}</div>
+      <div class="plat-bar-track"><div class="plat-bar-fill" style="width:${cnt/max*100}%;background:${colors[cat]||'var(--accent)'}"></div></div>
+      <div class="plat-bar-count">${cnt}</div>
+    </div>`).join('');
+
+  const mb = document.getElementById('miniPlatBars');
+  mb.innerHTML = sorted.map(([cat,cnt]) => `
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+      <div style="font-family:var(--font-mono);font-size:10px;color:var(--text-dim);width:80px">${cat.toUpperCase()}</div>
+      <div style="flex:1;height:4px;background:var(--border)"><div style="height:100%;width:${cnt/max*100}%;background:${colors[cat]||'var(--accent)'}"></div></div>
+      <div style="font-family:var(--font-mono);font-size:10px;color:var(--text-dim)">${cnt}</div>
+    </div>`).join('');
+}
+
+function renderDomains(d) {
+  const domCnt = {};
+  const domSent = {};
+  d.forEach(m => {
+    domCnt[m.domain] = (domCnt[m.domain]||0)+1;
+    if (m.sentiment==='negative') domSent[m.domain] = (domSent[m.domain]||0)+1;
+  });
+  const sorted = Object.entries(domCnt).sort((a,b)=>b[1]-a[1]).slice(0,8);
+  const max = sorted[0]?.[1]||1;
+  const icons = {'x.com':['#1d9bf0','𝕏'],'facebook.com':['#1877f2','f'],'tiktok.com':['#ff0050','♪']};
+  const el = document.getElementById('domainsList');
+  if (sorted.length === 0) { el.innerHTML = '<div class="no-results">Sin datos</div>'; return; }
+  el.innerHTML = sorted.map(([dom,cnt],i) => {
+    const hasNeg = (domSent[dom]||0) > 0;
+    const [ic, ic2] = icons[dom]||['var(--text-dim)','◉'];
+    return `<div class="source-item" onclick="openDrawerDomain('${dom}')">
+      <div class="source-rank">${String(i+1).padStart(2,'0')}</div>
+      <div class="source-icon" style="background:#1a1a2e;color:${ic}">${ic2||'◉'}</div>
+      <div class="source-name">${dom}</div>
+      <div class="source-bar-wrap"><div class="source-bar-fill" style="width:${cnt/max*100}%;${hasNeg?'background:var(--red);opacity:0.6':''}"></div></div>
+      <div class="source-count" style="${hasNeg?'color:var(--red)':''}">${cnt}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderFeed(d) {
+  const sorted = [...d].sort((a,b) => (b.date+b.time).localeCompare(a.date+a.time)).slice(0,6);
+  const el = document.getElementById('mentionFeed');
+  if (sorted.length === 0) { el.innerHTML = '<div class="no-results">Sin menciones en el período seleccionado</div>'; return; }
+  const sentCol = {positive:'sent-positive',neutral:'sent-neutral',negative:'sent-negative'};
+  el.innerHTML = sorted.map(m => `
+    <div class="mention-item" onclick="window.open('${m.url}','_blank')">
+      <div class="mention-header">
+        <div class="mention-sentiment ${sentCol[m.sentiment]||'sent-neutral'}"></div>
+        <div class="mention-domain">${m.domain}</div>
+        <div class="mention-time">${formatDate(m.date)} · ${m.time}</div>
+      </div>
+      <div class="mention-title">${m.title||(m.full_text?m.full_text.substring(0,90)+'…':'Sin título')}</div>
+      <div class="mention-preview">${m.content||m.full_text||''}</div>
+      <span class="mention-cat">${m.category||''}</span>
+    </div>`).join('');
+}
+
+// ══════════════════════════════════════════
+// DRAWER
+// ══════════════════════════════════════════
+function openDrawerKw(kwDef) {
+  activeKw = kwDef;
+  document.querySelectorAll('.kw-tag').forEach(t => {
+    t.classList.toggle('active', t.dataset.kw === kwDef.word);
+  });
+  const from = document.getElementById('dateFrom').value;
+  const to   = document.getElementById('dateTo').value;
+  const base = ALL_MENTIONS.filter(m => m.date >= from && m.date <= to);
+  const matches = base.filter(m => matchKw(m, kwDef));
+  document.getElementById('feedFilter').textContent = `· filtro: ${kwDef.word}`;
+  filteredData = matches;
+  updateAll();
+
+  document.getElementById('drawerTitle').textContent = kwDef.word.toUpperCase();
+  document.getElementById('drawerSubtitle').textContent = `${matches.length} menciones contienen este término`;
+  renderDrawerMentions(matches, kwDef.terms);
+  document.getElementById('drawerOverlay').classList.add('open');
+  document.getElementById('drawer').classList.add('open');
+}
+
+function openDrawerDomain(domain) {
+  const from = document.getElementById('dateFrom').value;
+  const to   = document.getElementById('dateTo').value;
+  const matches = ALL_MENTIONS.filter(m => m.domain===domain && m.date>=from && m.date<=to);
+  document.getElementById('drawerTitle').textContent = domain.toUpperCase();
+  document.getElementById('drawerSubtitle').textContent = `${matches.length} menciones de este dominio`;
+  renderDrawerMentions(matches, []);
+  document.getElementById('drawerOverlay').classList.add('open');
+  document.getElementById('drawer').classList.add('open');
+}
+
+function openDrawerDate(dateStr) {
+  const matches = filteredData.filter(m => m.date === dateStr);
+  document.getElementById('drawerTitle').textContent = formatDate(dateStr).toUpperCase();
+  document.getElementById('drawerSubtitle').textContent = `${matches.length} menciones en esta fecha`;
+  renderDrawerMentions(matches, []);
+  document.getElementById('drawerOverlay').classList.add('open');
+  document.getElementById('drawer').classList.add('open');
+}
+
+function renderDrawerMentions(mentions, terms) {
+  const body = document.getElementById('drawerBody');
+  const sentCol = {positive:'var(--green)',neutral:'var(--neutral)',negative:'var(--red)'};
+  if (mentions.length === 0) {
+    body.innerHTML = '<div class="drawer-empty">Sin menciones para este filtro en el período seleccionado</div>';
+    return;
+  }
+  body.innerHTML = mentions.sort((a,b)=>(b.date+b.time).localeCompare(a.date+a.time)).map(m => {
+    let preview = m.content || m.full_text || '';
+    terms.forEach(t => {
+      const re = new RegExp(`(${t.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`, 'gi');
+      preview = preview.replace(re, '<span class="drawer-highlight">$1</span>');
+    });
+    return `<div class="drawer-mention">
+      <div class="drawer-mention-header">
+        <div style="width:6px;height:6px;border-radius:50%;background:${sentCol[m.sentiment]||sentCol.neutral};flex-shrink:0"></div>
+        <div class="drawer-mention-domain">${m.domain}</div>
+        <div class="drawer-mention-time">${formatDate(m.date)} · ${m.time}</div>
+      </div>
+      <div class="drawer-mention-title">${m.title||(m.full_text?m.full_text.substring(0,90)+'…':'Sin título')}</div>
+      <div class="drawer-mention-preview">${preview}</div>
+      <div class="drawer-mention-footer">
+        <span class="mention-cat">${m.category}</span>
+        <a class="drawer-mention-link" href="${m.url}" target="_blank" onclick="event.stopPropagation()">↗ ABRIR FUENTE</a>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function closeDrawer() {
+  document.getElementById('drawerOverlay').classList.remove('open');
+  document.getElementById('drawer').classList.remove('open');
+}
+
+// ══════════════════════════════════════════
+// MODAL
+// ══════════════════════════════════════════
+function openModal() {
+  document.getElementById('modalOverlay').classList.add('open');
+  setTimeout(() => {
+    const td = getTimelineData(filteredData);
+    tlRawDates = td.rawDates;
+    if (modalChart) { modalChart.destroy(); modalChart = null; }
+    const ctx = document.getElementById('timelineModalChart').getContext('2d');
+    modalChart = new Chart(ctx, {
+      type:'bar',
+      data:{ labels:td.labels, datasets:makeTimelineDatasets(td) },
+      options: tlOptions((evt, elems) => {
+        if (elems.length > 0) {
+          const idx = elems[0].index;
+          openDrawerDate(td.rawDates[idx]);
+        }
+      })
+    });
+  }, 50);
+}
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+}
+document.getElementById('modalOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+// ══════════════════════════════════════════
+// CALC TOOLTIP
+// ══════════════════════════════════════════
+const CALCS = {
+  ics: {
+    title: 'ÍNDICE CLIMA SOCIAL (ICS)',
+    formula: 'ICS = Vol(30%) + Polar(30%) + Neg(40%)',
+    body: 'Combina: volumen normalizado sobre histórico, índice de polarización (|%Pos − %Neg|), y peso de menciones negativas. Escala 0–100. Estable <25 · Monitorear 25-50 · Riesgo 50-75 · Posible Crisis >75'
+  },
+  total: {
+    title: 'MENCIONES TOTALES',
+    formula: 'COUNT(*) WHERE date BETWEEN :from AND :to',
+    body: 'Conteo directo de registros en la vista consolidada para el período seleccionado. Incluye todas las fuentes: Noticias, Social, Web.'
+  },
+  neutral: {
+    title: 'MENCIONES NEUTRAS',
+    formula: 'COUNT(*) WHERE sentiment = "neutral"',
+    body: 'Menciones sin carga emocional positiva ni negativa. Generalmente notas informativas, coberturas de agenda y contenido descriptivo.'
+  },
+  negativo: {
+    title: 'MENCIONES NEGATIVAS',
+    formula: 'COUNT(*) WHERE sentiment = "negative"',
+    body: 'Menciones con carga emocional adversa al sujeto. Incluye críticas, denuncias, reclamos y contenido desfavorable.'
+  },
+  positivo: {
+    title: 'MENCIONES POSITIVAS',
+    formula: 'COUNT(*) WHERE sentiment = "positive"',
+    body: 'Menciones favorables al sujeto.'
+  },
+  polarizacion: {
+    title: 'ÍNDICE DE POLARIZACIÓN',
+    formula: 'Polar = |(%Positivo) − (%Negativo)|',
+    body: 'Mide la distancia entre el extremo positivo y negativo del discurso. Un valor alto indica debate polarizado. Un valor bajo con mayoría neutral indica indiferencia o cobertura fáctica.'
+  },
+  timeline: {
+    title: 'EVOLUCIÓN TEMPORAL',
+    formula: 'GROUP BY mention_date, sentiment · ORDER BY date ASC',
+    body: 'Gráfico de barras apiladas por fecha. Permite detectar picos anómalos, aceleración de conversación y patrones de coordinación temporal. CLICK en una barra para ver las menciones de ese día.'
+  },
+  aceleracion: {
+    title: 'ACELERACIÓN DE CONVERSACIÓN',
+    formula: 'Δ% = (sem_actual − sem_anterior) / sem_anterior × 100',
+    body: 'Compara el volumen de la semana más reciente vs la semana anterior. Indica si la conversación está creciendo (+), decreciendo (−) o estable. Valores >50% activan alerta de pico.'
+  },
+};
+
+document.querySelectorAll('.info-badge').forEach(badge => {
+  badge.addEventListener('mouseenter', (e) => {
+    const key = badge.dataset.calc;
+    const calc = CALCS[key];
+    if (!calc) return;
+    const tt = document.getElementById('calcTooltip');
+    tt.innerHTML = `
+      <div class="calc-tooltip-title">// ${calc.title}</div>
+      <div class="calc-tooltip-formula">${calc.formula}</div>
+      <div class="calc-tooltip-body">${calc.body}</div>`;
+    const rect = badge.getBoundingClientRect();
+    tt.style.left = Math.min(rect.left, window.innerWidth-320)+'px';
+    tt.style.top  = (rect.bottom+8)+'px';
+    tt.classList.add('visible');
+  });
+  badge.addEventListener('mouseleave', () => {
+    document.getElementById('calcTooltip').classList.remove('visible');
+  });
+});
+
+// ══════════════════════════════════════════
+// KEYWORDS
+// ══════════════════════════════════════════
+function renderKeywords() {
+  const el = document.getElementById('keywords');
+  if (!el) return; // guard — elemento removido del DOM
+  if (KEYWORDS_DEF.length === 0) {
+    el.innerHTML = '<span style="font-family:var(--font-mono);font-size:10px;color:var(--text-faint)">Sin datos de términos</span>';
+    return;
+  }
+  el.innerHTML = KEYWORDS_DEF.map(k => {
+    const cnt = ALL_MENTIONS.filter(m => matchKw(m,k)).length;
+    const sz = Math.max(10, Math.min(15, 9 + cnt * 0.2));
+    return `<span class="kw-tag" data-kw="${k.word}" style="font-size:${sz}px;color:${k.col}" title="${cnt} menciones" onclick="openDrawerKw(KEYWORDS_DEF.find(x=>x.word==='${k.word}'))">${k.word} <span style="opacity:0.5;font-size:9px">${cnt}</span></span>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════
+document.getElementById('timestamp').textContent = '// ' + new Date().toLocaleString('es-AR',{dateStyle:'short',timeStyle:'short'});
+
+// Timeline (inicializa vacío)
+const emptyTd = {labels:[], pos:[], neu:[], neg:[], rawDates:[]};
+tlRawDates = [];
+const tlCtx = document.getElementById('timelineChart').getContext('2d');
+tlChart = new Chart(tlCtx, {
+  type:'bar',
+  data:{ labels:[], datasets:makeTimelineDatasets(emptyTd) },
+  options: tlOptions((evt, elems) => {
+    if (elems.length > 0) openDrawerDate(tlRawDates[elems[0].index]);
+  })
+});
+
+// Donut (inicializa vacío)
+const doCtx = document.getElementById('donutChart').getContext('2d');
+donutChart = new Chart(doCtx, {
+  type:'doughnut',
+  data:{ datasets:[{ data:[0,0,0], backgroundColor:['rgba(138,163,184,0.5)','rgba(255,59,92,0.7)','rgba(0,255,136,0.7)'], borderColor:['#8ba3b8','#ff3b5c','#00ff88'], borderWidth:1, hoverOffset:4 }] },
+  options:{ responsive:true, maintainAspectRatio:true, cutout:'72%', plugins:{ legend:{display:false}, tooltip:{backgroundColor:'#0c1118',borderColor:'#1e2d3d',borderWidth:1,titleColor:'#00d4ff',bodyColor:'#8ba3b8',titleFont:{family:'JetBrains Mono',size:11},bodyFont:{family:'JetBrains Mono',size:11}, callbacks:{label:ctx=>` ${['Neutral','Negativo','Positivo'][ctx.dataIndex]}: ${ctx.raw}`} } } }
+});
+
+// Cargar datos desde la API
+loadData();
+
+// ══════════════════════════════════════════
+// PAGE 2 — LISTENING / AMPLIFICACIÓN
+// ══════════════════════════════════════════
+
+// ── State ────────────────────────────────
+let p2Initialized = false;
+let p2Data        = null;
+let lpInfData     = [];
+let lpGroups      = [];
+let lpSortKey     = 'reach';
+let lpActiveFilter03 = 'all';
+let lpModalSortKey = 'reach', lpModalSortDir = -1;
+let lpModalPlatFilter = 'all', lpModalDataset = null;
+let lpDonutChart  = null;
+
+// ── Platform constants ────────────────────
+const LP_PLAT = {
+  'facebook.com':  { chip:'fb', label:'Facebook',  color:'#1877f2', icon:'f' },
+  'tiktok.com':    { chip:'tt', label:'TikTok',    color:'#cccccc', icon:'♪' },
+  'instagram.com': { chip:'ig', label:'Instagram', color:'#e1306c', icon:'◈' },
+  'x.com':         { chip:'x',  label:'X',         color:'#1da1f2', icon:'✦' },
+};
+const LP_PLATFORMS = [
+  { key:'facebook.com',  label:'Facebook',    color:'#1877f2', colorDim:'rgba(24,119,242,0.15)', icon:'f' },
+  { key:'tiktok.com',    label:'TikTok',      color:'#cccccc', colorDim:'rgba(200,200,200,0.10)', icon:'♪' },
+  { key:'instagram.com', label:'Instagram',   color:'#e1306c', colorDim:'rgba(225,48,108,0.15)', icon:'◈' },
+  { key:'x.com',         label:'X / Twitter', color:'#1da1f2', colorDim:'rgba(29,161,242,0.12)', icon:'✦' },
+];
+const LP_FILTERS03 = [
+  { key:'all',          label:'TODAS',    icon:'·', color:'#00d4ff', dot:'#00d4ff' },
+  { key:'facebook.com', label:'FACEBOOK', icon:'f', color:'#1877f2', dot:'#1877f2' },
+  { key:'tiktok.com',   label:'TIKTOK',   icon:'♪', color:'#cccccc', dot:'#cccccc' },
+  { key:'instagram.com',label:'INSTAGRAM',icon:'◈', color:'#e1306c', dot:'#e1306c' },
+  { key:'x.com',        label:'X',        icon:'✦', color:'#1da1f2', dot:'#1da1f2' },
+];
+
+// ── Helpers ───────────────────────────────
+function lpFmtK(n) {
+  if (!n || n === 0) return '0';
+  if (n >= 1e6) return (n/1e6).toFixed(1)+'M';
+  if (n >= 1e3) return (n/1e3).toFixed(1)+'k';
+  return String(Math.round(n));
+}
+function lpFmtNx(v) { return v >= 10 ? v.toFixed(1)+'x' : v.toFixed(2)+'x'; }
+function lpEffClass(v) { return v >= 2 ? 'high' : v >= 0.5 ? 'mid' : 'low'; }
+function lpInterpLabel(v) {
+  if (v >= 2)   return ['VIRAL',  'interp-high'];
+  if (v >= 0.5) return ['NORMAL', 'interp-mid'];
+  return             ['BAJO',   'interp-low'];
+}
+function lpPlatChip(domain) {
+  const p = LP_PLAT[domain] || { chip:'', label:domain, color:'#aaa', icon:'·' };
+  return `<span class="lp-plat-chip ${p.chip}">${p.icon} ${p.label}</span>`;
+}
+function lpSentStr(s) {
+  if (s === 1  || s === 'positive') return 'positive';
+  if (s === -1 || s === 'negative') return 'negative';
+  return 'neutral';
+}
+
+// ── Init & Load ───────────────────────────
+function p2Init() {
+  lpInitDonut();
+  p2LoadData();
+}
+
+async function p2LoadData() {
+  const from = document.getElementById('dateFrom').value;
+  const to   = document.getElementById('dateTo').value;
+  try {
+    const resp = await fetch(`${CONFIG.apiUrl}/api/listening/summary?project_id=${CONFIG.projectId}&dateFrom=${from}&dateTo=${to}`, {
+      headers: { Accept: 'application/json', 'ngrok-skip-browser-warning': 'true' },
+      mode: 'cors',
+    });
+    if (!resp.ok) throw new Error(`HTTP ${resp.status} — ${resp.statusText}`);
+    p2Data = await resp.json();
+    lpMapData();
+    lpRenderAll();
+  } catch(err) {
+    console.error('p2LoadData error:', err);
+    document.getElementById('infList').innerHTML =
+      `<div style="color:var(--red);font-family:var(--font-mono);font-size:10px;padding:14px">// Error: ${err.message}</div>`;
+  }
+}
+
+function lpMapData() {
+  if (!p2Data) return;
+  const inf = p2Data.influencers || {};
+  const rawProfiles = inf.profiles || [];
+  const totalMentions = inf.total_mentions || 1;
+  // Map API fields to expected format
+  lpInfData = rawProfiles.map(p => ({
+    name:      p.profile_name || p.name || '—',
+    domain:    p.domain || '',
+    reach:     p.reach     || 0,
+    followers: p.followers || 0,
+    mentions:  p.mentions  || 0,
+    eff:       p.eff       != null ? parseFloat(p.eff) : (p.followers > 0 ? p.reach / p.followers : 0),
+    sov:       totalMentions > 0 ? ((p.mentions || 0) / totalMentions * 100) : 0,
+  }));
+  // Build platform groups from profiles
+  lpGroups = LP_PLATFORMS.map(pl => {
+    const rows = lpInfData.filter(r => r.domain === pl.key);
+    return { ...pl, rows, reach: rows.reduce((s,r)=>s+r.reach,0), mentions: rows.reduce((s,r)=>s+r.mentions,0), perfiles: rows.length };
+  }).filter(g => g.perfiles > 0);
+}
+
+const LP_NO_DATA_HTML = `<div style="padding:24px 0;text-align:center;font-family:var(--font-mono);font-size:10px;color:var(--text-faint);letter-spacing:2px">// SIN DATOS PARA EL PERÍODO SELECCIONADO</div>`;
+
+function lpRenderAll() {
+  if (!p2Data) return;
+  lpRenderInd01();
+  lpRenderInd02();
+  lpBuildFilters03(); lpRenderCards03();
+  lpRenderInd04();
+  lpRenderInd05();
+}
+
+// ── IND.01 ───────────────────────────────
+function lpInd01SortBy(key) {
+  lpSortKey = key;
+  ['sortReach2','sortFollowers2','sortSov2','sortEff2'].forEach(id => {
+    document.getElementById(id)?.classList.remove('active');
+  });
+  const map = { reach:'sortReach2', followers:'sortFollowers2', sov:'sortSov2', eff:'sortEff2' };
+  document.getElementById(map[key])?.classList.add('active');
+  lpRenderInd01();
+}
+
+function lpRenderInd01() {
+  if (lpInfData.length === 0) {
+    document.getElementById('icaNumber').innerHTML = `—<span class="ica-pct">%</span>`;
+    document.getElementById('icaPin').style.left = '0%';
+    const st = document.getElementById('icaStatus');
+    st.className = 'ica-status'; st.textContent = 'SIN DATOS';
+    document.getElementById('infList').innerHTML = LP_NO_DATA_HTML;
+    document.getElementById('othersLabel2').textContent = '—';
+    document.getElementById('insight01').innerHTML = '// Sin datos de influencers para el período seleccionado.';
+    return;
+  }
+  const sorted = [...lpInfData].sort((a,b) => b[lpSortKey] - a[lpSortKey]);
+  const TOP_N = 3;
+  const top  = sorted.slice(0, TOP_N);
+  const rest = sorted.slice(TOP_N);
+  const totalReach = lpInfData.reduce((s,r)=>s+r.reach,0) || 1;
+  const topReach   = top.reduce((s,r)=>s+r.reach,0);
+  const ica = Math.round(topReach / totalReach * 100);
+
+  document.getElementById('icaNumber').innerHTML = `${ica}<span class="ica-pct">%</span>`;
+  document.getElementById('icaPin').style.left = ica + '%';
+  let stCls = 'status-baja', stTxt = '◎ AMPLIFICACIÓN DISTRIBUIDA';
+  if (ica >= 85)      { stCls='status-alta';  stTxt='⚠ CONCENTRACIÓN CRÍTICA'; }
+  else if (ica >= 66) { stCls='status-alta';  stTxt='⚠ ALTA DEPENDENCIA'; }
+  else if (ica >= 33) { stCls='status-media'; stTxt='◈ CONCENTRACIÓN MEDIA'; }
+  const st = document.getElementById('icaStatus');
+  st.className = 'ica-status ' + stCls; st.textContent = stTxt;
+
+  const maxVal  = sorted[0]?.[lpSortKey] || 1;
+  const colors  = ['var(--accent)','var(--yellow)','var(--green)'];
+  document.getElementById('infList').innerHTML = top.map((r,i) => {
+    const p   = LP_PLAT[r.domain] || {};
+    const pct = (r[lpSortKey] / maxVal * 100).toFixed(1);
+    const valFmt = lpSortKey==='reach'     ? lpFmtK(r.reach)
+                 : lpSortKey==='followers' ? lpFmtK(r.followers)
+                 : lpSortKey==='sov'       ? r.sov.toFixed(1)+'%'
+                 : r.eff.toFixed(2)+'x';
+    return `<div class="inf-item">
+      <div class="inf-rank">${i+1}</div>
+      <div class="inf-icon" style="background:${p.color||'#333'}">${p.icon||'·'}</div>
+      <div class="inf-info">
+        <div class="inf-name">${r.name}</div>
+        <div class="inf-sub">${r.domain} · ${lpFmtK(r.followers)} seguidores · SoV ${r.sov.toFixed(1)}%</div>
+      </div>
+      <div class="inf-bar-track"><div class="inf-bar-fill" style="width:${pct}%;background:${colors[i]||'var(--text-dim)'};"></div></div>
+      <div class="inf-val" style="color:${colors[i]||'var(--text-dim)'}">${valFmt}</div>
+    </div>`;
+  }).join('');
+
+  const restReach = rest.reduce((s,r)=>s+r.reach,0);
+  const restPct   = totalReach > 0 ? Math.round(restReach/totalReach*100) : 0;
+  document.getElementById('othersLabel2').textContent =
+    `otros ${rest.length} perfiles · reach combinado ~${restPct}% del total`;
+
+  document.getElementById('insight01').innerHTML =
+    `⚡ ICA <span class="hl-y">${ica}%</span> — concentración <span class="hl-y">${ica>=66?'ALTA':'MEDIA'}</span> · ` +
+    `Top 3: <span class="hl">${top.map(r=>r.name).join(', ')}</span> · ` +
+    `${lpInfData.length} perfiles · reach total <span class="hl-a">${lpFmtK(totalReach)}</span>`;
+
+  lpModalDataset = lpInfData;
+}
+
+// ── IND.02 ───────────────────────────────
+function lpInitDonut() {
+  const ctx = document.getElementById('socialDonut').getContext('2d');
+  lpDonutChart = new Chart(ctx, {
+    type:'doughnut',
+    data:{ datasets:[{ data:[1], backgroundColor:['rgba(0,212,255,0.15)'], borderColor:['#1e2d3d'], borderWidth:1 }] },
+    options:{
+      cutout:'68%', responsive:true, maintainAspectRatio:true,
+      plugins:{ legend:{display:false}, tooltip:{enabled:false} },
+      onClick:(_,els) => { if(els.length && lpGroups[els[0].index]) lpOpenModal02(lpGroups[els[0].index]); }
+    }
+  });
+}
+
+function lpRenderInd02() {
+  if (lpInfData.length === 0) {
+    document.getElementById('centerVal').textContent = '—';
+    document.getElementById('socList').innerHTML = LP_NO_DATA_HTML;
+    document.getElementById('insight02').innerHTML = '// Sin datos para el período seleccionado.';
+    if (lpDonutChart) { lpDonutChart.data.datasets[0].data=[1]; lpDonutChart.data.datasets[0].backgroundColor=['rgba(30,45,61,0.5)']; lpDonutChart.data.labels=[]; lpDonutChart.update(); }
+    return;
+  }
+  const totalReach02 = lpGroups.reduce((s,g)=>s+g.reach,0) || 1;
+  const totalMentions = lpInfData.reduce((s,r)=>s+r.mentions,0);
+
+  if (lpDonutChart && lpGroups.length > 0) {
+    lpDonutChart.data.labels                      = lpGroups.map(g=>g.label);
+    lpDonutChart.data.datasets[0].data            = lpGroups.map(g=>g.reach);
+    lpDonutChart.data.datasets[0].backgroundColor = lpGroups.map(g=>g.color);
+    lpDonutChart.data.datasets[0].borderColor     = ['#0c1118'];
+    lpDonutChart.data.datasets[0].borderWidth     = 3;
+    lpDonutChart.options.plugins.tooltip = {
+      callbacks:{ label: c => {
+        const g = lpGroups[c.dataIndex];
+        return [` Reach: ${lpFmtK(g.reach)} (${(g.reach/totalReach02*100).toFixed(1)}%)`,` Perfiles: ${g.perfiles}`,` Menciones: ${g.mentions}`];
+      }},
+      backgroundColor:'#111820', borderColor:'#1e2d3d', borderWidth:1,
+      titleColor:'#d4e4f0', bodyColor:'#5a7a94',
+      titleFont:{family:'JetBrains Mono',size:11}, bodyFont:{family:'JetBrains Mono',size:10}, padding:10,
+    };
+    lpDonutChart.update();
+  }
+  document.getElementById('centerVal').textContent = totalMentions;
+
+  document.getElementById('socList').innerHTML = lpGroups.map((g,i) => {
+    const pct = (g.reach/totalReach02*100).toFixed(1);
+    return `<div class="soc-item" onclick="lpOpenModal02(lpGroups[${i}])" style="--current-color:${g.color}">
+      <div class="soc-dot" style="background:${g.color}"></div>
+      <div class="soc-name">${g.label}</div>
+      <div class="soc-perfiles">${g.perfiles} perfiles</div>
+      <div class="soc-reach">${lpFmtK(g.reach)}</div>
+      <div class="soc-pct" style="color:${g.color}">${pct}%</div>
+      <div class="soc-arrow">→</div>
+    </div>`;
+  }).join('');
+
+  const fb = lpGroups.find(g=>g.key==='facebook.com');
+  const tk = lpGroups.find(g=>g.key==='tiktok.com');
+  const fbEff = fb && fb.rows.reduce((s,r)=>s+r.followers,0) > 0 ? (fb.reach/fb.rows.reduce((s,r)=>s+r.followers,0)).toFixed(2) : '—';
+  const tkEff = tk && tk.rows.reduce((s,r)=>s+r.followers,0) > 0 ? (tk.reach/tk.rows.reduce((s,r)=>s+r.followers,0)).toFixed(2) : '—';
+  document.getElementById('insight02').innerHTML =
+    `ℹ Reach por plataforma. ` +
+    (fb ? `Eficiencia FB: <span class="hl-a">${fbEff}x</span> · ` : '') +
+    (tk ? `TK: <span class="hl-a">${tkEff}x</span>` : '');
+}
+
+// ── IND.03 ───────────────────────────────
+function lpBuildFilters03() {
+  const bar = document.getElementById('filterBar03');
+  if (!bar) return;
+  bar.innerHTML = `<div class="filter-label">RED:</div>`;
+  LP_FILTERS03.forEach(f => {
+    const btn = document.createElement('button');
+    btn.className = 'filter-btn' + (f.key===lpActiveFilter03?' active':'');
+    btn.style.setProperty('--current-color', f.color);
+    btn.innerHTML = `<span class="fb-dot" style="background:${f.dot}"></span>${f.label}`;
+    btn.onclick = () => { lpActiveFilter03=f.key; lpBuildFilters03(); lpRenderCards03(); };
+    bar.appendChild(btn);
+  });
+}
+
+function lpRenderCards03() {
+  if (lpInfData.length === 0) {
+    document.getElementById('cardsGrid03').innerHTML = LP_NO_DATA_HTML;
+    document.getElementById('insight03').innerHTML = '// Sin datos para el período seleccionado.';
+    return;
+  }
+  const pool   = lpActiveFilter03==='all' ? lpInfData : lpInfData.filter(r=>r.domain===lpActiveFilter03);
+  const sorted = [...pool].sort((a,b)=>b.eff-a.eff);
+  const top5   = sorted.slice(0,5);
+  while (top5.length < 5) top5.push(null);
+  const maxEff = top5[0]?.eff || 1;
+
+  const grid = document.getElementById('cardsGrid03');
+  if (!grid) return;
+  grid.innerHTML = top5.map((r,i) => {
+    if (!r) return `<div class="eff-card" style="opacity:0.15;pointer-events:none;"></div>`;
+    const f = LP_FILTERS03.find(f=>f.key===r.domain) || { label:r.domain, icon:'●', color:'#5a7a94', dot:'#5a7a94' };
+    const ec = lpEffClass(r.eff);
+    const [ilabel, iclass] = lpInterpLabel(r.eff);
+    const barPct   = (r.eff/maxEff*100).toFixed(1);
+    const barColor = r.eff>=2?'var(--green)':r.eff>=0.5?'var(--yellow)':'var(--red)';
+    const rankCls  = i===0?'rank1':i===1?'rank2':i===2?'rank3':'';
+    return `<div class="eff-card ${rankCls}">
+      <div class="eff-platform">
+        <div class="eff-icon" style="background:${f.color}22;color:${f.color}">${f.icon}</div>
+        <div class="eff-platform-name" style="color:${f.color}">${f.label}</div>
+        <div class="eff-rank">#${i+1}</div>
+      </div>
+      <div class="eff-name" title="${r.name}">${r.name}</div>
+      <div class="eff-score ${ec}">${lpFmtNx(r.eff)}</div>
+      <div class="eff-bar-wrap"><div class="eff-bar-fill" style="width:${barPct}%;background:${barColor}"></div></div>
+      <div class="eff-sub">${lpFmtK(r.reach)} reach / ${lpFmtK(r.followers)} followers</div>
+      <div class="eff-sub">${r.mentions} mención${r.mentions!==1?'es':''}</div>
+      <div><span class="eff-interp ${iclass}">${ilabel}</span></div>
+    </div>`;
+  }).join('');
+
+  if (sorted.length) {
+    const viral  = sorted.filter(r=>r.eff>=2).length;
+    const normal = sorted.filter(r=>r.eff>=0.5&&r.eff<2).length;
+    const bajo   = sorted.filter(r=>r.eff<0.5).length;
+    const avg    = sorted.reduce((s,r)=>s+r.eff,0)/sorted.length;
+    const fLabel = lpActiveFilter03==='all' ? 'el conjunto' : (LP_FILTERS03.find(f=>f.key===lpActiveFilter03)?.label||lpActiveFilter03);
+    document.getElementById('insight03').innerHTML =
+      `⚡ <span class="hl">${sorted[0].name}</span> lidera con <span class="hl">${lpFmtNx(sorted[0].eff)}</span> en ${fLabel} · ` +
+      `Distribución: <span class="hl">${viral} viral</span> / <span class="hl-y">${normal} normal</span> / ${bajo} bajo · ` +
+      `Promedio: <span class="hl-y">${avg.toFixed(2)}x</span>`;
+  }
+}
+
+// ── IND.04 ───────────────────────────────
+function lpRenderInd04() {
+  if (!p2Data) return;
+  const ops       = p2Data.operations || {};
+  const stats     = ops.stats     || {};
+  const opList    = ops.list      || [];
+  const recurring = ops.recurring || [];
+
+  document.getElementById('s04-ops').textContent   = stats.total_ops        || '0';
+  document.getElementById('s04-media').textContent = stats.total_media       || '0';
+  document.getElementById('s04-recur').textContent = stats.recurring_count   || '0';
+  document.getElementById('s04-max').textContent   = stats.max_reach_size    || '0';
+  document.getElementById('s04-maxsub').textContent = stats.max_reach_narrative
+    ? `medios · ${stats.max_reach_narrative}` : 'medios';
+
+  const recurDomains = new Set(recurring.map(r=>r.domain));
+  const sentClass = s => { const ss=lpSentStr(s); return ss==='negative'?'s-negative':ss==='positive'?'s-positive':'s-neutral'; };
+  const sentLabel = s => { const ss=lpSentStr(s); return ss==='negative'?'NEGATIVO':ss==='positive'?'POSITIVO':'NEUTRAL'; };
+
+  document.getElementById('opList04').innerHTML = opList.map(op => {
+    const sz     = op.group_size || op.size || 2;
+    const szCls  = sz>=3?'size3':'size2';
+    const szSub  = sz>=3?'s3':'s2';
+    const domains = Array.isArray(op.domains) ? op.domains
+                  : (op.medios ? op.medios.split(',').map(s=>s.trim()) : []);
+    const dateStr = op.date ? (typeof op.date==='string' ? op.date.slice(0,10) : op.date) : '—';
+    return `<div class="op-card ${szCls}">
+      <div class="op-top">
+        <div class="op-size ${szSub}"><div class="op-size-num">${sz}</div><div class="op-size-label">MEDIOS</div></div>
+        <div class="op-meta">
+          <div class="op-title" title="${(op.title||'').replace(/"/g,'&quot;')}">${op.title||'(Sin título)'}</div>
+          <div class="op-date">${dateStr} · ${op.category||'—'}</div>
+        </div>
+        <div class="op-badges">
+          <span class="sentiment-badge ${sentClass(op.sentiment)}">${sentLabel(op.sentiment)}</span>
+          <span class="category-badge">${op.category||'—'}</span>
+        </div>
+      </div>
+      <div class="op-domains">
+        ${domains.map(dm => {
+          const rec = recurDomains.has(dm.trim());
+          return `<span class="domain-tag${rec?' recurrent':''}" ${rec?'title="Operador recurrente"':''}>${dm.trim()}${rec?' ★':''}</span>`;
+        }).join('')}
+      </div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('recGrid04').innerHTML = recurring.map(r =>
+    `<div class="rec-row">
+      <div class="rec-domain">${r.domain}</div>
+      <div><div class="rec-count">${r.ops}</div><div class="rec-label">ops.</div></div>
+      <div class="rec-ops">${r.narrativas||'—'}</div>
+    </div>`
+  ).join('');
+
+  const recNames = recurring.map(r=>`<span class="hl-r">${r.domain}</span>`).join(' y ');
+  document.getElementById('insight04').innerHTML =
+    `⚡ Se detectaron <span class="hl-r">${stats.total_ops||0} posibles coordinaciones</span> de ` +
+    `<span class="hl-a">${stats.total_media||0} actores</span>` +
+    (recNames ? ` · ${recNames} aparecen en 2+ operaciones distintas` : '') + '.';
+}
+
+// ── IND.05 ───────────────────────────────
+function lpRenderInd05() {
+  if (!p2Data) return;
+  const rd     = p2Data.reach_daily || {};
+  const totals = rd.totals || {};
+  const peaks  = rd.peaks  || {};
+  const series = rd.series || [];
+
+  document.getElementById('i05-total').textContent      = lpFmtK(totals.total     || 0);
+  const from = document.getElementById('dateFrom').value;
+  const to   = document.getElementById('dateTo').value;
+  document.getElementById('i05-period').textContent     = `${from} – ${to} · ${totals.dias_total||0} días`;
+
+  const pctS = totals.pct_social    || (totals.total > 0 ? totals.social/totals.total*100    : 0);
+  const pctN = totals.pct_nonsocial || (totals.total > 0 ? totals.nonsocial/totals.total*100 : 0);
+
+  document.getElementById('i05-social').textContent          = lpFmtK(totals.social    || 0);
+  document.getElementById('i05-social-pct').textContent      = `${(+pctS).toFixed(1)}% del total`;
+  document.getElementById('i05-social-bar').style.width      = pctS + '%';
+  document.getElementById('i05-nonsocial').textContent       = lpFmtK(totals.nonsocial || 0);
+  document.getElementById('i05-nonsocial-pct').textContent   = `${(+pctN).toFixed(1)}% del total`;
+  document.getElementById('i05-nonsocial-bar').style.width   = pctN + '%';
+  document.getElementById('i05-stacked-s').style.width       = pctS + '%';
+  document.getElementById('i05-stacked-slabel').textContent  = `SOCIAL ${(+pctS).toFixed(1)}%`;
+  document.getElementById('i05-stacked-nlabel').textContent  = `NO SOCIAL ${(+pctN).toFixed(1)}%`;
+  document.getElementById('i05-pk-sval').textContent         = lpFmtK(peaks.social_val    || 0);
+  document.getElementById('i05-pk-sdate').textContent        = peaks.social_date    || '—';
+  document.getElementById('i05-pk-nval').textContent         = lpFmtK(peaks.nonsocial_val || 0);
+  document.getElementById('i05-pk-ndate').textContent        = peaks.nonsocial_date || '—';
+  document.getElementById('i05-dias').textContent            = totals.dias_activos  || '—';
+  document.getElementById('i05-dias-total').textContent      = `de ${totals.dias_total||'—'} totales`;
+
+  document.getElementById('insight05').innerHTML =
+    `⚡ <span class="hl-p">Social</span> ${(+pctS).toFixed(1)}% · ` +
+    `<span class="hl-a">No-Social</span> ${(+pctN).toFixed(1)}% · ` +
+    `Pico social: <span class="hl-y">${peaks.social_date||'—'}</span> ${lpFmtK(peaks.social_val||0)} · ` +
+    `Pico no-social: <span class="hl-y">${peaks.nonsocial_date||'—'}</span> ${lpFmtK(peaks.nonsocial_val||0)}`;
+
+  lpRenderSparkline(series);
+}
+
+function lpRenderSparkline(series) {
+  if (!series || series.length === 0) return;
+  const canvas = document.getElementById('spark05');
+  if (!canvas) return;
+  const dpr = window.devicePixelRatio || 1;
+  const W = canvas.parentElement.clientWidth || 400;
+  const H = 72;
+  canvas.width  = W * dpr; canvas.height = H * dpr;
+  canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  const PAD  = { l:4, r:4, t:8, b:18 };
+  const cW   = W - PAD.l - PAD.r;
+  const cH   = H - PAD.t - PAD.b;
+  const soc  = series.map(d=>d.s);
+  const nonS = series.map(d=>d.n);
+  const maxV = Math.max(...soc, ...nonS) || 1;
+  const xStep = cW / Math.max(series.length - 1, 1);
+  const toX = i => PAD.l + i * xStep;
+  const toY = v => PAD.t + cH - (v / maxV) * cH;
+
+  ctx.strokeStyle='rgba(30,45,61,0.8)'; ctx.lineWidth=1;
+  [0.25,0.5,0.75,1].forEach(f => {
+    const y = PAD.t + cH - f*cH;
+    ctx.beginPath(); ctx.moveTo(PAD.l,y); ctx.lineTo(W-PAD.r,y); ctx.stroke();
+  });
+  // Area no-social
+  ctx.beginPath(); ctx.moveTo(toX(0),toY(nonS[0]));
+  nonS.forEach((v,i)=>ctx.lineTo(toX(i),toY(v)));
+  ctx.lineTo(toX(series.length-1),PAD.t+cH); ctx.lineTo(toX(0),PAD.t+cH); ctx.closePath();
+  ctx.fillStyle='rgba(0,212,255,0.12)'; ctx.fill();
+  // Area social
+  ctx.beginPath(); ctx.moveTo(toX(0),toY(soc[0]));
+  soc.forEach((v,i)=>ctx.lineTo(toX(i),toY(v)));
+  ctx.lineTo(toX(series.length-1),PAD.t+cH); ctx.lineTo(toX(0),PAD.t+cH); ctx.closePath();
+  ctx.fillStyle='rgba(176,96,255,0.14)'; ctx.fill();
+  // Línea no-social
+  ctx.beginPath(); ctx.moveTo(toX(0),toY(nonS[0]));
+  nonS.forEach((v,i)=>{ if(i>0) ctx.lineTo(toX(i),toY(v)); });
+  ctx.strokeStyle='#00d4ff'; ctx.lineWidth=1.5; ctx.stroke();
+  // Línea social
+  ctx.beginPath(); ctx.moveTo(toX(0),toY(soc[0]));
+  soc.forEach((v,i)=>{ if(i>0) ctx.lineTo(toX(i),toY(v)); });
+  ctx.strokeStyle='#b060ff'; ctx.lineWidth=1.5; ctx.stroke();
+  // Picos
+  const pkS=soc.indexOf(Math.max(...soc));
+  const pkN=nonS.indexOf(Math.max(...nonS));
+  ctx.beginPath(); ctx.arc(toX(pkS),toY(soc[pkS]),3,0,Math.PI*2); ctx.fillStyle='#b060ff'; ctx.fill();
+  ctx.beginPath(); ctx.arc(toX(pkN),toY(nonS[pkN]),3,0,Math.PI*2); ctx.fillStyle='#00d4ff'; ctx.fill();
+  // Labels X
+  const every = Math.ceil(series.length/5);
+  ctx.fillStyle='#2a4a5e'; ctx.textAlign='center';
+  ctx.font=`7px JetBrains Mono, monospace`;
+  series.forEach((d,i) => { if(i%every===0||i===series.length-1) ctx.fillText(d.d, toX(i), H-3); });
+}
+
+// ── Modal ─────────────────────────────────
+function lpOpenModal01() {
+  lpModalDataset = lpInfData;
+  document.getElementById('lpModalTitle').textContent = 'TODOS LOS INFLUENCERS — FUENTES AMPLIFICADORAS';
+  document.getElementById('lpModalTitle').style.color = 'var(--accent)';
+  lpModalSortKey='reach'; lpModalSortDir=-1; lpModalPlatFilter='all';
+  document.querySelectorAll('#p2ModalOverlay .lp-plat-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelector('#p2ModalOverlay .lp-plat-btn.all')?.classList.add('active');
+  document.querySelector('#p2ModalOverlay .lp-modal-plat-filter').style.display='';
+  document.getElementById('p2ModalOverlay').classList.add('open');
+  lpRenderModal();
+}
+function lpOpenModal02(group) {
+  lpModalDataset = group.rows;
+  document.getElementById('lpModalTitle').textContent = `${group.icon} ${group.label.toUpperCase()} — PERFILES`;
+  document.getElementById('lpModalTitle').style.color = group.color;
+  lpModalSortKey='reach'; lpModalSortDir=-1; lpModalPlatFilter='all';
+  document.querySelector('#p2ModalOverlay .lp-modal-plat-filter').style.display='none';
+  document.getElementById('p2ModalOverlay').classList.add('open');
+  lpRenderModal();
+}
+function lpCloseModal() {
+  document.getElementById('p2ModalOverlay').classList.remove('open');
+  document.querySelector('#p2ModalOverlay .lp-modal-plat-filter').style.display='';
+}
+function lpModalSort(key, btn) {
+  if (lpModalSortKey===key) lpModalSortDir*=-1;
+  else { lpModalSortKey=key; lpModalSortDir=-1; }
+  document.querySelectorAll('#p2ModalOverlay .lp-modal-sort-btn').forEach(b=>b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  lpRenderModal();
+}
+function lpFilterPlat(plat, btn) {
+  lpModalPlatFilter = plat;
+  document.querySelectorAll('#p2ModalOverlay .lp-plat-btn').forEach(b=>b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  if (!lpModalDataset) lpModalDataset = lpInfData;
+  lpRenderModal();
+}
+function lpRenderModal() {
+  let rows = lpModalDataset ? [...lpModalDataset] : [...lpInfData];
+  if (lpModalPlatFilter !== 'all') rows = rows.filter(r=>r.domain===lpModalPlatFilter);
+  rows.sort((a,b) => {
+    if (lpModalSortKey==='name') return a.name.localeCompare(b.name) * lpModalSortDir;
+    if (lpModalSortKey==='plat') return a.domain.localeCompare(b.domain) * lpModalSortDir;
+    return ((a[lpModalSortKey]||0) - (b[lpModalSortKey]||0)) * lpModalSortDir;
+  });
+  const totalR = rows.reduce((s,r)=>s+r.reach, 0);
+  const avgR   = rows.length ? totalR/rows.length : 0;
+  const avgEff = rows.length ? rows.reduce((s,r)=>s+r.eff,0)/rows.length : 0;
+  document.getElementById('lpModalSubtitle').textContent = `${rows.length} perfiles · reach total ${lpFmtK(totalR)}`;
+  document.getElementById('lpModalTotalReach').textContent = lpFmtK(totalR);
+  document.getElementById('lpModalCount').textContent      = rows.length;
+  document.getElementById('lpModalAvgReach').textContent   = lpFmtK(Math.round(avgR));
+  document.getElementById('lpModalAvgEff').textContent     = avgEff.toFixed(2)+'x';
+  document.getElementById('lpModalTbody').innerHTML = rows.map((r,i) => {
+    const effCls = r.eff>=2?'lp-eff-high':r.eff>=0.5?'lp-eff-mid':'lp-eff-low';
+    return `<tr>
+      <td class="col-mob-hide" style="color:var(--text-faint);width:32px;text-align:center">${i+1}</td>
+      <td style="color:var(--text-main);max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${r.name}">${r.name}</td>
+      <td>${lpPlatChip(r.domain)}</td>
+      <td style="color:var(--accent);text-align:right">${lpFmtK(r.reach)}</td>
+      <td style="color:var(--text-dim);text-align:right">${lpFmtK(r.followers)}</td>
+      <td style="text-align:right"><span class="${effCls}" style="font-family:var(--font-mono);font-size:10px;font-weight:bold">${r.eff.toFixed(1)}x</span></td>
+      <td class="col-mob-hide" style="color:var(--text-dim);text-align:right">${r.sov.toFixed(2)}%</td>
+      <td class="col-mob-hide" style="color:var(--text-dim);text-align:center">${r.mentions}</td>
+    </tr>`;
+  }).join('');
+}
+
+// ── Narrativa Dominante ────────────────────────────────────────
+let NARRATIVA_DATA = null;
+
+// ── Briefing IA ────────────────────────────────────────────────
+let BRIEFING_DATA = null;
+
+async function loadBriefing(force = false) {
+  const from = document.getElementById('dateFrom').value;
+  const to   = document.getElementById('dateTo').value;
+  if (!force && BRIEFING_DATA && BRIEFING_DATA.from_date === from && BRIEFING_DATA.to_date === to) return;
+
+  const label = document.getElementById('briefingDateLabel');
+  const body  = document.getElementById('briefingBody');
+  if (label) label.textContent = `${from} → ${to}`;
+  if (body)  body.innerHTML = '<div style="font-family:var(--font-mono);font-size:11px;color:#8ba3b8">Generando análisis...</div>';
+
+  try {
+    const forceParam = force ? '&force=1' : '';
+    const url = `${CONFIG.apiUrl}/api/v1/briefing?project_id=${CONFIG.projectId}&from_date=${from}&to_date=${to}${forceParam}`;
+    const resp = await fetch(url, {
+      headers: { Accept: 'application/json', 'ngrok-skip-browser-warning': 'true' },
+      mode: 'cors',
+    });
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    BRIEFING_DATA = await resp.json();
+    renderBriefing(BRIEFING_DATA);
+  } catch(e) {
+    console.warn('Briefing no disponible:', e);
+    if (body) body.innerHTML = '<div style="font-family:var(--font-mono);font-size:10px;color:#5a7a94">Análisis no disponible</div>';
+  }
+}
+
+function renderBriefing(data) {
+  const body = document.getElementById('briefingBody');
+  if (!body) return;
+  const esc = s => (s||'').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const b = data.briefing || {};
+  const score = b.ics_score !== undefined ? b.ics_score : (b.clima_social_score !== undefined ? b.clima_social_score : '—');
+  const label = esc(b.ics_label || b.clima_social_label || '');
+  const sent  = esc(b.sentimiento || '');
+  const narr  = esc(b.narrativa_dominante || '');
+  body.innerHTML =
+    `<p><strong>ICS:</strong> ${score} — ${label}</p>` +
+    `<p>${sent}</p>` +
+    `<p>${narr}</p>` +
+    `<span class="briefing-link" onclick="openBriefingModal()">[ VER ANÁLISIS COMPLETO → ]</span>`;
+}
+
+function openBriefingModal() {
+  if (!BRIEFING_DATA) return;
+  const esc = s => (s||'').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  document.getElementById('briefingModalDateRange').textContent = `${BRIEFING_DATA.from_date} → ${BRIEFING_DATA.to_date}`;
+
+  const b = BRIEFING_DATA.briefing || {};
+  const bIcsScore = b.ics_score !== undefined ? b.ics_score : (b.clima_social_score !== undefined ? b.clima_social_score : '—');
+  const bIcsLabel = esc(b.ics_label || b.clima_social_label || '');
+  document.getElementById('briefingModalBriefing').innerHTML =
+    `<p><strong>ICS:</strong> ${bIcsScore} — ${bIcsLabel}</p>` +
+    `<p><strong>Sentimiento:</strong> ${esc(b.sentimiento)}</p>` +
+    `<p><strong>Polarización:</strong> ${b.polarizacion_pct}%</p>` +
+    `<p><strong>Narrativa dominante:</strong> ${esc(b.narrativa_dominante)}</p>`;
+
+  const r = BRIEFING_DATA.riesgo_reputacional || {};
+  document.getElementById('briefingModalRiesgo').innerHTML =
+    `<p><strong>Señales de crisis:</strong> ${esc(r.senales_crisis)}</p>` +
+    `<p><strong>Métricas de alerta:</strong> ${esc(r.metricas_alerta)}</p>` +
+    `<p><strong>Tendencia polarización:</strong> ${esc(r.tendencia_polarizacion)}</p>`;
+
+  const ef = BRIEFING_DATA.eficiencia_amplificacion || {};
+  document.getElementById('briefingModalEficiencia').innerHTML =
+    `<p><strong>ICA:</strong> ${ef.ica_pct}% — ${esc(ef.ica_interpretacion)}</p>` +
+    `<p><strong>Red mayor alcance:</strong> ${esc(ef.red_mayor_alcance)}</p>` +
+    `<p><strong>Análisis Nx:</strong> ${esc(ef.nx_analisis)}</p>`;
+
+  const n = BRIEFING_DATA.narrativas_temas || {};
+  document.getElementById('briefingModalNarrativas').innerHTML =
+    `<p><strong>Narrativas dominantes:</strong> ${esc(n.narrativas_dominantes)}</p>` +
+    `<p><strong>Temas articuladores:</strong> ${esc(n.temas_articuladores)}</p>` +
+    `<p><strong>Impactos políticos:</strong> ${esc(n.impactos_politicos)}</p>`;
+
+  const prios = BRIEFING_DATA.prioridades_accion || [];
+  document.getElementById('briefingModalPrioridades').innerHTML = prios.map(p => {
+    const col = p.urgencia === 'alta' ? '#e05555' : p.urgencia === 'media' ? '#e0a855' : '#55a8e0';
+    return `<li><span style="color:${col};font-weight:bold">[${esc(p.urgencia).toUpperCase()}]</span> ` +
+           `<strong>${esc(p.accion)}</strong> — ${esc(p.objetivo)} ` +
+           `<span style="color:#8ba3b8">(${esc(p.metrica)})</span></li>`;
+  }).join('');
+
+  document.getElementById('briefingModal').classList.add('open');
+}
+
+function closeBriefingModal() {
+  document.getElementById('briefingModal').classList.remove('open');
+}
+document.getElementById('briefingModal').addEventListener('click', function(e) {
+  if (e.target === this) closeBriefingModal();
+});
+
+async function loadNarrativa() {
+  try {
+    const url = `${CONFIG.apiUrl}/api/v1/narrative?project_id=${CONFIG.projectId}`;
+    const resp = await fetch(url, {
+      headers: {
+        Accept: 'application/json',
+        'ngrok-skip-browser-warning': 'true'
+      },
+      mode: 'cors',
+    });
+    if (!resp.ok) return;
+    NARRATIVA_DATA = await resp.json();
+    renderNarrativa();
+  } catch(e) {
+    console.warn('Narrativa no disponible:', e);
+  }
+}
+
+function narrativaColor(pos, neg, neu) {
+  const total = pos + neg + neu || 1;
+  if (neg / total > 0.40) return '#ff3b5c';
+  if (pos / total > 0.40) return '#00ff88';
+  if (neg / total > 0.20) return '#8ba3b8';
+  return '#00d4ff';
+}
+
+function buildCloud(terms, maxShow, from, to) {
+  if (!terms.length) return '<span style="color:var(--text-dim);font-size:9px">Sin datos</span>';
+  const maxCount = terms[0].count;
+  const visible = terms.slice(0, maxShow);
+  return visible.map(t => {
+    const size  = 9 + Math.round((t.count / maxCount) * 7); // 9-16px
+    const color = narrativaColor(t.pos, t.neg, t.neu);
+    const safeTerm = t.term.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+    const click = from ? ` onclick="openTermMentions('${safeTerm}','${from}','${to}')"` : '';
+    const hint  = from ? ' · click para ver menciones' : '';
+    return `<span class="nterm" style="font-size:${size}px;color:${color};cursor:${from?'pointer':'default'}" title="${t.count} menciones${hint}"${click}>${t.term}</span>`;
+  }).join('');
+}
+
+async function openTermMentions(term, from, to) {
+  document.getElementById('narrativaModal').classList.remove('open');
+  document.getElementById('drawerTitle').textContent = term.toUpperCase();
+  document.getElementById('drawerSubtitle').textContent = 'Cargando menciones…';
+  document.getElementById('drawerOverlay').classList.add('open');
+  document.getElementById('drawer').classList.add('open');
+  try {
+    const url = `${CONFIG.apiUrl}/api/v1/term_mentions?project_id=${CONFIG.projectId}&term=${encodeURIComponent(term)}&from_date=${from}&to_date=${to}`;
+    const resp = await fetch(url, { headers: { Accept: 'application/json', 'ngrok-skip-browser-warning': 'true' }, mode: 'cors' });
+    const data = await resp.json();
+    const ids = new Set((data.mention_ids || []).map(String));
+    const matches = ALL_MENTIONS.filter(m => m.date >= from && m.date <= to && ids.has(String(m.mention_id)));
+    document.getElementById('drawerSubtitle').textContent =
+      `${matches.length} mención${matches.length !== 1 ? 'es' : ''} · ${from} → ${to}`;
+    renderDrawerMentions(matches, [term]);
+  } catch(e) {
+    document.getElementById('drawerSubtitle').textContent = 'Error cargando menciones';
+  }
+}
+
+function renderNarrativa() {
+  const body = document.getElementById('narrativaBody');
+  if (!NARRATIVA_DATA || !NARRATIVA_DATA.weeks) {
+    body.innerHTML = '<div style="font-family:var(--font-mono);font-size:9px;color:var(--text-dim)">Sin datos NLP</div>';
+    return;
+  }
+  body.innerHTML = NARRATIVA_DATA.weeks.map((w, i) => `
+    <div class="narrativa-week">
+      <div class="narrativa-week-hdr">
+        <span class="narrativa-week-label">${w.label.toUpperCase()}</span>
+        <span class="narrativa-week-dates">${w.from} / ${w.to}</span>
+      </div>
+      <div class="narrativa-cloud">${buildCloud(w.terms, 16, w.from, w.to)}</div>
+      ${w.terms.length > 16 ? `<span class="narrativa-more" onclick="openNarrativaModal(${i})">+ ver todos (${w.terms.length})</span>` : ''}
+    </div>
+  `).join('');
+}
+
+function openNarrativaModal(weekIdx) {
+  const modal     = document.getElementById('narrativaModal');
+  const modalBody = document.getElementById('narrativaModalBody');
+  modalBody.innerHTML = NARRATIVA_DATA.weeks.map((w, i) => {
+    const active = i === weekIdx ? 'border-left:2px solid var(--accent);padding-left:10px;' : '';
+    return `
+      <div class="narrativa-modal-week" style="${active}">
+        <div style="font-family:var(--font-mono);font-size:9px;color:var(--text-dim);margin-bottom:8px">
+          ${w.label.toUpperCase()} &nbsp; <span style="color:var(--accent)">${w.from} → ${w.to}</span>
+        </div>
+        <div>${buildCloud(w.terms, 40, w.from, w.to)}</div>
+      </div>`;
+  }).join('');
+  modal.classList.add('open');
+}
+
+function closeNarrativaModal() {
+  document.getElementById('narrativaModal').classList.remove('open');
+}
+document.getElementById('narrativaModal').addEventListener('click', function(e) {
+  if (e.target === this) closeNarrativaModal();
+});
+</script>
+</body>
+</html>

@@ -1417,6 +1417,13 @@ const CONFIG = {
 };
 
 // ══════════════════════════════════════════
+// SENTIMENT HELPER — prioriza custom_sentiment sobre Brand24
+// ══════════════════════════════════════════
+function getSentiment(m) {
+  return m.custom_sentiment || m.sentiment;
+}
+
+// ══════════════════════════════════════════
 // DATA (poblado por loadData())
 // ══════════════════════════════════════════
 let ALL_MENTIONS = [];
@@ -1567,9 +1574,9 @@ function matchKw(m, kwDef) {
 function updateAll() {
   const d = filteredData;
   const total = d.length;
-  const pos = d.filter(m=>m.sentiment==='positive').length;
-  const neg = d.filter(m=>m.sentiment==='negative').length;
-  const neu = d.filter(m=>m.sentiment==='neutral').length;
+  const pos = d.filter(m=>getSentiment(m)==='positive').length;
+  const neg = d.filter(m=>getSentiment(m)==='negative').length;
+  const neu = d.filter(m=>getSentiment(m)==='neutral').length;
 
   document.getElementById('filteredCount').textContent = total;
 
@@ -1686,7 +1693,7 @@ function updateAll() {
 function updateAlerts(d, neg, pos, total, maxDay) {
   // Dominio crítico (mayor concentración negativa)
   const domNeg = {};
-  d.filter(m=>m.sentiment==='negative').forEach(m => {
+  d.filter(m=>getSentiment(m)==='negative').forEach(m => {
     domNeg[m.domain] = (domNeg[m.domain]||0) + 1;
   });
   const topNegDom = Object.entries(domNeg).sort((a,b)=>b[1]-a[1])[0];
@@ -1722,8 +1729,8 @@ function updateAlerts(d, neg, pos, total, maxDay) {
 function calcICS(d) {
   if (!d.length) return {score:0, status:'SIN DATOS'};
   const total = d.length;
-  const neg = d.filter(m=>m.sentiment==='negative').length;
-  const pos = d.filter(m=>m.sentiment==='positive').length;
+  const neg = d.filter(m=>getSentiment(m)==='negative').length;
+  const pos = d.filter(m=>getSentiment(m)==='positive').length;
   const pPct = pos/total*100;
   const nPct = neg/total*100;
   const volNorm = Math.min(total/80*40, 40);
@@ -1756,9 +1763,9 @@ function getTimelineData(d) {
       const ms = ['e','f','m','a','m','j','j','a','s','o','n','d'];
       return parseInt(p[2])+ms[parseInt(p[1])-1];
     }),
-    pos:     dates.map(dt => d.filter(m=>m.date===dt&&m.sentiment==='positive').length),
-    neu:     dates.map(dt => d.filter(m=>m.date===dt&&m.sentiment==='neutral').length),
-    neg:     dates.map(dt => d.filter(m=>m.date===dt&&m.sentiment==='negative').length),
+    pos:     dates.map(dt => d.filter(m=>m.date===dt&&getSentiment(m)==='positive').length),
+    neu:     dates.map(dt => d.filter(m=>m.date===dt&&getSentiment(m)==='neutral').length),
+    neg:     dates.map(dt => d.filter(m=>m.date===dt&&getSentiment(m)==='negative').length),
     rawDates: dates,
   };
 }
@@ -1833,7 +1840,7 @@ function renderDomains(d) {
   const domSent = {};
   d.forEach(m => {
     domCnt[m.domain] = (domCnt[m.domain]||0)+1;
-    if (m.sentiment==='negative') domSent[m.domain] = (domSent[m.domain]||0)+1;
+    if (getSentiment(m)==='negative') domSent[m.domain] = (domSent[m.domain]||0)+1;
   });
   const sorted = Object.entries(domCnt).sort((a,b)=>b[1]-a[1]).slice(0,8);
   const max = sorted[0]?.[1]||1;
@@ -1861,7 +1868,7 @@ function renderFeed(d) {
   el.innerHTML = sorted.map(m => `
     <div class="mention-item" onclick="window.open('${m.url}','_blank')">
       <div class="mention-header">
-        <div class="mention-sentiment ${sentCol[m.sentiment]||'sent-neutral'}"></div>
+        <div class="mention-sentiment ${sentCol[getSentiment(m)]||'sent-neutral'}"></div>
         <div class="mention-domain">${m.domain}</div>
         <div class="mention-time">${formatDate(m.date)} · ${m.time}</div>
       </div>
@@ -1929,7 +1936,7 @@ function renderDrawerMentions(mentions, terms) {
     });
     return `<div class="drawer-mention">
       <div class="drawer-mention-header">
-        <div style="width:6px;height:6px;border-radius:50%;background:${sentCol[m.sentiment]||sentCol.neutral};flex-shrink:0"></div>
+        <div style="width:6px;height:6px;border-radius:50%;background:${sentCol[getSentiment(m)]||sentCol.neutral};flex-shrink:0"></div>
         <div class="drawer-mention-domain">${m.domain}</div>
         <div class="drawer-mention-time">${formatDate(m.date)} · ${m.time}</div>
       </div>

@@ -147,7 +147,7 @@
     padding:20px; display:flex; flex-direction:column; align-items:center; justify-content:center;
     position:relative; overflow:hidden;
   }
-  .ics-panel::before { content:'ICS'; position:absolute; font-family:var(--font-display); font-size:120px; color:rgba(0,212,255,0.03); top:50%; left:50%; transform:translate(-50%,-50%); letter-spacing:10px; }
+  .ics-panel::before { content:'TM'; position:absolute; font-family:var(--font-display); font-size:120px; color:rgba(0,212,255,0.03); top:50%; left:50%; transform:translate(-50%,-50%); letter-spacing:10px; }
   .ics-label { font-family:var(--font-mono); font-size:10px; color:var(--text-dim); letter-spacing:3px; margin-bottom:6px; }
   .ics-number { font-family:var(--font-display); font-size:88px; line-height:1; color:var(--yellow); text-shadow:0 0 30px rgba(255,214,0,0.5); letter-spacing:4px; transition:all 0.5s; }
   .ics-status { font-family:var(--font-display); font-size:20px; letter-spacing:6px; color:var(--yellow); margin-top:4px; }
@@ -155,21 +155,21 @@
   .ics-bar-track { height:6px; background:var(--border); position:relative; overflow:visible; }
   .ics-bar-segments { position:absolute; inset:0; display:flex; }
   .ics-bar-segments span { flex:1; height:100%; }
-  .seg-estable { background:var(--green); opacity:0.7; }
-  .seg-tension  { background:var(--yellow); opacity:0.7; }
-  .seg-riesgo   { background:#ff8c00; opacity:0.7; }
-  .seg-crisis   { background:var(--red); opacity:0.7; }
+  .seg-monitorear { background:var(--red); opacity:0.7; }
+  .seg-estable    { background:var(--yellow); opacity:0.7; }
+  .seg-favorable  { background:var(--green); opacity:0.7; }
   .ics-bar-indicator { position:absolute; top:-4px; width:2px; height:14px; background:#fff; transform:translateX(-50%); box-shadow:0 0 8px #fff; transition:left 0.5s; }
   .ics-scale { display:flex; justify-content:space-between; margin-top:6px; }
   .ics-scale span { font-family:var(--font-mono); font-size:9px; color:var(--text-faint); }
   .semaforo { display:flex; gap:6px; margin-top:14px; }
   .sem-item { flex:1; height:4px; }
   .sem-item.active { height:6px; }
-  .sem-estable { background:var(--green); opacity:0.4; }
-  .sem-tension { background:var(--yellow); opacity:0.7; }
-  .sem-riesgo  { background:#ff8c00; opacity:0.3; }
-  .sem-crisis  { background:var(--red); opacity:0.3; }
-  .sem-tension.active { opacity:1; box-shadow:0 0 10px var(--yellow); }
+  .sem-monitorear { background:var(--red); opacity:0.3; }
+  .sem-estable { background:var(--yellow); opacity:0.3; }
+  .sem-favorable { background:var(--green); opacity:0.3; }
+  .sem-monitorear.active { opacity:1; box-shadow:0 0 10px var(--red); }
+  .sem-estable.active { opacity:1; box-shadow:0 0 10px var(--yellow); }
+  .sem-favorable.active { opacity:1; box-shadow:0 0 10px var(--green); }
 
   /* KPI CARDS */
   .kpi-row { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; }
@@ -871,25 +871,23 @@
   <div class="ics-row">
     <div class="ics-panel">
       <div style="position:absolute;top:10px;right:10px" class="info-badge" data-calc="ics">?</div>
-      <div class="ics-label">// ÍNDICE CLIMA SOCIAL</div>
+      <div class="ics-label">// TEMPERATURA DE MENCIONES</div>
       <div class="ics-number" id="icsNumber">—</div>
       <div class="ics-status" id="icsStatus">CARGANDO</div>
       <div class="semaforo">
-        <div class="sem-item sem-estable" id="sem0"></div>
-        <div class="sem-item sem-tension" id="sem1"></div>
-        <div class="sem-item sem-riesgo" id="sem2"></div>
-        <div class="sem-item sem-crisis" id="sem3"></div>
+        <div class="sem-item sem-monitorear" id="sem0"></div>
+        <div class="sem-item sem-estable" id="sem1"></div>
+        <div class="sem-item sem-favorable" id="sem2"></div>
       </div>
       <div class="ics-bar-container">
         <div class="ics-bar-track">
           <div class="ics-bar-segments">
-            <span class="seg-estable"></span><span class="seg-tension"></span>
-            <span class="seg-riesgo"></span><span class="seg-crisis"></span>
+            <span class="seg-monitorear" style="flex:45"></span><span class="seg-estable" style="flex:10"></span><span class="seg-favorable" style="flex:45"></span>
           </div>
           <div class="ics-bar-indicator" id="icsIndicator" style="left:0%"></div>
         </div>
         <div class="ics-scale">
-          <span>0 ESTABLE</span><span>25</span><span>50 RIESGO</span><span>75</span><span>100 POSIBLE CRISIS</span>
+          <span>-100 MONITOREAR</span><span>-10</span><span>0</span><span>+10</span><span>+100 FAVORABLE</span>
         </div>
       </div>
     </div>
@@ -959,7 +957,7 @@
           <canvas id="donutChart"></canvas>
           <div class="donut-center">
             <div class="donut-center-val" id="donutCenter">—</div>
-            <div class="donut-center-label">ICS</div>
+            <div class="donut-center-label">MENCIONES</div>
           </div>
         </div>
         <div class="donut-legend">
@@ -1606,19 +1604,33 @@ function updateAll() {
     document.getElementById('kpiPosPct').textContent = '—';
   }
 
-  // ICS
-  const ics = calcICS(d);
-  document.getElementById('icsNumber').textContent = ics.score;
-  document.getElementById('icsStatus').textContent = ics.status;
-  document.getElementById('icsIndicator').style.left = ics.score + '%';
-  document.getElementById('donutCenter').textContent = ics.score;
+  // TM (Temperatura de Menciones)
+  const tm = calcTM(d);
+  const tmSign = tm.score > 0 ? '+' : '';
+  document.getElementById('icsNumber').textContent = tmSign + tm.score;
+  document.getElementById('icsStatus').textContent = tm.status;
+  document.getElementById('icsIndicator').style.left = ((tm.score + 100) / 2) + '%';
+  document.getElementById('donutCenter').textContent = total;
+
+  // Color dinámico del número según semáforo
+  const icsNumEl = document.getElementById('icsNumber');
+  const icsStatEl = document.getElementById('icsStatus');
+  if (tm.score > 10) {
+    icsNumEl.style.color = 'var(--green)'; icsNumEl.style.textShadow = '0 0 30px rgba(0,255,136,0.5)';
+    icsStatEl.style.color = 'var(--green)';
+  } else if (tm.score < -10) {
+    icsNumEl.style.color = 'var(--red)'; icsNumEl.style.textShadow = '0 0 30px rgba(255,59,48,0.5)';
+    icsStatEl.style.color = 'var(--red)';
+  } else {
+    icsNumEl.style.color = 'var(--yellow)'; icsNumEl.style.textShadow = '0 0 30px rgba(255,214,0,0.5)';
+    icsStatEl.style.color = 'var(--yellow)';
+  }
 
   // Semáforo
-  ['sem0','sem1','sem2','sem3'].forEach(id => document.getElementById(id).classList.remove('active'));
-  if (ics.score < 25)      document.getElementById('sem0').classList.add('active');
-  else if (ics.score < 50) document.getElementById('sem1').classList.add('active');
-  else if (ics.score < 75) document.getElementById('sem2').classList.add('active');
-  else                     document.getElementById('sem3').classList.add('active');
+  ['sem0','sem1','sem2'].forEach(id => document.getElementById(id).classList.remove('active'));
+  if (tm.score < -10)     document.getElementById('sem0').classList.add('active');
+  else if (tm.score <= 10) document.getElementById('sem1').classList.add('active');
+  else                     document.getElementById('sem2').classList.add('active');
 
   // Polarización
   const pPct = total > 0 ? pos/total*100 : 0;
@@ -1726,24 +1738,16 @@ function updateAlerts(d, neg, pos, total, maxDay) {
   }
 }
 
-function calcICS(d) {
+function calcTM(d) {
   if (!d.length) return {score:0, status:'SIN DATOS'};
   const total = d.length;
-  const neg = d.filter(m=>getSentiment(m)==='negative').length;
-  const pos = d.filter(m=>getSentiment(m)==='positive').length;
-  const pPct = pos/total*100;
-  const nPct = neg/total*100;
-  const volNorm = Math.min(total/80*100, 100);
-  const polar = Math.abs(pPct - nPct);
-  const polarScore = Math.min(polar*1.5, 100);
-  const negScore = Math.min(nPct*3, 100);
-  const score = Math.round(volNorm*0.3 + polarScore*0.3 + negScore*0.4);
-  const clamped = Math.max(0, Math.min(100, score));
+  const pos = d.filter(m => m.custom_sentiment === 'positive').length;
+  const neg = d.filter(m => m.custom_sentiment === 'negative').length;
+  const score = parseFloat(((pos - neg) / total * 100).toFixed(1));
   let status = 'ESTABLE';
-  if (clamped >= 75) status = 'POSIBLE CRISIS';
-  else if (clamped >= 50) status = 'RIESGO';
-  else if (clamped >= 25) status = 'MONITOREAR';
-  return {score: clamped, status};
+  if (score > 10) status = 'FAVORABLE';
+  else if (score < -10) status = 'MONITOREAR';
+  return {score, status};
 }
 
 function formatDate(d) {
@@ -1989,9 +1993,9 @@ document.getElementById('modalOverlay').addEventListener('click', function(e) {
 // ══════════════════════════════════════════
 const CALCS = {
   ics: {
-    title: 'ÍNDICE CLIMA SOCIAL (ICS)',
-    formula: 'ICS = Vol(30%) + Polar(30%) + Neg(40%)',
-    body: 'Combina: volumen normalizado sobre histórico, índice de polarización (|%Pos − %Neg|), y peso de menciones negativas. Escala 0–100. Estable <25 · Monitorear 25-50 · Riesgo 50-75 · Posible Crisis >75'
+    title: 'TEMPERATURA DE MENCIONES (TM)',
+    formula: 'TM = ((Positivas − Negativas) / Total) × 100',
+    body: 'Mide el balance neto del sentimiento propio. Escala −100 a +100. Favorable >+10 · Estable −10 a +10 · Monitorear <−10'
   },
   total: {
     title: 'MENCIONES TOTALES',

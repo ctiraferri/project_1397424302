@@ -1632,21 +1632,21 @@ function updateAll() {
   else if (tm.score <= 10) document.getElementById('sem1').classList.add('active');
   else                     document.getElementById('sem2').classList.add('active');
 
-  // Polarización
+  // Polarización = 2 × min(pos%, neg%) — mide enfrentamiento real de bandos
   const pPct = total > 0 ? pos/total*100 : 0;
   const nPct = total > 0 ? neg/total*100 : 0;
-  const polar = Math.abs(pPct - nPct).toFixed(2);
+  const polar = (2 * Math.min(pPct, nPct)).toFixed(1);
   document.getElementById('polarVal').textContent = total > 0 ? polar : '—';
 
   let polarDesc = '';
   if (total === 0) {
     polarDesc = 'Sin datos';
-  } else if (parseFloat(polar) >= 20) {
+  } else if (parseFloat(polar) >= 40) {
     polarDesc = 'Alta polarización · Debate intenso';
-  } else if (parseFloat(polar) >= 10) {
+  } else if (parseFloat(polar) >= 20) {
     polarDesc = 'Polarización moderada';
   } else {
-    polarDesc = 'Tensión baja · Narrativa principalmente neutra';
+    polarDesc = 'Tensión baja · Sin enfrentamiento de bandos';
   }
   document.getElementById('polarDesc').textContent = polarDesc;
 
@@ -2019,8 +2019,8 @@ const CALCS = {
   },
   polarizacion: {
     title: 'ÍNDICE DE POLARIZACIÓN',
-    formula: 'Polar = |(%Positivo) − (%Negativo)|',
-    body: 'Mide la distancia entre el extremo positivo y negativo del discurso. Un valor alto indica debate polarizado. Un valor bajo con mayoría neutral indica indiferencia o cobertura fáctica.'
+    formula: 'Polar = 2 × min(%Pos, %Neg)',
+    body: 'Mide el enfrentamiento real entre bandos. Escala 0–100. Alta (≥40): debate intenso con ambos polos fuertes. Moderada (20–40): tensión creciente. Baja (<20): domina un solo polo o narrativa neutra.'
   },
   timeline: {
     title: 'EVOLUCIÓN TEMPORAL',

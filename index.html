@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- force redeploy -->
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -712,6 +713,33 @@
   #page2 .peak-val.a { color:var(--accent); }
   #page2 .peak-date  { font-family:var(--font-mono); font-size:9px; color:var(--text-faint); margin-top:2px; }
   /* Modal P2 */
+  #p2QualModalOverlay { display:none; position:fixed; inset:0; z-index:810; background:rgba(7,10,15,0.88); backdrop-filter:blur(4px); align-items:flex-start; justify-content:center; padding:40px 20px; overflow-y:auto; }
+  #p2QualModalOverlay.open { display:flex; }
+  #p2QualModalOverlay .lp-modal { background:var(--bg-panel); border:1px solid var(--border); border-top:2px solid var(--accent); width:100%; max-width:920px; max-height:90vh; display:flex; flex-direction:column; }
+  #p2QualModalOverlay .lp-modal-header { display:flex; align-items:center; justify-content:space-between; padding:14px 20px; border-bottom:1px solid var(--border-dim); flex-shrink:0; }
+  #p2QualModalOverlay .lp-modal-title { font-family:var(--font-mono); font-size:10px; letter-spacing:3px; }
+  #p2QualModalOverlay .lp-modal-subtitle { font-family:var(--font-mono); font-size:9px; color:var(--text-dim); margin-top:3px; }
+  #p2QualModalOverlay .lp-modal-close { width:28px; height:28px; background:var(--bg-card); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:14px; color:var(--text-dim); cursor:pointer; transition:all 0.15s; }
+  #p2QualModalOverlay .lp-modal-close:hover { border-color:var(--red); color:var(--red); }
+  #p2QualModalOverlay .lp-modal-body { overflow-y:auto; flex:1; }
+  #p2QualModalOverlay .lp-modal-body::-webkit-scrollbar { width:4px; }
+  #p2QualModalOverlay .lp-modal-body::-webkit-scrollbar-track { background:var(--bg-deep); }
+  #p2QualModalOverlay .lp-modal-body::-webkit-scrollbar-thumb { background:var(--accent); }
+  #p2QualModalOverlay .lp-modal-footer { padding:10px 20px; border-top:1px solid var(--border-dim); flex-shrink:0; display:flex; align-items:center; gap:12px; font-family:var(--font-mono); font-size:9px; color:var(--text-dim); flex-wrap:wrap; }
+  #p2QualModalOverlay .lp-modal-footer .lp-modal-stat-val { color:var(--accent); }
+  #p2QualModalOverlay .p2q-card { padding:14px 20px; border-bottom:1px solid var(--border-dim); transition:background 0.1s; }
+  #p2QualModalOverlay .p2q-card:hover { background:var(--bg-hover); }
+  #p2QualModalOverlay .p2q-header { display:flex; align-items:center; gap:8px; margin-bottom:6px; }
+  #p2QualModalOverlay .p2q-sent-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+  #p2QualModalOverlay .p2q-domain { font-family:var(--font-mono); font-size:9px; color:var(--text-dim); letter-spacing:1px; }
+  #p2QualModalOverlay .p2q-date { font-family:var(--font-mono); font-size:9px; color:var(--text-faint); margin-left:auto; }
+  #p2QualModalOverlay .p2q-title { font-family:var(--font-mono); font-size:11px; color:var(--text-main); margin-bottom:4px; line-height:1.4; }
+  #p2QualModalOverlay .p2q-content { font-family:var(--font-mono); font-size:10px; color:var(--text-dim); line-height:1.5; margin-bottom:8px; max-height:60px; overflow:hidden; }
+  #p2QualModalOverlay .p2q-footer { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+  #p2QualModalOverlay .p2q-stat { font-family:var(--font-mono); font-size:9px; color:var(--text-faint); letter-spacing:1px; }
+  #p2QualModalOverlay .p2q-stat b { color:var(--accent); font-weight:normal; }
+  #p2QualModalOverlay .p2q-link { margin-left:auto; font-family:var(--font-mono); font-size:9px; color:var(--accent); text-decoration:none; letter-spacing:1px; }
+  #p2QualModalOverlay .p2q-link:hover { color:#fff; }
   #p2ModalOverlay { display:none; position:fixed; inset:0; z-index:800; background:rgba(7,10,15,0.88); backdrop-filter:blur(4px); align-items:flex-start; justify-content:center; padding:40px 20px; overflow-y:auto; }
   #p2ModalOverlay.open { display:flex; }
   #p2ModalOverlay .lp-modal { background:var(--bg-panel); border:1px solid var(--border); border-top:2px solid var(--accent); width:100%; max-width:860px; max-height:90vh; display:flex; flex-direction:column; }
@@ -769,6 +797,8 @@
     /* Fix min-width:auto cascade on nested grids */
     #page2 .listening-grid > *,
     #page2 .row-1 > *,
+    #page2 .row-2 > *,
+    #page2 .row-2-right > *,
     #page2 .row-3 > * { min-width: 0; }
     #page2 .panel { overflow: hidden; }
     /* Contain inf-others-label */
@@ -780,6 +810,187 @@
     #page2 .inf-bar-track { width: 60px; }
     #page2 .page-title { font-size: 20px; letter-spacing: 2px; }
   }
+  /* ── PAGE 3: MEDIOS (shares page2 panel styles) ───────── */
+  #page3 .listening-grid { position:relative; z-index:1; display:grid; grid-template-columns:1fr; gap:16px; }
+  #page3 .row-1 { display:grid; grid-template-columns:3fr 2fr; gap:16px; }
+  #page3 .panel { background:var(--bg-panel); border:1px solid var(--border); padding:16px 18px; }
+  #page3 .panel-header { display:flex; align-items:center; gap:8px; margin-bottom:14px; padding-bottom:10px; border-bottom:1px solid var(--border-dim); }
+  #page3 .panel-title { font-family:var(--font-mono); font-size:10px; letter-spacing:3px; color:var(--text-dim); flex:1; }
+  #page3 .panel-header[data-color="yellow"]::before { content:''; width:3px; height:10px; flex-shrink:0; background:var(--yellow); box-shadow:0 0 6px var(--yellow); }
+  #page3 .panel-header[data-color="purple"]::before { content:''; width:3px; height:10px; flex-shrink:0; background:var(--purple); }
+  #page3 .panel-header[data-color="green"]::before  { content:''; width:3px; height:10px; flex-shrink:0; background:var(--green); box-shadow:0 0 6px var(--green); }
+  #page3 .help-btn { width:18px; height:18px; border-radius:50%; background:var(--bg-card); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:9px; color:var(--text-dim); cursor:default; flex-shrink:0; position:relative; transition:all 0.15s; }
+  #page3 .help-btn.y:hover { border-color:var(--yellow); color:var(--yellow); background:var(--yellow-dim); }
+  #page3 .help-btn.p:hover { border-color:var(--purple); color:var(--purple); background:var(--purple-dim); }
+  #page3 .help-btn.g:hover { border-color:var(--green);  color:var(--green);  background:var(--green-dim); }
+  #page3 .help-tooltip { visibility:hidden; opacity:0; position:absolute; top:calc(100% + 6px); right:0; width:260px; background:var(--bg-card); border:1px solid var(--border-dim); padding:10px 12px; z-index:600; box-shadow:0 6px 20px rgba(0,0,0,0.9); transition:opacity 0.15s,visibility 0.15s; pointer-events:none; }
+  #page3 .help-btn:hover .help-tooltip { visibility:visible; opacity:1; }
+  #page3 .help-tt-title { font-family:var(--font-mono); font-size:9px; letter-spacing:2px; margin-bottom:6px; padding-bottom:5px; border-bottom:1px solid var(--border-dim); }
+  #page3 .help-btn.y .help-tt-title { color:var(--yellow); border-top:2px solid var(--yellow); }
+  #page3 .help-btn.p .help-tt-title { color:var(--purple); border-top:2px solid var(--purple); }
+  #page3 .help-btn.g .help-tt-title { color:var(--green);  border-top:2px solid var(--green); }
+  #page3 .help-tooltip p { font-family:var(--font-mono); font-size:9px; color:var(--text-dim); line-height:1.6; margin-bottom:4px; }
+  #page3 .help-formula { background:var(--bg-deep); border:1px solid var(--border-dim); padding:4px 7px; margin:5px 0; font-family:var(--font-mono); font-size:8px; color:var(--accent); }
+  #page3 .help-zones { display:flex; flex-direction:column; gap:3px; margin-top:5px; }
+  #page3 .help-zone { display:flex; align-items:center; gap:6px; font-family:var(--font-mono); font-size:8px; color:var(--text-dim); }
+  #page3 .hz-dot { width:7px; height:7px; border-radius:1px; flex-shrink:0; }
+  #page3 .insight-bar { padding:8px 12px; background:var(--bg-card); border:1px solid var(--border-dim); font-family:var(--font-mono); font-size:10px; color:var(--text-dim); line-height:1.6; margin-top:14px; }
+  #page3 .hl   { color:var(--green); }
+  #page3 .hl-y { color:var(--yellow); }
+  #page3 .hl-r { color:var(--red); }
+  #page3 .hl-a { color:var(--accent); }
+  #page3 .hl-p { color:var(--purple); }
+  #page3 .section-label { font-family:var(--font-mono); font-size:9px; letter-spacing:3px; color:var(--text-faint); margin-bottom:8px; display:flex; align-items:center; gap:8px; }
+  #page3 .section-label::after { content:''; flex:1; height:1px; background:var(--border-dim); }
+  #page3 .sort-btn { font-family:var(--font-mono); font-size:8px; letter-spacing:1px; padding:2px 7px; border:1px solid var(--border); color:var(--text-faint); background:transparent; cursor:pointer; transition:all 0.15s; }
+  #page3 .sort-btn.active, #page3 .sort-btn:hover { border-color:var(--accent); color:var(--accent); background:var(--accent-dim); }
+  /* P3 ICA (same as P2 ICA) */
+  #page3 .ica-layout { display:grid; grid-template-columns:200px 1fr; gap:20px; }
+  #page3 .ica-gauge { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; padding:8px 0; }
+  #page3 .ica-sublabel { font-family:var(--font-mono); font-size:9px; color:var(--text-dim); letter-spacing:2px; }
+  #page3 .ica-number { font-family:var(--font-display); font-size:72px; line-height:1; color:var(--yellow); text-shadow:0 0 30px rgba(255,214,0,0.5); letter-spacing:4px; transition:all 0.5s; }
+  #page3 .ica-pct { font-size:32px; color:var(--text-dim); }
+  #page3 .ica-status { font-family:var(--font-mono); font-size:10px; padding:3px 10px; border:1px solid; letter-spacing:2px; margin-top:4px; }
+  #page3 .status-alta  { border-color:var(--red);    color:var(--red);    background:var(--red-dim); }
+  #page3 .status-media { border-color:var(--yellow);  color:var(--yellow); background:var(--yellow-dim); }
+  #page3 .status-baja  { border-color:var(--green);   color:var(--green);  background:var(--green-dim); }
+  #page3 .ica-scale-wrap { width:100%; margin-top:12px; }
+  #page3 .ica-scale-track { height:8px; position:relative; overflow:visible; background:linear-gradient(90deg,var(--green) 0%,var(--yellow) 45%,var(--orange) 70%,var(--red) 100%); opacity:0.6; }
+  #page3 .ica-scale-pin { position:absolute; top:-5px; width:2px; height:18px; background:#fff; transform:translateX(-50%); box-shadow:0 0 8px #fff; transition:left 0.5s; }
+  #page3 .ica-scale-labels { display:flex; justify-content:space-between; margin-top:6px; }
+  #page3 .ica-scale-labels span { font-family:var(--font-mono); font-size:8px; color:var(--text-faint); }
+  #page3 .rank-header { font-family:var(--font-mono); font-size:9px; color:var(--text-dim); letter-spacing:2px; margin-bottom:10px; display:flex; align-items:center; justify-content:space-between; }
+  #page3 .rank-sort { display:flex; gap:6px; }
+  #page3 .inf-list { display:flex; flex-direction:column; gap:8px; }
+  #page3 .inf-item { display:flex; align-items:center; gap:10px; padding:6px 8px; transition:background 0.15s; cursor:pointer; }
+  #page3 .inf-item:hover { background:var(--bg-hover); }
+  #page3 .inf-rank { font-family:var(--font-mono); font-size:11px; color:var(--text-faint); width:18px; text-align:center; flex-shrink:0; }
+  #page3 .inf-icon { width:26px; height:26px; border-radius:3px; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:bold; flex-shrink:0; color:#fff; }
+  #page3 .inf-info { flex:1; min-width:0; }
+  #page3 .inf-name { font-size:13px; color:var(--text-main); font-family:var(--font-mono); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  #page3 .inf-sub  { font-family:var(--font-mono); font-size:9px; color:var(--text-dim); margin-top:1px; }
+  #page3 .inf-bar-track { width:100px; height:5px; background:var(--border); flex-shrink:0; }
+  #page3 .inf-bar-fill  { height:100%; transition:width 0.5s; }
+  #page3 .inf-val { font-family:var(--font-mono); font-size:12px; width:54px; text-align:right; flex-shrink:0; }
+  #page3 .inf-others { display:flex; align-items:center; gap:10px; padding:6px 8px; cursor:pointer; border:1px dashed var(--border-dim); transition:all 0.15s; margin-top:4px; }
+  #page3 .inf-others:hover { border-color:var(--accent); background:var(--accent-dim); }
+  #page3 .inf-others:hover .inf-others-label { color:var(--accent); }
+  #page3 .inf-others-icon { width:26px; height:26px; background:var(--bg-card); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:10px; color:var(--text-faint); }
+  #page3 .inf-others-label { flex:1; font-family:var(--font-mono); font-size:10px; color:var(--text-dim); letter-spacing:1px; transition:color 0.15s; }
+  #page3 .inf-others-cta { font-family:var(--font-mono); font-size:9px; color:var(--accent); opacity:0.7; letter-spacing:1px; }
+  #page3 .inf-others:hover .inf-others-cta { opacity:1; }
+  /* P3 IND.02 Donut */
+  #page3 .ind02-layout { display:grid; grid-template-columns:180px 1fr; gap:20px; align-items:center; }
+  #page3 .donut-wrap { position:relative; width:180px; height:180px; flex-shrink:0; margin:0 auto; }
+  #page3 .donut-center { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); text-align:center; pointer-events:none; }
+  #page3 .donut-center-val { font-family:var(--font-display); font-size:34px; line-height:1; color:var(--accent); letter-spacing:2px; }
+  #page3 .donut-center-label { font-family:var(--font-mono); font-size:8px; letter-spacing:2px; color:var(--text-dim); margin-top:3px; }
+  #page3 .soc-list { display:flex; flex-direction:column; gap:5px; }
+  #page3 .soc-item { display:flex; align-items:center; gap:10px; padding:8px 10px; cursor:pointer; transition:all 0.15s; border:1px solid transparent; }
+  #page3 .soc-item:hover { background:var(--bg-hover); border-color:var(--border-dim); }
+  #page3 .soc-dot { width:9px; height:9px; border-radius:2px; flex-shrink:0; }
+  #page3 .soc-name { flex:1; font-family:var(--font-mono); font-size:11px; color:var(--text-main); letter-spacing:1px; }
+  #page3 .soc-perfiles { font-family:var(--font-mono); font-size:9px; color:var(--text-faint); width:56px; text-align:right; }
+  #page3 .soc-reach { font-family:var(--font-mono); font-size:12px; color:var(--text-main); width:48px; text-align:right; }
+  #page3 .soc-pct { font-family:var(--font-mono); font-size:12px; width:42px; text-align:right; font-weight:600; }
+  #page3 .soc-arrow { font-family:var(--font-mono); font-size:9px; color:var(--text-faint); width:16px; text-align:right; opacity:0; transition:opacity 0.15s; }
+  #page3 .soc-item:hover .soc-arrow { opacity:1; color:var(--accent); }
+  /* P3 IND.03 Efficiency */
+  #page3 .ind03-subtitle { font-family:var(--font-mono); font-size:9px; color:var(--text-faint); letter-spacing:1px; margin-bottom:14px; }
+  #page3 .filter-bar { display:flex; align-items:center; gap:6px; margin-bottom:14px; flex-wrap:wrap; }
+  #page3 .filter-label { font-family:var(--font-mono); font-size:9px; color:var(--text-faint); letter-spacing:2px; }
+  #page3 .filter-btn { font-family:var(--font-mono); font-size:9px; letter-spacing:1px; padding:4px 12px; border:1px solid var(--border); color:var(--text-dim); background:transparent; cursor:pointer; transition:all 0.15s; display:flex; align-items:center; gap:5px; }
+  #page3 .filter-btn .fb-dot { width:6px; height:6px; border-radius:1px; }
+  #page3 .filter-btn.active { color:var(--current-color,var(--accent)); border-color:var(--current-color,var(--accent)); background:rgba(0,0,0,0.3); }
+  #page3 .filter-btn:hover  { color:var(--current-color,var(--accent)); border-color:var(--current-color,var(--accent)); }
+  #page3 .cards-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:10px; margin-bottom:14px; }
+  #page3 .eff-card { background:var(--bg-card); border:1px solid var(--border-dim); padding:12px 12px 10px; display:flex; flex-direction:column; gap:6px; }
+  #page3 .eff-card.rank1 { border-top:2px solid var(--green); }
+  #page3 .eff-card.rank2 { border-top:2px solid rgba(0,255,136,0.5); }
+  #page3 .eff-card.rank3 { border-top:2px solid rgba(0,255,136,0.25); }
+  #page3 .eff-platform { display:flex; align-items:center; gap:6px; }
+  #page3 .eff-icon { width:16px; height:16px; border-radius:2px; display:flex; align-items:center; justify-content:center; font-size:9px; flex-shrink:0; }
+  #page3 .eff-platform-name { font-family:var(--font-mono); font-size:8px; letter-spacing:2px; }
+  #page3 .eff-rank { font-family:var(--font-mono); font-size:8px; color:var(--text-faint); margin-left:auto; }
+  #page3 .eff-name { font-family:var(--font-ui); font-size:14px; font-weight:600; color:var(--text-main); line-height:1.2; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  #page3 .eff-score { font-family:var(--font-display); font-size:34px; line-height:1; }
+  #page3 .eff-score.high { color:var(--green); text-shadow:0 0 12px rgba(0,255,136,0.4); }
+  #page3 .eff-score.mid  { color:var(--yellow); }
+  #page3 .eff-score.low  { color:var(--red); }
+  #page3 .eff-bar-wrap { height:2px; background:var(--border-dim); width:100%; }
+  #page3 .eff-bar-fill { height:100%; }
+  #page3 .eff-sub { font-family:var(--font-mono); font-size:9px; color:var(--text-dim); line-height:1.4; }
+  #page3 .eff-interp { font-family:var(--font-mono); font-size:8px; letter-spacing:1px; padding:2px 5px; display:inline-block; margin-top:2px; }
+  #page3 .interp-high { color:var(--green); background:var(--green-dim); }
+  #page3 .interp-mid  { color:var(--yellow); background:var(--yellow-dim); }
+  #page3 .interp-low  { color:var(--text-faint); background:var(--red-dim); }
+  /* P3 Responsive */
+  @media (max-width:1100px) {
+    #page3 .row-1 { grid-template-columns:1fr; }
+    #page3 .ica-layout { grid-template-columns:180px 1fr; }
+    #page3 .ind02-layout { grid-template-columns:160px 1fr; }
+    #page3 .cards-grid { grid-template-columns:repeat(3,1fr); }
+  }
+  @media (max-width:640px) {
+    #page3 .row-1 { grid-template-columns:1fr; }
+    #page3 .ica-layout { grid-template-columns:1fr; }
+    #page3 .ind02-layout { grid-template-columns:1fr; }
+    #page3 .cards-grid { grid-template-columns:repeat(2,1fr); }
+    #page3 .listening-grid > *, #page3 .row-1 > * { min-width: 0; }
+    #page3 .panel { overflow: hidden; }
+    #page3 .inf-others-label { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    #page3 .rank-sort { flex-wrap: wrap; gap: 4px; }
+    #page3 .panel-title { letter-spacing: 1px; }
+    #page3 .ica-number { font-size: 56px; }
+    #page3 .inf-bar-track { width: 60px; }
+  }
+
+  /* ── PAGE 2: NEW INDICATORS ─────────────────────────── */
+  /* Window legend */
+  .p2-window-legend { display:none; font-family:var(--font-mono); font-size:9px; letter-spacing:3px; color:var(--yellow); padding:6px 14px; border:1px solid rgba(255,214,0,0.2); background:rgba(255,214,0,0.04); margin-bottom:12px; }
+  .p2-window-legend .p2-window-dot { color:var(--yellow); margin-right:6px; }
+  /* Qualitative grid (IND 01 new) */
+  .p2-qual-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:10px; }
+  .p2-qual-card { background:var(--bg-card); border:1px solid var(--border-dim); padding:14px 12px; display:flex; flex-direction:column; gap:8px; }
+  .p2-qual-card .q-header { display:flex; align-items:center; gap:8px; }
+  .p2-qual-card .q-icon { width:22px; height:22px; border-radius:3px; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:bold; color:#fff; flex-shrink:0; }
+  .p2-qual-card .q-plat-name { font-family:var(--font-mono); font-size:9px; letter-spacing:2px; color:var(--text-dim); }
+  .p2-qual-card .q-count { font-family:var(--font-display); font-size:32px; line-height:1; color:var(--text-main); }
+  .p2-qual-card .q-count-label { font-family:var(--font-mono); font-size:8px; color:var(--text-faint); letter-spacing:1px; }
+  /* Sentiment bar */
+  .p2-sent-bar { height:6px; display:flex; overflow:hidden; border-radius:1px; }
+  .p2-sent-bar .sb-pos { background:var(--green); }
+  .p2-sent-bar .sb-neu { background:var(--yellow); opacity:0.5; }
+  .p2-sent-bar .sb-neg { background:var(--red); }
+  .p2-sent-pcts { display:flex; justify-content:space-between; font-family:var(--font-mono); font-size:8px; }
+  .p2-sent-pcts .sp-pos { color:var(--green); }
+  .p2-sent-pcts .sp-neg { color:var(--red); }
+  /* Metric rows */
+  .p2-qual-card .q-metric { display:flex; justify-content:space-between; align-items:baseline; }
+  .p2-qual-card .q-metric-label { font-family:var(--font-mono); font-size:8px; color:var(--text-faint); letter-spacing:1px; }
+  .p2-qual-card .q-metric-val { font-family:var(--font-mono); font-size:12px; color:var(--accent); }
+  /* P2 ICA by reach (IND 02 new) */
+  .p2-ica-layout { display:grid; grid-template-columns:200px 1fr; gap:20px; }
+  .p2-ica-gauge { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; padding:8px 0; }
+  .p2-ica-number { font-family:var(--font-display); font-size:72px; line-height:1; color:var(--yellow); text-shadow:0 0 30px rgba(255,214,0,0.5); letter-spacing:4px; transition:all 0.5s; }
+  .p2-ica-pct { font-size:32px; color:var(--text-dim); }
+  .p2-top-domains { display:flex; flex-direction:column; gap:8px; }
+  .p2-domain-row { display:flex; align-items:center; gap:10px; padding:6px 8px; }
+  .p2-domain-rank { font-family:var(--font-mono); font-size:11px; color:var(--text-faint); width:18px; text-align:center; }
+  .p2-domain-name { font-family:var(--font-mono); font-size:13px; color:var(--text-main); flex:1; }
+  .p2-domain-bar { width:100px; height:5px; background:var(--border); flex-shrink:0; }
+  .p2-domain-bar-fill { height:100%; transition:width 0.5s; }
+  .p2-domain-val { font-family:var(--font-mono); font-size:12px; width:54px; text-align:right; flex-shrink:0; }
+  /* P2 row layout */
+  #page2 .row-2 { display:grid; grid-template-columns:2fr 3fr; gap:16px; }
+  #page2 .row-2-right { display:flex; flex-direction:column; gap:16px; }
+  @media (max-width:1100px) { #page2 .row-2 { grid-template-columns:1fr; } }
+  @media (max-width:640px) {
+    .p2-qual-grid { grid-template-columns:repeat(2,1fr); }
+    .p2-ica-layout { grid-template-columns:1fr; }
+    .p2-ica-number { font-size:56px; }
+  }
+
   /* ── Narrativa Dominante ────────────────────────────── */
   .narrativa-section { display:flex; flex-direction:column; gap:0; height:100%; }
   .narrativa-week { flex:1; padding:8px 0; border-bottom:1px solid var(--border-dim); overflow:hidden; position:relative; }
@@ -845,6 +1056,7 @@
         <div class="page-menu" id="pageMenu">
           <button class="page-menu-item active" onclick="switchPage(1)">PÁG. 01 / OVERVIEW</button>
           <button class="page-menu-item" onclick="switchPage(2)">PÁG. 02 / RADAR</button>
+          <button class="page-menu-item" onclick="switchPage(3)">PÁG. 03 / MEDIOS</button>
         </div>
       </div>
       <div class="live-badge"><div class="live-dot"></div>LIVE · BBDD ACTIVA</div>
@@ -884,7 +1096,7 @@
           <div class="ics-bar-segments">
             <span class="seg-monitorear" style="flex:45"></span><span class="seg-estable" style="flex:10"></span><span class="seg-favorable" style="flex:45"></span>
           </div>
-          <div class="ics-bar-indicator" id="icsIndicator" style="left:0%"></div>
+          <div class="ics-bar-indicator" id="icsIndicator" style="left:50%"></div>
         </div>
         <div class="ics-scale">
           <span>-100 MONITOREAR</span><span>-10</span><span>0</span><span>+10</span><span>+100 FAVORABLE</span>
@@ -1079,119 +1291,36 @@
   <!-- PÁGINA 2: LISTENING -->
   <div id="page2" class="page-section">
 
+    <!-- Window legend (fixed, no filter) -->
+    <div class="p2-window-legend" id="p2WindowLegend">
+      <span class="p2-window-dot">●</span> VENTANA: ÚLTIMAS 48 HS VISIBLES
+    </div>
+
     <div class="listening-grid">
 
-      <!-- FILA 1: IND01 + IND02 -->
-      <div class="row-1">
-
-        <!-- IND.01 -->
-        <div class="panel" id="panel-ind01">
-          <div class="panel-header" data-color="yellow">
-            <div class="panel-title">IND. 01 — CONCENTRACIÓN DE AMPLIFICACIÓN (ICA)</div>
-            <div class="help-btn y">?
-              <div class="help-tooltip">
-                <div class="help-tt-title">// ICA — ÍNDICE CONCENTRACIÓN</div>
-                <p>% del reach total concentrado en los <span style="color:var(--yellow)">Top 3 perfiles</span>. Un ICA alto = dependencia de pocos actores.</p>
-                <div class="help-formula">ICA = Σ reach(top 3) ÷ Σ reach(total) × 100</div>
-                <div class="help-zones">
-                  <div class="help-zone"><div class="hz-dot" style="background:var(--green)"></div>0–33% Distribuido · bajo riesgo</div>
-                  <div class="help-zone"><div class="hz-dot" style="background:var(--yellow)"></div>33–66% Moderado · monitorear</div>
-                  <div class="help-zone"><div class="hz-dot" style="background:var(--orange)"></div>66–85% Alta dependencia · riesgo</div>
-                  <div class="help-zone"><div class="hz-dot" style="background:var(--red)"></div>85–100% Crítico · vulnerabilidad máxima</div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="ica-layout">
-            <div class="ica-gauge">
-              <div class="ica-sublabel">% REACH · TOP 3</div>
-              <div class="ica-number" id="icaNumber">—<span class="ica-pct">%</span></div>
-              <div class="ica-status" id="icaStatus">CARGANDO</div>
-              <div class="ica-scale-wrap">
-                <div class="ica-scale-track"><div class="ica-scale-pin" id="icaPin" style="left:0%"></div></div>
-                <div class="ica-scale-labels"><span>DISTRIBUIDO</span><span>33%</span><span>66%</span><span>CRÍTICO</span></div>
-              </div>
-            </div>
-            <div>
-              <div class="rank-header">
-                <span>TOP INFLUENCERS</span>
-                <div class="rank-sort">
-                  <button class="sort-btn active" id="sortReach2"     onclick="lpInd01SortBy('reach')">REACH</button>
-                  <button class="sort-btn"         id="sortFollowers2" onclick="lpInd01SortBy('followers')">FOLLOWERS</button>
-                  <button class="sort-btn"         id="sortSov2"       onclick="lpInd01SortBy('sov')">SoV %</button>
-                  <button class="sort-btn"         id="sortEff2"       onclick="lpInd01SortBy('eff')">ALCANCE</button>
-                </div>
-              </div>
-              <div class="inf-list" id="infList"></div>
-              <div class="inf-others" id="othersBtn2" onclick="lpOpenModal01()">
-                <div class="inf-others-icon">···</div>
-                <div class="inf-others-label" id="othersLabel2">otros perfiles · reach combinado</div>
-                <div class="inf-others-cta">VER TODOS →</div>
-              </div>
-            </div>
-          </div>
-          <div class="insight-bar" id="insight01">⚡ Cargando datos…</div>
-        </div>
-
-        <!-- IND.02 -->
-        <div class="panel" id="panel-ind02">
-          <div class="panel-header" data-color="purple">
-            <div class="panel-title">IND. 02 — REACH POR RED SOCIAL</div>
-            <div class="help-btn p">?
-              <div class="help-tooltip">
-                <div class="help-tt-title">// ¿QUÉ MUESTRA?</div>
-                <p>Distribución del reach total generado por influencers, agrupado por plataforma.</p>
-                <p>El centro muestra las <span style="color:var(--accent)">menciones totales</span>. Click en cualquier red para filtrar el modal.</p>
-              </div>
-            </div>
-          </div>
-          <div class="ind02-layout">
-            <div>
-              <div class="donut-wrap">
-                <canvas id="socialDonut"></canvas>
-                <div class="donut-center">
-                  <div class="donut-center-val" id="centerVal">—</div>
-                  <div class="donut-center-label">MENCIONES</div>
-                </div>
-              </div>
-            </div>
-            <div class="soc-list" id="socList"></div>
-          </div>
-          <div class="insight-bar" id="insight02">⚡ Cargando datos…</div>
-        </div>
-
-      </div><!-- /row-1 -->
-
-      <!-- FILA 2: IND03 (ancho completo) -->
-      <div class="panel" id="panel-ind03">
-        <div class="panel-header" data-color="green">
-          <div class="panel-title">IND. 03 — EFICIENCIA DE AMPLIFICACIÓN (ALCANCE Nx)</div>
-          <div class="help-btn g">?
+      <!-- IND 01 — ÍNDICE CUALITATIVO DE MENCIONES (full width) -->
+      <div class="panel" id="panel-p2-ind01">
+        <div class="panel-header" data-color="accent">
+          <div class="panel-title">IND. 01 — ÍNDICE CUALITATIVO DE MENCIONES (48HS)</div>
+          <div class="help-btn a">?
             <div class="help-tooltip">
-              <div class="help-tt-title">// ¿QUÉ ES EL ALCANCE Nx?</div>
-              <p><strong style="color:var(--text-main)">Nx = reach ÷ followers</strong></p>
-              <p>Cuántas veces multiplicó su audiencia propia.</p>
-              <div style="margin:6px 0 4px;">
-                <div class="help-zone"><div class="hz-dot" style="background:var(--green)"></div><div style="font-family:var(--font-mono);font-size:8px;color:var(--text-dim);">≥ 2.0x — VIRAL</div></div>
-                <div class="help-zone"><div class="hz-dot" style="background:var(--yellow)"></div><div style="font-family:var(--font-mono);font-size:8px;color:var(--text-dim);">0.5x – 2.0x — NORMAL</div></div>
-                <div class="help-zone"><div class="hz-dot" style="background:var(--red)"></div><div style="font-family:var(--font-mono);font-size:8px;color:var(--text-dim);">&lt; 0.5x — BAJO</div></div>
-              </div>
+              <div class="help-tt-title">// ENGAGEMENT REAL POR PLATAFORMA</div>
+              <p>Métricas reales de engagement (likes, comments, shares, views) capturadas en ventana de <span style="color:var(--yellow)">48 horas</span>.</p>
+              <p>Sentimiento usa clasificación propia (custom) con fallback al de Brand24.</p>
             </div>
           </div>
         </div>
-        <div class="ind03-subtitle">↑ Mayor = convierte mejor su audiencia en alcance efectivo · Nx = reach ÷ followers · top 5 por red</div>
-        <div class="filter-bar" id="filterBar03"></div>
-        <div class="cards-grid" id="cardsGrid03"></div>
-        <div class="insight-bar" id="insight03">⚡ Cargando datos…</div>
+        <div class="p2-qual-grid" id="p2-qualGrid"></div>
+        <div class="insight-bar" id="p2-insight01">⚡ Cargando datos de engagement…</div>
       </div>
 
-      <!-- FILA 3: IND04 + IND05 -->
-      <div class="row-3">
+      <!-- FILA 2: IND02 (Narrativas) + IND03 (ICA by reach) -->
+      <div class="row-2">
 
-        <!-- IND.04 -->
+        <!-- IND 02 — NARRATIVAS COORDINADAS -->
         <div class="panel" id="panel-ind04">
           <div class="panel-header" data-color="red">
-            <div class="panel-title">IND. 04 — POSIBLES NARRATIVAS COORDINADAS</div>
+            <div class="panel-title">IND. 02 — POSIBLES NARRATIVAS COORDINADAS</div>
             <div class="help-btn r">?
               <div class="help-tooltip">
                 <div class="help-tt-title">// ¿QUÉ ES UNA OPERACIÓN?</div>
@@ -1213,65 +1342,215 @@
           <div class="insight-bar" id="insight04">⚡ Cargando datos…</div>
         </div>
 
-        <!-- IND.05 -->
-        <div class="panel" id="panel-ind05">
-          <div class="panel-header" data-color="accent">
-            <div class="panel-title">IND. 05 — REACH · SOCIAL vs NO SOCIAL</div>
-            <div class="help-btn a">?
-              <div class="help-tooltip">
-                <div class="help-tt-title">// CANALES DE REACH</div>
-                <p><span style="color:var(--purple)">SOCIAL</span> — reach en redes sociales (Facebook, TikTok, Instagram, X).</p>
-                <p><span style="color:var(--accent)">NO SOCIAL</span> — reach en medios digitales, portales y blogs.</p>
+        <!-- Right column: IND03 + IND04 stacked -->
+        <div class="row-2-right">
+
+          <!-- IND 03 — CONCENTRACIÓN DE AMPLIFICACIÓN (POR REACH) -->
+          <div class="panel" id="panel-p2-ind02">
+            <div class="panel-header" data-color="yellow">
+              <div class="panel-title">IND. 03 — CONCENTRACIÓN DE AMPLIFICACIÓN (REACH)</div>
+              <div class="help-btn y">?
+                <div class="help-tooltip">
+                  <div class="help-tt-title">// ICA POR VIEWS</div>
+                  <p>% de views concentrado en las <span style="color:var(--yellow)">Top 3 menciones</span>. Basado en engagement real (48hs).</p>
+                  <div class="help-formula">ICA = Σ views(top 3) ÷ Σ views(total) × 100</div>
+                  <div class="help-zones">
+                    <div class="help-zone"><div class="hz-dot" style="background:var(--green)"></div>0–33% Distribuida · bajo riesgo</div>
+                    <div class="help-zone"><div class="hz-dot" style="background:var(--yellow)"></div>33–66% Media · monitorear</div>
+                    <div class="help-zone"><div class="hz-dot" style="background:var(--red)"></div>66–100% Crítica · alta dependencia</div>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="total-block">
-            <div class="total-label">REACH TOTAL ACUMULADO</div>
-            <div class="total-val" id="i05-total">—</div>
-            <div class="total-sub" id="i05-period">Cargando…</div>
-          </div>
-          <div class="cards-row">
-            <div class="reach-card social">
-              <div class="rc-label">SOCIAL MEDIA</div>
-              <div class="rc-val" id="i05-social">—</div>
-              <div class="rc-pct" id="i05-social-pct">—</div>
-              <div class="rc-sub">Redes sociales</div>
-              <div class="rc-bar-wrap"><div class="rc-bar-fill" id="i05-social-bar" style="width:0%"></div></div>
+            <div class="p2-ica-layout">
+              <div class="p2-ica-gauge">
+                <div class="ica-sublabel">% VIEWS · TOP 3 MENCIONES</div>
+                <div class="p2-ica-number" id="p2-icaNumber">—<span class="p2-ica-pct">%</span></div>
+                <div class="ica-status" id="p2-icaStatus">CARGANDO</div>
+                <div class="ica-scale-wrap">
+                  <div class="ica-scale-track"><div class="ica-scale-pin" id="p2-icaPin" style="left:0%"></div></div>
+                  <div class="ica-scale-labels"><span>DISTRIBUIDO</span><span>33%</span><span>66%</span><span>CRÍTICO</span></div>
+                </div>
+              </div>
+              <div class="p2-top-domains" id="p2-topDomains"></div>
             </div>
-            <div class="reach-card nonsocial">
-              <div class="rc-label">NO SOCIAL</div>
-              <div class="rc-val" id="i05-nonsocial">—</div>
-              <div class="rc-pct" id="i05-nonsocial-pct">—</div>
-              <div class="rc-sub">Portales y medios</div>
-              <div class="rc-bar-wrap"><div class="rc-bar-fill" id="i05-nonsocial-bar" style="width:0%"></div></div>
-            </div>
+            <div class="insight-bar" id="p2-insight02">⚡ Cargando datos…</div>
           </div>
-          <div class="section-label">// DISTRIBUCIÓN</div>
-          <div class="stacked-bar-wrap">
-            <div class="stacked-social" id="i05-stacked-s" style="width:50%"><span class="stacked-label" id="i05-stacked-slabel">SOCIAL —</span></div>
-            <div class="stacked-nonsocial"><span class="stacked-label" id="i05-stacked-nlabel">NO SOCIAL —</span></div>
-          </div>
-          <div class="bar-legend">
-            <div class="bar-leg-item"><div class="bar-leg-dot" style="background:var(--purple)"></div><span class="bar-leg-text">Social Media</span></div>
-            <div class="bar-leg-item"><div class="bar-leg-dot" style="background:var(--accent)"></div><span class="bar-leg-text">Portales / Medios</span></div>
-          </div>
-          <div class="section-label">// EVOLUCIÓN DIARIA</div>
-          <div class="sparkline-wrap">
-            <canvas id="spark05"></canvas>
-          </div>
-          <div class="peak-row">
-            <div class="peak-card"><div class="peak-label">PICO SOCIAL</div><div class="peak-val p" id="i05-pk-sval">—</div><div class="peak-date" id="i05-pk-sdate">—</div></div>
-            <div class="peak-card"><div class="peak-label">PICO NO SOCIAL</div><div class="peak-val a" id="i05-pk-nval">—</div><div class="peak-date" id="i05-pk-ndate">—</div></div>
-            <div class="peak-card"><div class="peak-label">DÍAS ACTIVOS</div><div class="peak-val" style="color:var(--text-main)" id="i05-dias">—</div><div class="peak-date" id="i05-dias-total">de — totales</div></div>
-          </div>
-          <div class="insight-bar" id="insight05">⚡ Cargando datos…</div>
-        </div>
 
-      </div><!-- /row-3 -->
+          <!-- IND 04 — REACH SOCIAL vs NO SOCIAL (7 DÍAS) -->
+          <div class="panel" id="panel-ind05">
+            <div class="panel-header" data-color="accent">
+              <div class="panel-title">IND. 04 — REACH · SOCIAL vs NO SOCIAL (7 DÍAS)</div>
+              <div class="help-btn a">?
+                <div class="help-tooltip">
+                  <div class="help-tt-title">// CANALES DE REACH</div>
+                  <p><span style="color:var(--purple)">SOCIAL</span> — reach en redes sociales (Facebook, TikTok, Instagram, X).</p>
+                  <p><span style="color:var(--accent)">NO SOCIAL</span> — reach en medios digitales, portales y blogs.</p>
+                </div>
+              </div>
+            </div>
+            <div class="total-block">
+              <div class="total-label">REACH TOTAL ACUMULADO</div>
+              <div class="total-val" id="i05-total">—</div>
+              <div class="total-sub" id="i05-period">Cargando…</div>
+            </div>
+            <div class="cards-row">
+              <div class="reach-card social">
+                <div class="rc-label">SOCIAL MEDIA</div>
+                <div class="rc-val" id="i05-social">—</div>
+                <div class="rc-pct" id="i05-social-pct">—</div>
+                <div class="rc-sub">Redes sociales</div>
+                <div class="rc-bar-wrap"><div class="rc-bar-fill" id="i05-social-bar" style="width:0%"></div></div>
+              </div>
+              <div class="reach-card nonsocial">
+                <div class="rc-label">NO SOCIAL</div>
+                <div class="rc-val" id="i05-nonsocial">—</div>
+                <div class="rc-pct" id="i05-nonsocial-pct">—</div>
+                <div class="rc-sub">Portales y medios</div>
+                <div class="rc-bar-wrap"><div class="rc-bar-fill" id="i05-nonsocial-bar" style="width:0%"></div></div>
+              </div>
+            </div>
+            <div class="section-label">// DISTRIBUCIÓN</div>
+            <div class="stacked-bar-wrap">
+              <div class="stacked-social" id="i05-stacked-s" style="width:50%"><span class="stacked-label" id="i05-stacked-slabel">SOCIAL —</span></div>
+              <div class="stacked-nonsocial"><span class="stacked-label" id="i05-stacked-nlabel">NO SOCIAL —</span></div>
+            </div>
+            <div class="bar-legend">
+              <div class="bar-leg-item"><div class="bar-leg-dot" style="background:var(--purple)"></div><span class="bar-leg-text">Social Media</span></div>
+              <div class="bar-leg-item"><div class="bar-leg-dot" style="background:var(--accent)"></div><span class="bar-leg-text">Portales / Medios</span></div>
+            </div>
+            <div class="section-label">// EVOLUCIÓN DIARIA</div>
+            <div class="sparkline-wrap">
+              <canvas id="spark05"></canvas>
+            </div>
+            <div class="peak-row">
+              <div class="peak-card"><div class="peak-label">PICO SOCIAL</div><div class="peak-val p" id="i05-pk-sval">—</div><div class="peak-date" id="i05-pk-sdate">—</div></div>
+              <div class="peak-card"><div class="peak-label">PICO NO SOCIAL</div><div class="peak-val a" id="i05-pk-nval">—</div><div class="peak-date" id="i05-pk-ndate">—</div></div>
+              <div class="peak-card"><div class="peak-label">DÍAS ACTIVOS</div><div class="peak-val" style="color:var(--text-main)" id="i05-dias">—</div><div class="peak-date" id="i05-dias-total">de — totales</div></div>
+            </div>
+            <div class="insight-bar" id="insight05">⚡ Cargando datos…</div>
+          </div>
+
+        </div><!-- /row-2-right -->
+
+      </div><!-- /row-2 -->
 
     </div><!-- /listening-grid -->
 
   </div><!-- /page2 -->
+
+  <!-- ═══════════════════════════════════════════ PAGE 3: MEDIOS ═══════════════════════════════════════════ -->
+  <div id="page3" class="page-section">
+
+    <div class="listening-grid">
+
+      <!-- FILA 1: IND01 (ICA Influencers) + IND02 (Donut) -->
+      <div class="row-1">
+
+        <!-- IND.01 — ICA INFLUENCERS -->
+        <div class="panel" id="p3-panel-ind01">
+          <div class="panel-header" data-color="yellow">
+            <div class="panel-title">IND. 01 — CONCENTRACIÓN DE AMPLIFICACIÓN (ICA)</div>
+            <div class="help-btn y">?
+              <div class="help-tooltip">
+                <div class="help-tt-title">// ICA — ÍNDICE CONCENTRACIÓN</div>
+                <p>% del reach total concentrado en los <span style="color:var(--yellow)">Top 3 perfiles</span>. Un ICA alto = dependencia de pocos actores.</p>
+                <div class="help-formula">ICA = Σ reach(top 3) ÷ Σ reach(total) × 100</div>
+                <div class="help-zones">
+                  <div class="help-zone"><div class="hz-dot" style="background:var(--green)"></div>0–33% Distribuido · bajo riesgo</div>
+                  <div class="help-zone"><div class="hz-dot" style="background:var(--yellow)"></div>33–66% Moderado · monitorear</div>
+                  <div class="help-zone"><div class="hz-dot" style="background:var(--orange)"></div>66–85% Alta dependencia · riesgo</div>
+                  <div class="help-zone"><div class="hz-dot" style="background:var(--red)"></div>85–100% Crítico · vulnerabilidad máxima</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="ica-layout">
+            <div class="ica-gauge">
+              <div class="ica-sublabel">% REACH · TOP 3</div>
+              <div class="ica-number" id="p3-icaNumber">—<span class="ica-pct">%</span></div>
+              <div class="ica-status" id="p3-icaStatus">CARGANDO</div>
+              <div class="ica-scale-wrap">
+                <div class="ica-scale-track"><div class="ica-scale-pin" id="p3-icaPin" style="left:0%"></div></div>
+                <div class="ica-scale-labels"><span>DISTRIBUIDO</span><span>33%</span><span>66%</span><span>CRÍTICO</span></div>
+              </div>
+            </div>
+            <div>
+              <div class="rank-header">
+                <span>TOP INFLUENCERS</span>
+                <div class="rank-sort">
+                  <button class="sort-btn active" id="p3-sortReach"     onclick="p3Ind01SortBy('reach')">REACH</button>
+                  <button class="sort-btn"         id="p3-sortFollowers" onclick="p3Ind01SortBy('followers')">FOLLOWERS</button>
+                  <button class="sort-btn"         id="p3-sortSov"       onclick="p3Ind01SortBy('sov')">SoV %</button>
+                  <button class="sort-btn"         id="p3-sortEff"       onclick="p3Ind01SortBy('eff')">ALCANCE</button>
+                </div>
+              </div>
+              <div class="inf-list" id="p3-infList"></div>
+              <div class="inf-others" id="p3-othersBtn" onclick="lpOpenModal01()">
+                <div class="inf-others-icon">···</div>
+                <div class="inf-others-label" id="p3-othersLabel">otros perfiles · reach combinado</div>
+                <div class="inf-others-cta">VER TODOS →</div>
+              </div>
+            </div>
+          </div>
+          <div class="insight-bar" id="p3-insight01">⚡ Cargando datos…</div>
+        </div>
+
+        <!-- IND.02 — REACH POR RED -->
+        <div class="panel" id="p3-panel-ind02">
+          <div class="panel-header" data-color="purple">
+            <div class="panel-title">IND. 02 — REACH POR RED SOCIAL</div>
+            <div class="help-btn p">?
+              <div class="help-tooltip">
+                <div class="help-tt-title">// ¿QUÉ MUESTRA?</div>
+                <p>Distribución del reach total generado por influencers, agrupado por plataforma.</p>
+                <p>El centro muestra las <span style="color:var(--accent)">menciones totales</span>. Click en cualquier red para filtrar el modal.</p>
+              </div>
+            </div>
+          </div>
+          <div class="ind02-layout">
+            <div>
+              <div class="donut-wrap">
+                <canvas id="p3-socialDonut"></canvas>
+                <div class="donut-center">
+                  <div class="donut-center-val" id="p3-centerVal">—</div>
+                  <div class="donut-center-label">MENCIONES</div>
+                </div>
+              </div>
+            </div>
+            <div class="soc-list" id="p3-socList"></div>
+          </div>
+          <div class="insight-bar" id="p3-insight02">⚡ Cargando datos…</div>
+        </div>
+
+      </div><!-- /row-1 -->
+
+      <!-- IND.03 — EFICIENCIA Nx (full width) -->
+      <div class="panel" id="p3-panel-ind03">
+        <div class="panel-header" data-color="green">
+          <div class="panel-title">IND. 03 — EFICIENCIA DE AMPLIFICACIÓN (ALCANCE Nx)</div>
+          <div class="help-btn g">?
+            <div class="help-tooltip">
+              <div class="help-tt-title">// ¿QUÉ ES EL ALCANCE Nx?</div>
+              <p><strong style="color:var(--text-main)">Nx = reach ÷ followers</strong></p>
+              <p>Cuántas veces multiplicó su audiencia propia.</p>
+              <div style="margin:6px 0 4px;">
+                <div class="help-zone"><div class="hz-dot" style="background:var(--green)"></div><div style="font-family:var(--font-mono);font-size:8px;color:var(--text-dim);">≥ 2.0x — VIRAL</div></div>
+                <div class="help-zone"><div class="hz-dot" style="background:var(--yellow)"></div><div style="font-family:var(--font-mono);font-size:8px;color:var(--text-dim);">0.5x – 2.0x — NORMAL</div></div>
+                <div class="help-zone"><div class="hz-dot" style="background:var(--red)"></div><div style="font-family:var(--font-mono);font-size:8px;color:var(--text-dim);">&lt; 0.5x — BAJO</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="ind03-subtitle">↑ Mayor = convierte mejor su audiencia en alcance efectivo · Nx = reach ÷ followers · top 5 por red</div>
+        <div class="filter-bar" id="p3-filterBar03"></div>
+        <div class="cards-grid" id="p3-cardsGrid03"></div>
+        <div class="insight-bar" id="p3-insight03">⚡ Cargando datos…</div>
+      </div>
+
+    </div><!-- /listening-grid -->
+
+  </div><!-- /page3 -->
 
   <footer>
     <span>// WAR ROOM DIGITAL · INTELIGENCIA NARRATIVA, OPORTUNIDADES Y RIESGO POLÍTICO</span>
@@ -1281,6 +1560,21 @@
 </div>
 
 <!-- MODAL P2: FUENTES AMPLIFICADORAS -->
+<!-- MODAL CUALITATIVO P2 -->
+<div id="p2QualModalOverlay" onclick="if(event.target===this)p2CloseQualModal()">
+  <div class="lp-modal" onclick="event.stopPropagation()">
+    <div class="lp-modal-header">
+      <div>
+        <div class="lp-modal-title" id="p2QualModalTitle" style="color:var(--accent)">MENCIONES</div>
+        <div class="lp-modal-subtitle" id="p2QualModalSubtitle"></div>
+      </div>
+      <div class="lp-modal-close" onclick="p2CloseQualModal()">✕</div>
+    </div>
+    <div class="lp-modal-body" id="p2QualModalBody"></div>
+    <div class="lp-modal-footer" id="p2QualModalFooter"></div>
+  </div>
+</div>
+
 <div id="p2ModalOverlay" onclick="if(event.target===this)lpCloseModal()">
   <div class="lp-modal" onclick="event.stopPropagation()">
     <div class="lp-modal-header">
@@ -1415,7 +1709,8 @@ const CONFIG = {
 };
 
 // ══════════════════════════════════════════
-// SENTIMENT HELPER — prioriza custom_sentiment sobre Brand24
+// SENTIMENT HELPER
+// Usa custom_sentiment (propio) con fallback a sentiment (Brand24)
 // ══════════════════════════════════════════
 function getSentiment(m) {
   return m.custom_sentiment || m.sentiment;
@@ -1447,7 +1742,13 @@ function switchPage(n) {
   document.getElementById('pageSelectorLabel').textContent = items[n - 1].textContent;
   document.getElementById('pageNav').classList.remove('open');
   document.querySelector('.filter-count').style.display = n === 1 ? '' : 'none';
+  // Filter bar visibility: show on page 1 and 3, hide on page 2
+  document.querySelector('.filter-bar').style.display = (n === 2) ? 'none' : '';
+  // Window legend: show only on page 2
+  const wl = document.getElementById('p2WindowLegend');
+  if (wl) wl.style.display = (n === 2) ? '' : 'none';
   if (n === 2 && !p2Initialized) { p2Initialized = true; p2Init(); }
+  if (n === 3 && !p3Initialized) { p3Initialized = true; p3Init(); }
 }
 function togglePageMenu() {
   document.getElementById('pageNav').classList.toggle('open');
@@ -1519,7 +1820,7 @@ function applyFilter() {
   filteredData = ALL_MENTIONS.filter(m => m.date >= from && m.date <= to);
   if (activeKw) filteredData = filteredData.filter(m => matchKw(m, activeKw));
   updateAll();
-  if (p2Initialized) p2LoadData();
+  if (p3Initialized) p3LoadData();
   loadBriefing();
 }
 function resetFilter() {
@@ -1532,7 +1833,7 @@ function resetFilter() {
   document.getElementById('feedFilter').textContent = '';
   filteredData = ALL_MENTIONS.filter(m => m.date >= _localFrom && m.date <= _localToday);
   updateAll();
-  if (p2Initialized) p2LoadData();
+  if (p3Initialized) p3LoadData();
 }
 function filterCurrentMonth() {
   const now = new Date();
@@ -1872,7 +2173,7 @@ function renderFeed(d) {
   el.innerHTML = sorted.map(m => `
     <div class="mention-item" onclick="window.open('${m.url}','_blank')">
       <div class="mention-header">
-        <div class="mention-sentiment ${sentCol[getSentiment(m)]||'sent-neutral'}"></div>
+        <div class="mention-sentiment ${sentCol[getSentiment(m)]||'sent-neutral'}" title="B24:${m.sentiment}${m.custom_sentiment&&m.custom_sentiment!==m.sentiment?' | Propio:'+m.custom_sentiment:''}"></div>
         <div class="mention-domain">${m.domain}</div>
         <div class="mention-time">${formatDate(m.date)} · ${m.time}</div>
       </div>
@@ -1940,7 +2241,7 @@ function renderDrawerMentions(mentions, terms) {
     });
     return `<div class="drawer-mention">
       <div class="drawer-mention-header">
-        <div style="width:6px;height:6px;border-radius:50%;background:${sentCol[getSentiment(m)]||sentCol.neutral};flex-shrink:0"></div>
+        <div style="width:6px;height:6px;border-radius:50%;background:${sentCol[getSentiment(m)]||sentCol.neutral};flex-shrink:0" title="B24:${m.sentiment}${m.custom_sentiment&&m.custom_sentiment!==m.sentiment?' | Propio:'+m.custom_sentiment:''}"></div>
         <div class="drawer-mention-domain">${m.domain}</div>
         <div class="drawer-mention-time">${formatDate(m.date)} · ${m.time}</div>
       </div>
@@ -2100,12 +2401,20 @@ donutChart = new Chart(doCtx, {
 loadData();
 
 // ══════════════════════════════════════════
-// PAGE 2 — LISTENING / AMPLIFICACIÓN
+// PAGE 2 — RADAR (engagement-based, fixed window)
 // ══════════════════════════════════════════
 
-// ── State ────────────────────────────────
+// ── State P2 ─────────────────────────────
 let p2Initialized = false;
-let p2Data        = null;
+let p2EngData     = null;
+
+// ══════════════════════════════════════════
+// PAGE 3 — MEDIOS (influencers, was old page 2)
+// ══════════════════════════════════════════
+
+// ── State P3 ─────────────────────────────
+let p3Initialized = false;
+let p3Data        = null;
 let lpInfData     = [];
 let lpGroups      = [];
 let lpSortKey     = 'reach';
@@ -2159,272 +2468,261 @@ function lpSentStr(s) {
   return 'neutral';
 }
 
-// ── Init & Load ───────────────────────────
+// ── P2 Init & Load (engagement, fixed window) ──
 function p2Init() {
-  lpInitDonut();
   p2LoadData();
 }
 
+function localDateStr(d) {
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
 async function p2LoadData() {
-  const from = document.getElementById('dateFrom').value;
-  const to   = document.getElementById('dateTo').value;
+  const now = new Date();
+  const todayStr = localDateStr(now);
+  const twoDaysAgo = localDateStr(new Date(now.getTime() - 2*86400000));
+  const sevenDaysAgo = localDateStr(new Date(now.getTime() - 7*86400000));
+
+  const fetchOpts = { headers: { Accept:'application/json', 'ngrok-skip-browser-warning':'true' }, mode:'cors' };
+
   try {
-    const resp = await fetch(`${CONFIG.apiUrl}/api/listening/summary?project_id=${CONFIG.projectId}&dateFrom=${from}&dateTo=${to}`, {
-      headers: { Accept: 'application/json', 'ngrok-skip-browser-warning': 'true' },
-      mode: 'cors',
-    });
-    if (!resp.ok) throw new Error(`HTTP ${resp.status} — ${resp.statusText}`);
-    p2Data = await resp.json();
-    lpMapData();
-    lpRenderAll();
+    const [engResp, listenResp48, listenResp7d] = await Promise.all([
+      fetch(`${CONFIG.apiUrl}/api/v1/engagement?project_id=${CONFIG.projectId}&from_date=${twoDaysAgo}&to_date=${todayStr}`, fetchOpts),
+      fetch(`${CONFIG.apiUrl}/api/listening/summary?project_id=${CONFIG.projectId}&dateFrom=${twoDaysAgo}&dateTo=${todayStr}`, fetchOpts),
+      fetch(`${CONFIG.apiUrl}/api/listening/summary?project_id=${CONFIG.projectId}&dateFrom=${sevenDaysAgo}&dateTo=${todayStr}`, fetchOpts),
+    ]);
+
+    p2EngData = await engResp.json();
+    const listen48 = await listenResp48.json();
+    const listen7d = await listenResp7d.json();
+
+    p2RenderInd01(p2EngData);
+    p2RenderInd02(p2EngData);
+    p2RenderInd03(listen48);
+    p2RenderInd04(listen7d);
   } catch(err) {
     console.error('p2LoadData error:', err);
-    document.getElementById('infList').innerHTML =
-      `<div style="color:var(--red);font-family:var(--font-mono);font-size:10px;padding:14px">// Error: ${err.message}</div>`;
+    const el = document.getElementById('p2-qualGrid');
+    if (el) el.innerHTML = `<div style="color:var(--red);font-family:var(--font-mono);font-size:10px;padding:14px;grid-column:1/-1">// Error: ${err.message}</div>`;
   }
 }
 
-function lpMapData() {
-  if (!p2Data) return;
-  const inf = p2Data.influencers || {};
-  const rawProfiles = inf.profiles || [];
-  const totalMentions = inf.total_mentions || 1;
-  // Map API fields to expected format
-  lpInfData = rawProfiles.map(p => ({
-    name:      p.profile_name || p.name || '—',
-    domain:    p.domain || '',
-    reach:     p.reach     || 0,
-    followers: p.followers || 0,
-    mentions:  p.mentions  || 0,
-    eff:       p.eff       != null ? parseFloat(p.eff) : (p.followers > 0 ? p.reach / p.followers : 0),
-    sov:       totalMentions > 0 ? ((p.mentions || 0) / totalMentions * 100) : 0,
-  }));
-  // Build platform groups from profiles
-  lpGroups = LP_PLATFORMS.map(pl => {
-    const rows = lpInfData.filter(r => r.domain === pl.key);
-    return { ...pl, rows, reach: rows.reduce((s,r)=>s+r.reach,0), mentions: rows.reduce((s,r)=>s+r.mentions,0), perfiles: rows.length };
-  }).filter(g => g.perfiles > 0);
-}
+// ── P2 IND.01 — Qualitative Cards ────────
+let p2QualCats = {};  // stored for modal access
 
-const LP_NO_DATA_HTML = `<div style="padding:24px 0;text-align:center;font-family:var(--font-mono);font-size:10px;color:var(--text-faint);letter-spacing:2px">// SIN DATOS PARA EL PERÍODO SELECCIONADO</div>`;
+const P2_PLAT_META = {
+  'Facebook':    { color:'#1877f2', icon:'f' },
+  'Instagram':   { color:'#e1306c', icon:'◈' },
+  'TikTok':      { color:'#cccccc', icon:'♪' },
+  'X (Twitter)': { color:'#1da1f2', icon:'✦' },
+};
 
-function lpRenderAll() {
-  if (!p2Data) return;
-  lpRenderInd01();
-  lpRenderInd02();
-  lpBuildFilters03(); lpRenderCards03();
-  lpRenderInd04();
-  lpRenderInd05();
-}
+function p2RenderInd01(engData) {
+  const mentions = engData.mentions || [];
+  const grid = document.getElementById('p2-qualGrid');
+  if (!grid) return;
 
-// ── IND.01 ───────────────────────────────
-function lpInd01SortBy(key) {
-  lpSortKey = key;
-  ['sortReach2','sortFollowers2','sortSov2','sortEff2'].forEach(id => {
-    document.getElementById(id)?.classList.remove('active');
+  // Group by category
+  const cats = {};
+  mentions.forEach(m => {
+    const cat = m.category || 'Other';
+    if (!cats[cat]) cats[cat] = { mentions:[], views:0, likes:0, comments:0, shares:0, pos:0, neg:0, neu:0 };
+    const bucket = cats[cat];
+    bucket.mentions.push(m);
+    bucket.views    += (m.views || 0);
+    bucket.likes    += (m.likes || 0);
+    bucket.comments += (m.comments || 0);
+    bucket.shares   += (m.shares || 0);
+    const sent = m.custom_sentiment || m.sentiment || 'neutral';
+    if (sent === 'positive') bucket.pos++;
+    else if (sent === 'negative') bucket.neg++;
+    else bucket.neu++;
   });
-  const map = { reach:'sortReach2', followers:'sortFollowers2', sov:'sortSov2', eff:'sortEff2' };
-  document.getElementById(map[key])?.classList.add('active');
-  lpRenderInd01();
-}
 
-function lpRenderInd01() {
-  if (lpInfData.length === 0) {
-    document.getElementById('icaNumber').innerHTML = `—<span class="ica-pct">%</span>`;
-    document.getElementById('icaPin').style.left = '0%';
-    const st = document.getElementById('icaStatus');
-    st.className = 'ica-status'; st.textContent = 'SIN DATOS';
-    document.getElementById('infList').innerHTML = LP_NO_DATA_HTML;
-    document.getElementById('othersLabel2').textContent = '—';
-    document.getElementById('insight01').innerHTML = '// Sin datos de influencers para el período seleccionado.';
+  // Preferred order
+  const order = ['Facebook', 'Instagram', 'TikTok', 'X (Twitter)'];
+  // Add any remaining categories as News/Web
+  const newsKeys = Object.keys(cats).filter(k => !order.includes(k));
+  // Merge news keys into a single "News/Web" bucket
+  if (newsKeys.length) {
+    const nw = { mentions:[], views:0, likes:0, comments:0, shares:0, pos:0, neg:0, neu:0 };
+    newsKeys.forEach(k => {
+      const b = cats[k];
+      nw.mentions.push(...b.mentions);
+      nw.views+=b.views; nw.likes+=b.likes; nw.comments+=b.comments; nw.shares+=b.shares;
+      nw.pos+=b.pos; nw.neg+=b.neg; nw.neu+=b.neu;
+    });
+    cats['News/Web'] = nw;
+  }
+
+  p2QualCats = cats;
+  const renderOrder = [...order.filter(k => cats[k]), ...(newsKeys.length ? ['News/Web'] : [])]
+    .sort((a, b) => cats[b].mentions.length - cats[a].mentions.length);
+
+  if (renderOrder.length === 0) {
+    grid.innerHTML = `<div style="padding:24px;text-align:center;font-family:var(--font-mono);font-size:10px;color:var(--text-faint);letter-spacing:2px;grid-column:1/-1">// SIN DATOS DE ENGAGEMENT PARA LAS ÚLTIMAS 48HS</div>`;
+    document.getElementById('p2-insight01').innerHTML = '// Sin datos de engagement.';
     return;
   }
-  const sorted = [...lpInfData].sort((a,b) => b[lpSortKey] - a[lpSortKey]);
-  const TOP_N = 3;
-  const top  = sorted.slice(0, TOP_N);
-  const rest = sorted.slice(TOP_N);
-  const totalReach = lpInfData.reduce((s,r)=>s+r.reach,0) || 1;
-  const topReach   = top.reduce((s,r)=>s+r.reach,0);
-  const ica = Math.round(topReach / totalReach * 100);
 
-  document.getElementById('icaNumber').innerHTML = `${ica}<span class="ica-pct">%</span>`;
-  document.getElementById('icaPin').style.left = ica + '%';
+  grid.innerHTML = renderOrder.map(cat => {
+    const b = cats[cat];
+    const total = b.mentions.length;
+    const pctPos = total ? Math.round(b.pos/total*100) : 0;
+    const pctNeg = total ? Math.round(b.neg/total*100) : 0;
+    const pctNeu = 100 - pctPos - pctNeg;
+    const meta = P2_PLAT_META[cat] || { color:'#5a7a94', icon:'●' };
+    const totalViews = Math.round(b.views);
+    const totalEng   = Math.round(b.likes+b.comments+b.shares);
+
+    return `<div class="p2-qual-card" style="border-top:2px solid ${meta.color};cursor:pointer" onclick="p2OpenQualModal('${cat}')">
+      <div class="q-header">
+        <div class="q-icon" style="background:${meta.color}22;color:${meta.color};border:1px solid ${meta.color}44">${meta.icon}</div>
+        <div class="q-plat-name" style="color:${meta.color}">${cat.toUpperCase()}</div>
+      </div>
+      <div class="q-count">${total}</div>
+      <div class="q-count-label">MENCIONES</div>
+      <div class="p2-sent-bar">
+        <div class="sb-pos" style="width:${pctPos}%"></div>
+        <div class="sb-neu" style="width:${pctNeu}%"></div>
+        <div class="sb-neg" style="width:${pctNeg}%"></div>
+      </div>
+      <div class="p2-sent-pcts">
+        <span class="sp-pos">${pctPos}% +</span>
+        <span class="sp-neg">${pctNeg}% −</span>
+      </div>
+      ${(cat==='Instagram'||cat==='Facebook') ? '<div class="q-metric" style="visibility:hidden"><span class="q-metric-label">—</span><span class="q-metric-val">—</span></div>' : `<div class="q-metric">
+        <span class="q-metric-label">REACH</span>
+        <span class="q-metric-val">${lpFmtK(totalViews)}</span>
+      </div>`}
+      <div class="q-metric">
+        <span class="q-metric-label">ENGAGEMENT</span>
+        <span class="q-metric-val">${lpFmtK(totalEng)}</span>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Insight
+  const totalAll = mentions.length;
+  const totalViews = mentions.reduce((s,m) => s+(m.views||0), 0);
+  const topCat = renderOrder.reduce((best, cat) => cats[cat].mentions.length > (cats[best]?.mentions.length||0) ? cat : best, renderOrder[0]);
+  document.getElementById('p2-insight01').innerHTML =
+    `⚡ <span class="hl-a">${totalAll}</span> menciones con engagement real ` +
+    `<span style="opacity:.45">(excepto IG y FB que no disponibilizan información)</span> · ` +
+    `views totales: <span class="hl-y">${lpFmtK(totalViews)}</span> · ` +
+    `mayor volumen: <span class="hl">${topCat}</span> (${cats[topCat].mentions.length})`;
+}
+
+// ── P2 Qualitative Modal ─────
+function p2OpenQualModal(cat) {
+  const bucket = p2QualCats[cat];
+  if (!bucket) return;
+  const meta = P2_PLAT_META[cat] || { color:'#5a7a94', icon:'●' };
+  document.getElementById('p2QualModalTitle').textContent = cat.toUpperCase();
+  document.getElementById('p2QualModalTitle').style.color = meta.color;
+  document.getElementById('p2QualModalSubtitle').textContent =
+    `${bucket.mentions.length} menciones · últimas 48hs`;
+
+  const sorted = [...bucket.mentions].sort((a,b) => (b.views||0) - (a.views||0));
+  const sentCol = {positive:'var(--green)', neutral:'var(--yellow)', negative:'var(--red)'};
+  const body = document.getElementById('p2QualModalBody');
+  body.innerHTML = sorted.map(m => {
+    const sent = m.custom_sentiment || m.sentiment || 'neutral';
+    const title = (m.title || '').replace(/<[^>]*>/g, '');
+    const content = (m.content || m.full_text || '').replace(/<[^>]*>/g, '');
+    const displayTitle = title || (content ? content.substring(0,90)+'…' : '—');
+    const displayContent = content || '';
+    const url = m.url || '';
+    const link = url
+      ? `<a href="${url}" target="_blank" rel="noopener" class="p2q-link">↗ ABRIR FUENTE</a>`
+      : '';
+    return `<div class="p2q-card">
+      <div class="p2q-header">
+        <div class="p2q-sent-dot" style="background:${sentCol[sent]||sentCol.neutral}" title="${sent}"></div>
+        <div class="p2q-domain">${m.domain || '—'}</div>
+        <div class="p2q-date">${m.capture_date || ''}</div>
+      </div>
+      <div class="p2q-title">${displayTitle}</div>
+      ${displayContent ? `<div class="p2q-content">${displayContent}</div>` : ''}
+      <div class="p2q-footer">
+        ${m.views ? `<span class="p2q-stat">VIEWS <b>${lpFmtK(m.views)}</b></span>` : ''}
+        ${m.likes ? `<span class="p2q-stat">LIKES <b>${lpFmtK(m.likes)}</b></span>` : ''}
+        ${m.comments ? `<span class="p2q-stat">COMM <b>${lpFmtK(m.comments)}</b></span>` : ''}
+        ${m.shares ? `<span class="p2q-stat">SHARES <b>${lpFmtK(m.shares)}</b></span>` : ''}
+        ${link}
+      </div>
+    </div>`;
+  }).join('');
+
+  // Footer stats
+  const totV = sorted.reduce((s,m)=>s+(m.views||0),0);
+  const totL = sorted.reduce((s,m)=>s+(m.likes||0),0);
+  const totC = sorted.reduce((s,m)=>s+(m.comments||0),0);
+  const totS = sorted.reduce((s,m)=>s+(m.shares||0),0);
+  document.getElementById('p2QualModalFooter').innerHTML =
+    `<div>MENCIONES: <span class="lp-modal-stat-val">${sorted.length}</span></div>` +
+    `<div>VIEWS: <span class="lp-modal-stat-val">${lpFmtK(totV)}</span></div>` +
+    `<div>LIKES: <span class="lp-modal-stat-val">${lpFmtK(totL)}</span></div>` +
+    `<div>COMMENTS: <span class="lp-modal-stat-val">${lpFmtK(totC)}</span></div>` +
+    `<div>SHARES: <span class="lp-modal-stat-val">${lpFmtK(totS)}</span></div>`;
+
+  document.getElementById('p2QualModalOverlay').classList.add('open');
+}
+
+function p2CloseQualModal() {
+  document.getElementById('p2QualModalOverlay').classList.remove('open');
+}
+
+// ── P2 IND.03 — ICA by Reach (views) ─────
+function p2RenderInd02(engData) {
+  const mentions = engData.mentions || [];
+
+  // Sort mentions by views (individual, not grouped by domain)
+  const withViews = mentions.filter(m => (m.views || 0) > 0);
+  const sorted = withViews.sort((a,b) => (b.views||0) - (a.views||0));
+  const totalViews = sorted.reduce((s,m) => s + (m.views||0), 0) || 1;
+  const top3 = sorted.slice(0, 3);
+  const top3Views = top3.reduce((s,m) => s + (m.views||0), 0);
+  const ica = Math.round(top3Views / totalViews * 100);
+
+  // Gauge
+  document.getElementById('p2-icaNumber').innerHTML = `${ica}<span class="p2-ica-pct">%</span>`;
+  document.getElementById('p2-icaPin').style.left = ica + '%';
   let stCls = 'status-baja', stTxt = '◎ AMPLIFICACIÓN DISTRIBUIDA';
-  if (ica >= 85)      { stCls='status-alta';  stTxt='⚠ CONCENTRACIÓN CRÍTICA'; }
-  else if (ica >= 66) { stCls='status-alta';  stTxt='⚠ ALTA DEPENDENCIA'; }
+  if (ica >= 66)      { stCls='status-alta';  stTxt='⚠ CONCENTRACIÓN CRÍTICA'; }
   else if (ica >= 33) { stCls='status-media'; stTxt='◈ CONCENTRACIÓN MEDIA'; }
-  const st = document.getElementById('icaStatus');
+  const st = document.getElementById('p2-icaStatus');
   st.className = 'ica-status ' + stCls; st.textContent = stTxt;
 
-  const maxVal  = sorted[0]?.[lpSortKey] || 1;
-  const colors  = ['var(--accent)','var(--yellow)','var(--green)'];
-  document.getElementById('infList').innerHTML = top.map((r,i) => {
-    const p   = LP_PLAT[r.domain] || {};
-    const pct = (r[lpSortKey] / maxVal * 100).toFixed(1);
-    const valFmt = lpSortKey==='reach'     ? lpFmtK(r.reach)
-                 : lpSortKey==='followers' ? lpFmtK(r.followers)
-                 : lpSortKey==='sov'       ? r.sov.toFixed(1)+'%'
-                 : r.eff.toFixed(2)+'x';
-    return `<div class="inf-item">
-      <div class="inf-rank">${i+1}</div>
-      <div class="inf-icon" style="background:${p.color||'#333'}">${p.icon||'·'}</div>
-      <div class="inf-info">
-        <div class="inf-name">${r.name}</div>
-        <div class="inf-sub">${r.domain} · ${lpFmtK(r.followers)} seguidores · SoV ${r.sov.toFixed(1)}%</div>
-      </div>
-      <div class="inf-bar-track"><div class="inf-bar-fill" style="width:${pct}%;background:${colors[i]||'var(--text-dim)'};"></div></div>
-      <div class="inf-val" style="color:${colors[i]||'var(--text-dim)'}">${valFmt}</div>
-    </div>`;
-  }).join('');
+  // Top mentions list
+  const colors = ['var(--accent)','var(--yellow)','var(--green)'];
+  const maxVal = top3[0] ? (top3[0].views||0) : 1;
+  document.getElementById('p2-topDomains').innerHTML =
+    (top3.length === 0
+      ? `<div style="padding:14px;font-family:var(--font-mono);font-size:10px;color:var(--text-faint)">// Sin datos de views</div>`
+      : top3.map((m, i) => {
+        const views = m.views || 0;
+        const pct = (views / maxVal * 100).toFixed(1);
+        const label = (m.title || m.content || m.full_text || 'Sin título').replace(/<[^>]*>/g,'').slice(0,50);
+        const dom = m.domain || '';
+        return `<div class="p2-domain-row">
+          <div class="p2-domain-rank" style="color:${colors[i]}">${i+1}</div>
+          <div class="p2-domain-name"><span>${label}</span>${dom ? `<span style="display:block;font-size:8px;color:var(--text-faint);margin-top:1px">${dom}</span>` : ''}</div>
+          <div class="p2-domain-bar"><div class="p2-domain-bar-fill" style="width:${pct}%;background:${colors[i]}"></div></div>
+          <div class="p2-domain-val" style="color:${colors[i]}">${lpFmtK(views)}</div>
+        </div>`;
+      }).join(''));
 
-  const restReach = rest.reduce((s,r)=>s+r.reach,0);
-  const restPct   = totalReach > 0 ? Math.round(restReach/totalReach*100) : 0;
-  document.getElementById('othersLabel2').textContent =
-    `otros ${rest.length} perfiles · reach combinado ~${restPct}% del total`;
-
-  document.getElementById('insight01').innerHTML =
-    `⚡ ICA <span class="hl-y">${ica}%</span> — concentración <span class="hl-y">${ica>=66?'ALTA':'MEDIA'}</span> · ` +
-    `Top 3: <span class="hl">${top.map(r=>r.name).join(', ')}</span> · ` +
-    `${lpInfData.length} perfiles · reach total <span class="hl-a">${lpFmtK(totalReach)}</span>`;
-
-  lpModalDataset = lpInfData;
+  document.getElementById('p2-insight02').innerHTML =
+    `⚡ ICA <span class="hl-y">${ica}%</span> — ` +
+    `Top 3: <span class="hl">${top3.map(m => (m.title||m.domain||'?').replace(/<[^>]*>/g,'').slice(0,25)).join(', ')}</span> · ` +
+    `${sorted.length} menciones con views · total <span class="hl-a">${lpFmtK(totalViews)}</span>`;
 }
 
-// ── IND.02 ───────────────────────────────
-function lpInitDonut() {
-  const ctx = document.getElementById('socialDonut').getContext('2d');
-  lpDonutChart = new Chart(ctx, {
-    type:'doughnut',
-    data:{ datasets:[{ data:[1], backgroundColor:['rgba(0,212,255,0.15)'], borderColor:['#1e2d3d'], borderWidth:1 }] },
-    options:{
-      cutout:'68%', responsive:true, maintainAspectRatio:true,
-      plugins:{ legend:{display:false}, tooltip:{enabled:false} },
-      onClick:(_,els) => { if(els.length && lpGroups[els[0].index]) lpOpenModal02(lpGroups[els[0].index]); }
-    }
-  });
-}
-
-function lpRenderInd02() {
-  if (lpInfData.length === 0) {
-    document.getElementById('centerVal').textContent = '—';
-    document.getElementById('socList').innerHTML = LP_NO_DATA_HTML;
-    document.getElementById('insight02').innerHTML = '// Sin datos para el período seleccionado.';
-    if (lpDonutChart) { lpDonutChart.data.datasets[0].data=[1]; lpDonutChart.data.datasets[0].backgroundColor=['rgba(30,45,61,0.5)']; lpDonutChart.data.labels=[]; lpDonutChart.update(); }
-    return;
-  }
-  const totalReach02 = lpGroups.reduce((s,g)=>s+g.reach,0) || 1;
-  const totalMentions = lpInfData.reduce((s,r)=>s+r.mentions,0);
-
-  if (lpDonutChart && lpGroups.length > 0) {
-    lpDonutChart.data.labels                      = lpGroups.map(g=>g.label);
-    lpDonutChart.data.datasets[0].data            = lpGroups.map(g=>g.reach);
-    lpDonutChart.data.datasets[0].backgroundColor = lpGroups.map(g=>g.color);
-    lpDonutChart.data.datasets[0].borderColor     = ['#0c1118'];
-    lpDonutChart.data.datasets[0].borderWidth     = 3;
-    lpDonutChart.options.plugins.tooltip = {
-      callbacks:{ label: c => {
-        const g = lpGroups[c.dataIndex];
-        return [` Reach: ${lpFmtK(g.reach)} (${(g.reach/totalReach02*100).toFixed(1)}%)`,` Perfiles: ${g.perfiles}`,` Menciones: ${g.mentions}`];
-      }},
-      backgroundColor:'#111820', borderColor:'#1e2d3d', borderWidth:1,
-      titleColor:'#d4e4f0', bodyColor:'#5a7a94',
-      titleFont:{family:'JetBrains Mono',size:11}, bodyFont:{family:'JetBrains Mono',size:10}, padding:10,
-    };
-    lpDonutChart.update();
-  }
-  document.getElementById('centerVal').textContent = totalMentions;
-
-  document.getElementById('socList').innerHTML = lpGroups.map((g,i) => {
-    const pct = (g.reach/totalReach02*100).toFixed(1);
-    return `<div class="soc-item" onclick="lpOpenModal02(lpGroups[${i}])" style="--current-color:${g.color}">
-      <div class="soc-dot" style="background:${g.color}"></div>
-      <div class="soc-name">${g.label}</div>
-      <div class="soc-perfiles">${g.perfiles} perfiles</div>
-      <div class="soc-reach">${lpFmtK(g.reach)}</div>
-      <div class="soc-pct" style="color:${g.color}">${pct}%</div>
-      <div class="soc-arrow">→</div>
-    </div>`;
-  }).join('');
-
-  const fb = lpGroups.find(g=>g.key==='facebook.com');
-  const tk = lpGroups.find(g=>g.key==='tiktok.com');
-  const fbEff = fb && fb.rows.reduce((s,r)=>s+r.followers,0) > 0 ? (fb.reach/fb.rows.reduce((s,r)=>s+r.followers,0)).toFixed(2) : '—';
-  const tkEff = tk && tk.rows.reduce((s,r)=>s+r.followers,0) > 0 ? (tk.reach/tk.rows.reduce((s,r)=>s+r.followers,0)).toFixed(2) : '—';
-  document.getElementById('insight02').innerHTML =
-    `ℹ Reach por plataforma. ` +
-    (fb ? `Eficiencia FB: <span class="hl-a">${fbEff}x</span> · ` : '') +
-    (tk ? `TK: <span class="hl-a">${tkEff}x</span>` : '');
-}
-
-// ── IND.03 ───────────────────────────────
-function lpBuildFilters03() {
-  const bar = document.getElementById('filterBar03');
-  if (!bar) return;
-  bar.innerHTML = `<div class="filter-label">RED:</div>`;
-  LP_FILTERS03.forEach(f => {
-    const btn = document.createElement('button');
-    btn.className = 'filter-btn' + (f.key===lpActiveFilter03?' active':'');
-    btn.style.setProperty('--current-color', f.color);
-    btn.innerHTML = `<span class="fb-dot" style="background:${f.dot}"></span>${f.label}`;
-    btn.onclick = () => { lpActiveFilter03=f.key; lpBuildFilters03(); lpRenderCards03(); };
-    bar.appendChild(btn);
-  });
-}
-
-function lpRenderCards03() {
-  if (lpInfData.length === 0) {
-    document.getElementById('cardsGrid03').innerHTML = LP_NO_DATA_HTML;
-    document.getElementById('insight03').innerHTML = '// Sin datos para el período seleccionado.';
-    return;
-  }
-  const pool   = lpActiveFilter03==='all' ? lpInfData : lpInfData.filter(r=>r.domain===lpActiveFilter03);
-  const sorted = [...pool].sort((a,b)=>b.eff-a.eff);
-  const top5   = sorted.slice(0,5);
-  while (top5.length < 5) top5.push(null);
-  const maxEff = top5[0]?.eff || 1;
-
-  const grid = document.getElementById('cardsGrid03');
-  if (!grid) return;
-  grid.innerHTML = top5.map((r,i) => {
-    if (!r) return `<div class="eff-card" style="opacity:0.15;pointer-events:none;"></div>`;
-    const f = LP_FILTERS03.find(f=>f.key===r.domain) || { label:r.domain, icon:'●', color:'#5a7a94', dot:'#5a7a94' };
-    const ec = lpEffClass(r.eff);
-    const [ilabel, iclass] = lpInterpLabel(r.eff);
-    const barPct   = (r.eff/maxEff*100).toFixed(1);
-    const barColor = r.eff>=2?'var(--green)':r.eff>=0.5?'var(--yellow)':'var(--red)';
-    const rankCls  = i===0?'rank1':i===1?'rank2':i===2?'rank3':'';
-    return `<div class="eff-card ${rankCls}">
-      <div class="eff-platform">
-        <div class="eff-icon" style="background:${f.color}22;color:${f.color}">${f.icon}</div>
-        <div class="eff-platform-name" style="color:${f.color}">${f.label}</div>
-        <div class="eff-rank">#${i+1}</div>
-      </div>
-      <div class="eff-name" title="${r.name}">${r.name}</div>
-      <div class="eff-score ${ec}">${lpFmtNx(r.eff)}</div>
-      <div class="eff-bar-wrap"><div class="eff-bar-fill" style="width:${barPct}%;background:${barColor}"></div></div>
-      <div class="eff-sub">${lpFmtK(r.reach)} reach / ${lpFmtK(r.followers)} followers</div>
-      <div class="eff-sub">${r.mentions} mención${r.mentions!==1?'es':''}</div>
-      <div><span class="eff-interp ${iclass}">${ilabel}</span></div>
-    </div>`;
-  }).join('');
-
-  if (sorted.length) {
-    const viral  = sorted.filter(r=>r.eff>=2).length;
-    const normal = sorted.filter(r=>r.eff>=0.5&&r.eff<2).length;
-    const bajo   = sorted.filter(r=>r.eff<0.5).length;
-    const avg    = sorted.reduce((s,r)=>s+r.eff,0)/sorted.length;
-    const fLabel = lpActiveFilter03==='all' ? 'el conjunto' : (LP_FILTERS03.find(f=>f.key===lpActiveFilter03)?.label||lpActiveFilter03);
-    document.getElementById('insight03').innerHTML =
-      `⚡ <span class="hl">${sorted[0].name}</span> lidera con <span class="hl">${lpFmtNx(sorted[0].eff)}</span> en ${fLabel} · ` +
-      `Distribución: <span class="hl">${viral} viral</span> / <span class="hl-y">${normal} normal</span> / ${bajo} bajo · ` +
-      `Promedio: <span class="hl-y">${avg.toFixed(2)}x</span>`;
-  }
-}
-
-// ── IND.04 ───────────────────────────────
-function lpRenderInd04() {
-  if (!p2Data) return;
-  const ops       = p2Data.operations || {};
+// ── P2 IND.02 — Narrativas Coordinadas (48h listen data) ────
+function p2RenderInd03(listenData) {
+  if (!listenData) return;
+  const ops       = listenData.operations || {};
   const stats     = ops.stats     || {};
   const opList    = ops.list      || [];
   const recurring = ops.recurring || [];
@@ -2483,18 +2781,19 @@ function lpRenderInd04() {
     (recNames ? ` · ${recNames} aparecen en 2+ operaciones distintas` : '') + '.';
 }
 
-// ── IND.05 ───────────────────────────────
-function lpRenderInd05() {
-  if (!p2Data) return;
-  const rd     = p2Data.reach_daily || {};
+// ── P2 IND.04 — Reach S vs NS (7 días) ────
+function p2RenderInd04(listenData) {
+  if (!listenData) return;
+  const rd     = listenData.reach_daily || {};
   const totals = rd.totals || {};
   const peaks  = rd.peaks  || {};
   const series = rd.series || [];
 
-  document.getElementById('i05-total').textContent      = lpFmtK(totals.total     || 0);
-  const from = document.getElementById('dateFrom').value;
-  const to   = document.getElementById('dateTo').value;
-  document.getElementById('i05-period').textContent     = `${from} – ${to} · ${totals.dias_total||0} días`;
+  document.getElementById('i05-total').textContent = lpFmtK(totals.total || 0);
+  const now = new Date();
+  const sevenAgo = localDateStr(new Date(now.getTime() - 7*86400000));
+  const todayS = localDateStr(now);
+  document.getElementById('i05-period').textContent = `${sevenAgo} – ${todayS} · ${totals.dias_total||0} días`;
 
   const pctS = totals.pct_social    || (totals.total > 0 ? totals.social/totals.total*100    : 0);
   const pctN = totals.pct_nonsocial || (totals.total > 0 ? totals.nonsocial/totals.total*100 : 0);
@@ -2524,6 +2823,278 @@ function lpRenderInd05() {
   lpRenderSparkline(series);
 }
 
+// ══════════════════════════════════════════
+// PAGE 3 — MEDIOS (init, load, render)
+// ══════════════════════════════════════════
+
+// ── P3 Init & Load ───────────────────────
+function p3Init() {
+  p3InitDonut();
+  p3LoadData();
+}
+
+async function p3LoadData() {
+  const from = document.getElementById('dateFrom').value;
+  const to   = document.getElementById('dateTo').value;
+  try {
+    const resp = await fetch(`${CONFIG.apiUrl}/api/listening/summary?project_id=${CONFIG.projectId}&dateFrom=${from}&dateTo=${to}`, {
+      headers: { Accept: 'application/json', 'ngrok-skip-browser-warning': 'true' },
+      mode: 'cors',
+    });
+    if (!resp.ok) throw new Error(`HTTP ${resp.status} — ${resp.statusText}`);
+    p3Data = await resp.json();
+    p3MapData();
+    p3RenderAll();
+  } catch(err) {
+    console.error('p3LoadData error:', err);
+    document.getElementById('p3-infList').innerHTML =
+      `<div style="color:var(--red);font-family:var(--font-mono);font-size:10px;padding:14px">// Error: ${err.message}</div>`;
+  }
+}
+
+function p3MapData() {
+  if (!p3Data) return;
+  const inf = p3Data.influencers || {};
+  const rawProfiles = inf.profiles || [];
+  const totalMentions = inf.total_mentions || 1;
+  // Map API fields to expected format
+  lpInfData = rawProfiles.map(p => ({
+    name:      p.profile_name || p.name || '—',
+    domain:    p.domain || '',
+    reach:     p.reach     || 0,
+    followers: p.followers || 0,
+    mentions:  p.mentions  || 0,
+    eff:       p.eff       != null ? parseFloat(p.eff) : (p.followers > 0 ? p.reach / p.followers : 0),
+    sov:       totalMentions > 0 ? ((p.mentions || 0) / totalMentions * 100) : 0,
+  }));
+  // Build platform groups from profiles
+  lpGroups = LP_PLATFORMS.map(pl => {
+    const rows = lpInfData.filter(r => r.domain === pl.key);
+    return { ...pl, rows, reach: rows.reduce((s,r)=>s+r.reach,0), mentions: rows.reduce((s,r)=>s+r.mentions,0), perfiles: rows.length };
+  }).filter(g => g.perfiles > 0);
+}
+
+const LP_NO_DATA_HTML = `<div style="padding:24px 0;text-align:center;font-family:var(--font-mono);font-size:10px;color:var(--text-faint);letter-spacing:2px">// SIN DATOS PARA EL PERÍODO SELECCIONADO</div>`;
+
+function p3RenderAll() {
+  if (!p3Data) return;
+  p3RenderInd01();
+  p3RenderInd02();
+  p3BuildFilters03(); p3RenderCards03();
+}
+
+// ── P3 IND.01 ─────────────────────────────
+function p3Ind01SortBy(key) {
+  lpSortKey = key;
+  ['p3-sortReach','p3-sortFollowers','p3-sortSov','p3-sortEff'].forEach(id => {
+    document.getElementById(id)?.classList.remove('active');
+  });
+  const map = { reach:'p3-sortReach', followers:'p3-sortFollowers', sov:'p3-sortSov', eff:'p3-sortEff' };
+  document.getElementById(map[key])?.classList.add('active');
+  p3RenderInd01();
+}
+
+function p3RenderInd01() {
+  if (lpInfData.length === 0) {
+    document.getElementById('p3-icaNumber').innerHTML = `—<span class="ica-pct">%</span>`;
+    document.getElementById('p3-icaPin').style.left = '0%';
+    const st = document.getElementById('p3-icaStatus');
+    st.className = 'ica-status'; st.textContent = 'SIN DATOS';
+    document.getElementById('p3-infList').innerHTML = LP_NO_DATA_HTML;
+    document.getElementById('p3-othersLabel').textContent = '—';
+    document.getElementById('p3-insight01').innerHTML = '// Sin datos de influencers para el período seleccionado.';
+    return;
+  }
+  const sorted = [...lpInfData].sort((a,b) => b[lpSortKey] - a[lpSortKey]);
+  const TOP_N = 3;
+  const top  = sorted.slice(0, TOP_N);
+  const rest = sorted.slice(TOP_N);
+  const totalReach = lpInfData.reduce((s,r)=>s+r.reach,0) || 1;
+  const topReach   = top.reduce((s,r)=>s+r.reach,0);
+  const ica = Math.round(topReach / totalReach * 100);
+
+  document.getElementById('p3-icaNumber').innerHTML = `${ica}<span class="ica-pct">%</span>`;
+  document.getElementById('p3-icaPin').style.left = ica + '%';
+  let stCls = 'status-baja', stTxt = '◎ AMPLIFICACIÓN DISTRIBUIDA';
+  if (ica >= 85)      { stCls='status-alta';  stTxt='⚠ CONCENTRACIÓN CRÍTICA'; }
+  else if (ica >= 66) { stCls='status-alta';  stTxt='⚠ ALTA DEPENDENCIA'; }
+  else if (ica >= 33) { stCls='status-media'; stTxt='◈ CONCENTRACIÓN MEDIA'; }
+  const st = document.getElementById('p3-icaStatus');
+  st.className = 'ica-status ' + stCls; st.textContent = stTxt;
+
+  const maxVal  = sorted[0]?.[lpSortKey] || 1;
+  const colors  = ['var(--accent)','var(--yellow)','var(--green)'];
+  document.getElementById('p3-infList').innerHTML = top.map((r,i) => {
+    const p   = LP_PLAT[r.domain] || {};
+    const pct = (r[lpSortKey] / maxVal * 100).toFixed(1);
+    const valFmt = lpSortKey==='reach'     ? lpFmtK(r.reach)
+                 : lpSortKey==='followers' ? lpFmtK(r.followers)
+                 : lpSortKey==='sov'       ? r.sov.toFixed(1)+'%'
+                 : r.eff.toFixed(2)+'x';
+    return `<div class="inf-item">
+      <div class="inf-rank">${i+1}</div>
+      <div class="inf-icon" style="background:${p.color||'#333'}">${p.icon||'·'}</div>
+      <div class="inf-info">
+        <div class="inf-name">${r.name}</div>
+        <div class="inf-sub">${r.domain} · ${lpFmtK(r.followers)} seguidores · SoV ${r.sov.toFixed(1)}%</div>
+      </div>
+      <div class="inf-bar-track"><div class="inf-bar-fill" style="width:${pct}%;background:${colors[i]||'var(--text-dim)'};"></div></div>
+      <div class="inf-val" style="color:${colors[i]||'var(--text-dim)'}">${valFmt}</div>
+    </div>`;
+  }).join('');
+
+  const restReach = rest.reduce((s,r)=>s+r.reach,0);
+  const restPct   = totalReach > 0 ? Math.round(restReach/totalReach*100) : 0;
+  document.getElementById('p3-othersLabel').textContent =
+    `otros ${rest.length} perfiles · reach combinado ~${restPct}% del total`;
+
+  document.getElementById('p3-insight01').innerHTML =
+    `⚡ ICA <span class="hl-y">${ica}%</span> — concentración <span class="hl-y">${ica>=66?'ALTA':'MEDIA'}</span> · ` +
+    `Top 3: <span class="hl">${top.map(r=>r.name).join(', ')}</span> · ` +
+    `${lpInfData.length} perfiles · reach total <span class="hl-a">${lpFmtK(totalReach)}</span>`;
+
+  lpModalDataset = lpInfData;
+}
+
+// ── P3 IND.02 ─────────────────────────────
+function p3InitDonut() {
+  const ctx = document.getElementById('p3-socialDonut').getContext('2d');
+  lpDonutChart = new Chart(ctx, {
+    type:'doughnut',
+    data:{ datasets:[{ data:[1], backgroundColor:['rgba(0,212,255,0.15)'], borderColor:['#1e2d3d'], borderWidth:1 }] },
+    options:{
+      cutout:'68%', responsive:true, maintainAspectRatio:true,
+      plugins:{ legend:{display:false}, tooltip:{enabled:false} },
+      onClick:(_,els) => { if(els.length && lpGroups[els[0].index]) lpOpenModal02(lpGroups[els[0].index]); }
+    }
+  });
+}
+
+function p3RenderInd02() {
+  if (lpInfData.length === 0) {
+    document.getElementById('p3-centerVal').textContent = '—';
+    document.getElementById('p3-socList').innerHTML = LP_NO_DATA_HTML;
+    document.getElementById('p3-insight02').innerHTML = '// Sin datos para el período seleccionado.';
+    if (lpDonutChart) { lpDonutChart.data.datasets[0].data=[1]; lpDonutChart.data.datasets[0].backgroundColor=['rgba(30,45,61,0.5)']; lpDonutChart.data.labels=[]; lpDonutChart.update(); }
+    return;
+  }
+  const totalReach02 = lpGroups.reduce((s,g)=>s+g.reach,0) || 1;
+  const totalMentions = lpInfData.reduce((s,r)=>s+r.mentions,0);
+
+  if (lpDonutChart && lpGroups.length > 0) {
+    lpDonutChart.data.labels                      = lpGroups.map(g=>g.label);
+    lpDonutChart.data.datasets[0].data            = lpGroups.map(g=>g.reach);
+    lpDonutChart.data.datasets[0].backgroundColor = lpGroups.map(g=>g.color);
+    lpDonutChart.data.datasets[0].borderColor     = ['#0c1118'];
+    lpDonutChart.data.datasets[0].borderWidth     = 3;
+    lpDonutChart.options.plugins.tooltip = {
+      callbacks:{ label: c => {
+        const g = lpGroups[c.dataIndex];
+        return [` Reach: ${lpFmtK(g.reach)} (${(g.reach/totalReach02*100).toFixed(1)}%)`,` Perfiles: ${g.perfiles}`,` Menciones: ${g.mentions}`];
+      }},
+      backgroundColor:'#111820', borderColor:'#1e2d3d', borderWidth:1,
+      titleColor:'#d4e4f0', bodyColor:'#5a7a94',
+      titleFont:{family:'JetBrains Mono',size:11}, bodyFont:{family:'JetBrains Mono',size:10}, padding:10,
+    };
+    lpDonutChart.update();
+  }
+  document.getElementById('p3-centerVal').textContent = totalMentions;
+
+  document.getElementById('p3-socList').innerHTML = lpGroups.map((g,i) => {
+    const pct = (g.reach/totalReach02*100).toFixed(1);
+    return `<div class="soc-item" onclick="lpOpenModal02(lpGroups[${i}])" style="--current-color:${g.color}">
+      <div class="soc-dot" style="background:${g.color}"></div>
+      <div class="soc-name">${g.label}</div>
+      <div class="soc-perfiles">${g.perfiles} perfiles</div>
+      <div class="soc-reach">${lpFmtK(g.reach)}</div>
+      <div class="soc-pct" style="color:${g.color}">${pct}%</div>
+      <div class="soc-arrow">→</div>
+    </div>`;
+  }).join('');
+
+  const fb = lpGroups.find(g=>g.key==='facebook.com');
+  const tk = lpGroups.find(g=>g.key==='tiktok.com');
+  const fbEff = fb && fb.rows.reduce((s,r)=>s+r.followers,0) > 0 ? (fb.reach/fb.rows.reduce((s,r)=>s+r.followers,0)).toFixed(2) : '—';
+  const tkEff = tk && tk.rows.reduce((s,r)=>s+r.followers,0) > 0 ? (tk.reach/tk.rows.reduce((s,r)=>s+r.followers,0)).toFixed(2) : '—';
+  document.getElementById('p3-insight02').innerHTML =
+    `ℹ Reach por plataforma. ` +
+    (fb ? `Eficiencia FB: <span class="hl-a">${fbEff}x</span> · ` : '') +
+    (tk ? `TK: <span class="hl-a">${tkEff}x</span>` : '');
+}
+
+// ── P3 IND.03 ─────────────────────────────
+function p3BuildFilters03() {
+  const bar = document.getElementById('p3-filterBar03');
+  if (!bar) return;
+  bar.innerHTML = `<div class="filter-label">RED:</div>`;
+  LP_FILTERS03.forEach(f => {
+    const btn = document.createElement('button');
+    btn.className = 'filter-btn' + (f.key===lpActiveFilter03?' active':'');
+    btn.style.setProperty('--current-color', f.color);
+    btn.innerHTML = `<span class="fb-dot" style="background:${f.dot}"></span>${f.label}`;
+    btn.onclick = () => { lpActiveFilter03=f.key; p3BuildFilters03(); p3RenderCards03(); };
+    bar.appendChild(btn);
+  });
+}
+
+function p3RenderCards03() {
+  if (lpInfData.length === 0) {
+    document.getElementById('p3-cardsGrid03').innerHTML = LP_NO_DATA_HTML;
+    document.getElementById('p3-insight03').innerHTML = '// Sin datos para el período seleccionado.';
+    return;
+  }
+  // Filtro global: descartar tercio inferior de reach
+  const byReach = [...lpInfData].sort((a,b) => b.reach - a.reach);
+  const cutIndex = Math.ceil(byReach.length * 2 / 3);
+  const afterReachFilter = byReach.length >= 3 ? byReach.slice(0, cutIndex) : [...byReach];
+  const excludedCount = lpInfData.length - afterReachFilter.length;
+
+  const pool   = lpActiveFilter03==='all' ? afterReachFilter : afterReachFilter.filter(r=>r.domain===lpActiveFilter03);
+  const sorted = [...pool].sort((a,b)=>b.eff-a.eff);
+  const top5   = sorted.slice(0,5);
+  while (top5.length < 5) top5.push(null);
+  const maxEff = top5[0]?.eff || 1;
+
+  const grid = document.getElementById('p3-cardsGrid03');
+  if (!grid) return;
+  grid.innerHTML = top5.map((r,i) => {
+    if (!r) return `<div class="eff-card" style="opacity:0.15;pointer-events:none;"></div>`;
+    const f = LP_FILTERS03.find(f=>f.key===r.domain) || { label:r.domain, icon:'●', color:'#5a7a94', dot:'#5a7a94' };
+    const ec = lpEffClass(r.eff);
+    const [ilabel, iclass] = lpInterpLabel(r.eff);
+    const barPct   = (r.eff/maxEff*100).toFixed(1);
+    const barColor = r.eff>=2?'var(--green)':r.eff>=0.5?'var(--yellow)':'var(--red)';
+    const rankCls  = i===0?'rank1':i===1?'rank2':i===2?'rank3':'';
+    return `<div class="eff-card ${rankCls}">
+      <div class="eff-platform">
+        <div class="eff-icon" style="background:${f.color}22;color:${f.color}">${f.icon}</div>
+        <div class="eff-platform-name" style="color:${f.color}">${f.label}</div>
+        <div class="eff-rank">#${i+1}</div>
+      </div>
+      <div class="eff-name" title="${r.name}">${r.name}</div>
+      <div class="eff-score ${ec}">${lpFmtNx(r.eff)}</div>
+      <div class="eff-bar-wrap"><div class="eff-bar-fill" style="width:${barPct}%;background:${barColor}"></div></div>
+      <div class="eff-sub">${lpFmtK(r.reach)} reach / ${lpFmtK(r.followers)} followers</div>
+      <div class="eff-sub">${r.mentions} mención${r.mentions!==1?'es':''}</div>
+      <div><span class="eff-interp ${iclass}">${ilabel}</span></div>
+    </div>`;
+  }).join('');
+
+  if (sorted.length) {
+    const viral  = sorted.filter(r=>r.eff>=2).length;
+    const normal = sorted.filter(r=>r.eff>=0.5&&r.eff<2).length;
+    const bajo   = sorted.filter(r=>r.eff<0.5).length;
+    const avg    = sorted.reduce((s,r)=>s+r.eff,0)/sorted.length;
+    const fLabel = lpActiveFilter03==='all' ? 'el conjunto' : (LP_FILTERS03.find(f=>f.key===lpActiveFilter03)?.label||lpActiveFilter03);
+    document.getElementById('p3-insight03').innerHTML =
+      `⚡ <span class="hl">${sorted[0].name}</span> lidera con <span class="hl">${lpFmtNx(sorted[0].eff)}</span> en ${fLabel} · ` +
+      `Distribución: <span class="hl">${viral} viral</span> / <span class="hl-y">${normal} normal</span> / ${bajo} bajo · ` +
+      `Promedio: <span class="hl-y">${avg.toFixed(2)}x</span>` +
+      (excludedCount > 0 ? ` · <span style="color:var(--text-faint)">${excludedCount} medio${excludedCount!==1?'s':''} excluido${excludedCount!==1?'s':''} (tercio inferior reach)</span>` : '');
+  }
+}
+
+// ── Sparkline (shared) ─────────────────────
 function lpRenderSparkline(series) {
   if (!series || series.length === 0) return;
   const canvas = document.getElementById('spark05');
@@ -2687,12 +3258,12 @@ function renderBriefing(data) {
   if (!body) return;
   const esc = s => (s||'').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   const b = data.briefing || {};
-  const score = b.ics_score !== undefined ? b.ics_score : (b.clima_social_score !== undefined ? b.clima_social_score : '—');
-  const label = esc(b.ics_label || b.clima_social_label || '');
+  const score = b.tm_score !== undefined ? b.tm_score : (b.ics_score !== undefined ? b.ics_score : '—');
+  const label = esc(b.tm_label || b.ics_label || '');
   const sent  = esc(b.sentimiento || '');
   const narr  = esc(b.narrativa_dominante || '');
   body.innerHTML =
-    `<p><strong>ICS:</strong> ${score} — ${label}</p>` +
+    `<p><strong>TM:</strong> ${score > 0 ? '+' : ''}${score} — ${label}</p>` +
     `<p>${sent}</p>` +
     `<p>${narr}</p>` +
     `<span class="briefing-link" onclick="openBriefingModal()">[ VER ANÁLISIS COMPLETO → ]</span>`;
@@ -2704,10 +3275,10 @@ function openBriefingModal() {
   document.getElementById('briefingModalDateRange').textContent = `${BRIEFING_DATA.from_date} → ${BRIEFING_DATA.to_date}`;
 
   const b = BRIEFING_DATA.briefing || {};
-  const bIcsScore = b.ics_score !== undefined ? b.ics_score : (b.clima_social_score !== undefined ? b.clima_social_score : '—');
-  const bIcsLabel = esc(b.ics_label || b.clima_social_label || '');
+  const bTmScore = b.tm_score !== undefined ? b.tm_score : (b.ics_score !== undefined ? b.ics_score : '—');
+  const bTmLabel = esc(b.tm_label || b.ics_label || '');
   document.getElementById('briefingModalBriefing').innerHTML =
-    `<p><strong>ICS:</strong> ${bIcsScore} — ${bIcsLabel}</p>` +
+    `<p><strong>TM:</strong> ${bTmScore > 0 ? '+' : ''}${bTmScore} — ${bTmLabel}</p>` +
     `<p><strong>Sentimiento:</strong> ${esc(b.sentimiento)}</p>` +
     `<p><strong>Polarización:</strong> ${b.polarizacion_pct}%</p>` +
     `<p><strong>Narrativa dominante:</strong> ${esc(b.narrativa_dominante)}</p>`;

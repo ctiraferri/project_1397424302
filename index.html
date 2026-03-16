@@ -2611,10 +2611,10 @@ function calcICS2(d) {
   const negPct = neg / total * 100;
   const negScore = negPct;
 
-  // Componente 3: Polarización (30%) — enfrentamiento real de bandos
+  // Componente 3: Polarización (30%) — dominio de un polo
   const posPct = pos / total * 100;
   const polar = 2 * Math.min(posPct, negPct);
-  const polarScore = polar;
+  const polarScore = 100 - polar;
 
   // ICS compuesto
   const raw = volScore * 0.30 + negScore * 0.40 + polarScore * 0.30;
@@ -2885,7 +2885,7 @@ const CALCS = {
   ics2: {
     title: 'ÍNDICE DE CLIMA SOCIAL (ICS 2.0)',
     formula: 'ICS = Volumen×0.30 + Negatividad×0.40 + Polarización×0.30',
-    body: '3 componentes normalizados a 0–100:\n\n① VOLUMEN (30%): promedio diario del período filtrado ÷ promedio diario últimos 90 días. Ratio 1×=25pts, 2×=50pts, 4×+=100pts.\n\n② NEGATIVIDAD (40%): % de menciones negativas sobre el total. Valor directo (37% neg = 37 pts). Peso mayor por ser la señal más directa de crisis.\n\n③ POLARIZACIÓN (30%): 2×min(pos%,neg%). Mide enfrentamiento real entre bandos. 50=bandos equilibrados, 0=domina un solo polo.\n\nNiveles: Tranquila <25 · Monitoreo 25–49 · Tensión 50–74 · Crisis ≥75'
+    body: '3 componentes normalizados a 0–100:\n\n① VOLUMEN (30%): promedio diario del período filtrado ÷ promedio diario últimos 90 días. Ratio 1×=25pts, 2×=50pts, 4×+=100pts.\n\n② NEGATIVIDAD (40%): % de menciones negativas sobre el total. Valor directo (37% neg = 37 pts). Peso mayor por ser la señal más directa de crisis.\n\n③ POLARIZACIÓN (30%): 100 − 2×min(pos%,neg%). Mide dominio de un polo. 100=un solo bando domina, 50=bandos equilibrados.\n\nNiveles: Tranquila <25 · Monitoreo 25–49 · Tensión 50–74 · Crisis ≥75'
   },
   ics: {
     title: 'TEMPERATURA DE MENCIONES (TM)',

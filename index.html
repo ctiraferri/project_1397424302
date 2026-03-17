@@ -3269,10 +3269,7 @@ function o_lpRenderCardsTier(items, gridId, labelId) {
   grid.innerHTML = top5.map((r,i) => {
     if (!r) return `<div class="eff-card" style="opacity:0.15;pointer-events:none;"></div>`;
     const f = O_LP_FILTERS03.find(f=>f.key===r.domain) || { label:r.domain, icon:'●', color:'#5a7a94', dot:'#5a7a94' };
-    const ec = o_lpEffClass(r.eff);
-    const [ilabel, iclass] = o_lpInterpLabel(r.eff);
     const barPct   = (r.eff/maxEff*100).toFixed(1);
-    const barColor = r.eff>=2?'var(--green)':r.eff>=0.5?'var(--yellow)':'var(--red)';
     const rankCls  = i===0?'rank1':i===1?'rank2':i===2?'rank3':'';
     return `<div class="eff-card ${rankCls}">
       <div class="eff-platform">
@@ -3281,8 +3278,8 @@ function o_lpRenderCardsTier(items, gridId, labelId) {
         <div class="eff-rank">#${i+1}</div>
       </div>
       <div class="eff-name" title="${r.name}">${r.name}</div>
-      <div class="eff-score ${ec}">${o_lpFmtK(r.followers)} <span class="eff-men-inline">/ ${r.mentions} Men.</span></div>
-      <div class="eff-bar-wrap"><div class="eff-bar-fill" style="width:${barPct}%;background:${barColor}"></div></div>
+      <div class="eff-score" style="color:var(--accent)">${o_lpFmtK(r.followers)} <span class="eff-men-inline" style="color:var(--accent);opacity:0.6">/ ${r.mentions} Men.</span></div>
+      <div class="eff-bar-wrap"><div class="eff-bar-fill" style="width:${barPct}%;background:var(--accent)"></div></div>
     </div>`;
   }).join('');
 }

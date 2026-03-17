@@ -671,15 +671,15 @@
   #page2 .op-list { display:flex; flex-direction:column; gap:6px; margin-bottom:16px; }
   #page2 .op-card { background:var(--bg-card); border:1px solid var(--border-dim); border-left:3px solid transparent; padding:10px 14px; transition:background 0.15s; }
   #page2 .op-card:hover { background:var(--bg-hover); }
-  #page2 .op-card.size3 { border-left-color:var(--red); }
-  #page2 .op-card.size2 { border-left-color:var(--yellow); }
+  #page2 .op-card.size3 { border-left-color:var(--border); }
+  #page2 .op-card.size2 { border-left-color:var(--border); }
   #page2 .op-top { display:flex; align-items:flex-start; gap:10px; margin-bottom:7px; }
   #page2 .op-size { flex-shrink:0; width:36px; height:36px; display:flex; flex-direction:column; align-items:center; justify-content:center; border:1px solid; }
-  #page2 .op-size.s3 { border-color:var(--red-brd); background:var(--red-dim); }
-  #page2 .op-size.s2 { border-color:var(--yellow-brd); background:var(--yellow-dim); }
+  #page2 .op-size.s3 { border-color:var(--border-dim); background:transparent; }
+  #page2 .op-size.s2 { border-color:var(--border-dim); background:transparent; }
   #page2 .op-size-num { font-family:var(--font-display); font-size:20px; line-height:1; }
-  #page2 .op-size.s3 .op-size-num { color:var(--red); }
-  #page2 .op-size.s2 .op-size-num { color:var(--yellow); }
+  #page2 .op-size.s3 .op-size-num { color:var(--text-dim); }
+  #page2 .op-size.s2 .op-size-num { color:var(--text-dim); }
   #page2 .op-size-label { font-family:var(--font-mono); font-size:7px; color:var(--text-faint); letter-spacing:1px; }
   #page2 .op-meta { flex:1; min-width:0; }
   #page2 .op-title { font-family:var(--font-ui); font-size:13px; font-weight:600; color:var(--text-main); line-height:1.3; margin-bottom:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
@@ -692,11 +692,11 @@
   #page2 .category-badge { font-family:var(--font-mono); font-size:8px; letter-spacing:1px; padding:2px 7px; border:1px solid var(--border-dim); color:var(--text-faint); }
   #page2 .op-domains { display:flex; align-items:center; gap:5px; flex-wrap:wrap; margin-top:7px; }
   #page2 .domain-tag { font-family:var(--font-mono); font-size:9px; color:var(--accent); background:var(--accent-dim); padding:2px 8px; border:1px solid rgba(0,212,255,0.15); }
-  #page2 .domain-tag.recurrent { color:var(--red); background:var(--red-dim); border-color:var(--red-brd); }
+  #page2 .domain-tag.recurrent { color:var(--accent); background:var(--accent-dim); border-color:rgba(0,212,255,0.15); }
   #page2 .rec-grid { display:flex; flex-direction:column; gap:6px; margin-bottom:16px; }
-  #page2 .rec-row { display:flex; align-items:center; gap:12px; padding:8px 12px; background:var(--bg-card); border:1px solid var(--red-brd); }
-  #page2 .rec-domain { font-family:var(--font-mono); font-size:11px; color:var(--red); flex:1; }
-  #page2 .rec-count  { font-family:var(--font-display); font-size:22px; color:var(--red); width:32px; text-align:right; }
+  #page2 .rec-row { display:flex; align-items:center; gap:12px; padding:8px 12px; background:var(--bg-card); border:1px solid var(--border-dim); }
+  #page2 .rec-domain { font-family:var(--font-mono); font-size:11px; color:var(--accent); flex:1; }
+  #page2 .rec-count  { font-family:var(--font-display); font-size:22px; color:var(--text-main); width:32px; text-align:right; }
   #page2 .rec-label  { font-family:var(--font-mono); font-size:9px; color:var(--text-faint); }
   #page2 .rec-ops    { font-family:var(--font-mono); font-size:9px; color:var(--text-dim); flex:2; }
   /* IND.05 */
@@ -975,11 +975,11 @@
   #page3 .category-badge { font-family:var(--font-mono); font-size:8px; letter-spacing:1px; padding:2px 7px; border:1px solid var(--border-dim); color:var(--text-faint); }
   #page3 .op-domains { display:flex; align-items:center; gap:5px; flex-wrap:wrap; margin-top:7px; }
   #page3 .domain-tag { font-family:var(--font-mono); font-size:9px; color:var(--accent); background:var(--accent-dim); padding:2px 8px; border:1px solid rgba(0,212,255,0.15); }
-  #page3 .domain-tag.recurrent { color:var(--red); background:var(--red-dim); border-color:var(--red-brd); }
+  #page3 .domain-tag.recurrent { color:var(--accent); background:var(--accent-dim); border-color:rgba(0,212,255,0.15); }
   #page3 .rec-grid { display:flex; flex-direction:column; gap:6px; margin-bottom:16px; }
-  #page3 .rec-row { display:flex; align-items:center; gap:12px; padding:8px 12px; background:var(--bg-card); border:1px solid var(--red-brd); }
-  #page3 .rec-domain { font-family:var(--font-mono); font-size:11px; color:var(--red); flex:1; }
-  #page3 .rec-count  { font-family:var(--font-display); font-size:22px; color:var(--red); width:32px; text-align:right; }
+  #page3 .rec-row { display:flex; align-items:center; gap:12px; padding:8px 12px; background:var(--bg-card); border:1px solid var(--border-dim); }
+  #page3 .rec-domain { font-family:var(--font-mono); font-size:11px; color:var(--accent); flex:1; }
+  #page3 .rec-count  { font-family:var(--font-display); font-size:22px; color:var(--text-main); width:32px; text-align:right; }
   #page3 .rec-label  { font-family:var(--font-mono); font-size:9px; color:var(--text-faint); }
   #page3 .rec-ops    { font-family:var(--font-mono); font-size:9px; color:var(--text-dim); flex:2; }
   /* IND.05 */
@@ -1303,7 +1303,7 @@
 
   /* ── Narrativa Dominante ────────────────────────────── */
   .narrativa-section { display:flex; flex-direction:column; gap:0; height:100%; }
-  .narrativa-week { flex:1; padding:8px 0; border-bottom:1px solid var(--border-dim); overflow:hidden; position:relative; }
+  .narrativa-week { flex:1; padding:8px 0; border-bottom:1px solid var(--border-dim); overflow:visible; position:relative; }
   .narrativa-week:last-child { border-bottom:none; }
   .narrativa-week-hdr { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:5px; }
   .narrativa-week-label { font-family:var(--font-mono); font-size:8px; color:var(--text-dim); letter-spacing:2px; }
@@ -1311,18 +1311,6 @@
   .narrativa-cloud { line-height:1.6; }
   .nterm { display:inline-block; margin:2px 3px; padding:2px 7px; border:1px solid currentColor; font-family:var(--font-mono); cursor:pointer; transition:opacity 0.2s; }
   .nterm:hover { opacity:0.7; }
-  .narrativa-more { font-family:var(--font-mono); font-size:8px; color:var(--accent); cursor:pointer; margin-top:4px; display:block; }
-  /* Modal Narrativa */
-  #narrativaModal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:1000; align-items:flex-start; justify-content:center; padding-top:0; }
-  #narrativaModal.open { display:flex; }
-  .narrativa-modal-box { background:var(--bg-panel); border:1px solid var(--border); padding:24px; max-width:600px; width:90%; max-height:92vh; overflow-y:auto; }
-  .narrativa-modal-box::-webkit-scrollbar { width:4px; }
-  .narrativa-modal-box::-webkit-scrollbar-track { background:var(--bg-deep); }
-  .narrativa-modal-box::-webkit-scrollbar-thumb { background:var(--accent); }
-  .narrativa-modal-box::-webkit-scrollbar-thumb:hover { background:var(--text-main); }
-  .narrativa-modal-title { font-family:var(--font-mono); font-size:11px; color:var(--accent); letter-spacing:3px; margin-bottom:16px; }
-  .narrativa-modal-week { margin-bottom:20px; }
-  .narrativa-modal-close { font-family:var(--font-mono); font-size:9px; color:var(--text-dim); cursor:pointer; float:right; }
   /* Panel & Modal Briefing IA */
   #briefingPanel { overflow-y:auto; }
   #briefingPanel .panel-title { font-size:9px; letter-spacing:2px; margin-bottom:10px; padding-bottom:8px; }
@@ -1355,7 +1343,7 @@
       <div class="header-subject">
         <div class="label">// CLIENTE</div>
         <div class="name">HORACIO RODRÍGUEZ LARRETA</div>
-        <div class="sub">Intendente · San Nicolás · Prov. Buenos Aires</div>
+        <div class="sub">Ex Jefe de Gobierno · CABA</div>
       </div>
     </div>
     <div class="header-right">
@@ -1575,14 +1563,6 @@
       </div>
     </div>
 
-    <!-- Modal Narrativa -->
-    <div id="narrativaModal">
-      <div class="narrativa-modal-box">
-        <span class="narrativa-modal-close" onclick="closeNarrativaModal()">[ CERRAR ]</span>
-        <div class="narrativa-modal-title">NARRATIVA DOMINANTE — DETALLE</div>
-        <div id="narrativaModalBody"></div>
-      </div>
-    </div>
 
 
     <!-- FEED -->
@@ -1720,7 +1700,7 @@
         <!-- IND.04 -->
         <div class="panel" id="lp2-panel-ind04">
           <div class="panel-header" data-color="red">
-            <div class="panel-title">IND. 04 — POSIBLES OPERACIONES COORDINADAS</div>
+            <div class="panel-title">IND. 04 — POSIBLES NARRATIVAS COORDINADAS</div>
             <div class="help-btn r">?
               <div class="help-tooltip">
                 <div class="help-tt-title">// ¿QUÉ ES UNA OPERACIÓN?</div>
@@ -1730,14 +1710,14 @@
             </div>
           </div>
           <div class="stats-row" id="lp2-stats04">
-            <div class="stat-box"><div class="stat-label">OPERACIONES ACTIVAS</div><div class="stat-val red" id="lp2-s04-ops">—</div><div class="stat-sub">narrativas coordinadas</div></div>
-            <div class="stat-box"><div class="stat-label">MEDIOS INVOLUCRADOS</div><div class="stat-val accent" id="lp2-s04-media">—</div><div class="stat-sub">operadores únicos</div></div>
-            <div class="stat-box"><div class="stat-label">POSIBLES OPERADORES RECURRENTES</div><div class="stat-val yellow" id="lp2-s04-recur">—</div><div class="stat-sub">en 2+ operaciones</div></div>
-            <div class="stat-box"><div class="stat-label">MAYOR ALCANCE</div><div class="stat-val red" id="lp2-s04-max">—</div><div class="stat-sub" id="lp2-s04-maxsub">medios</div></div>
+            <div class="stat-box"><div class="stat-label">COORDINACIONES ACTIVAS</div><div class="stat-val" id="lp2-s04-ops">—</div><div class="stat-sub">narrativas coordinadas</div></div>
+            <div class="stat-box"><div class="stat-label">ACTORES INVOLUCRADOS</div><div class="stat-val" id="lp2-s04-media">—</div><div class="stat-sub">operadores únicos</div></div>
+            <div class="stat-box"><div class="stat-label">NARRATIVAS RECURRENTES</div><div class="stat-val" id="lp2-s04-recur">—</div><div class="stat-sub">en 2+ narrativas</div></div>
+            <div class="stat-box"><div class="stat-label">MAYOR ALCANCE</div><div class="stat-val" id="lp2-s04-max">—</div><div class="stat-sub" id="lp2-s04-maxsub">medios</div></div>
           </div>
-          <div class="section-label">// OPERACIONES DETECTADAS</div>
+          <div class="section-label">// NARRATIVAS DETECTADAS</div>
           <div class="op-list" id="lp2-opList04"></div>
-          <div class="section-label">// POSIBLES OPERADORES RECURRENTES</div>
+          <div class="section-label">// NARRATIVAS RECURRENTES</div>
           <div class="rec-grid" id="lp2-recGrid04"></div>
           <div class="insight-bar" id="lp2-insight04">⚡ Cargando datos…</div>
         </div>
@@ -1846,13 +1826,13 @@
           </div>
           <div class="stats-row" id="stats04">
             <div class="stat-box"><div class="stat-label">COORDINACIONES ACTIVAS</div><div class="stat-val" id="s04-ops">—</div><div class="stat-sub">narrativas coordinadas</div></div>
-            <div class="stat-box"><div class="stat-label">ACTORES INVOLUCRADOS</div><div class="stat-val" id="s04-media">—</div><div class="stat-sub">operadores únicos</div></div>
-            <div class="stat-box"><div class="stat-label">POSIBLES OPERADORES RECURRENTES</div><div class="stat-val" id="s04-recur">—</div><div class="stat-sub">en 2+ operaciones</div></div>
+            <div class="stat-box"><div class="stat-label">ACTORES INVOLUCRADOS</div><div class="stat-val" id="s04-media">—</div><div class="stat-sub">actores únicos</div></div>
+            <div class="stat-box"><div class="stat-label">NARRATIVAS RECURRENTES</div><div class="stat-val" id="s04-recur">—</div><div class="stat-sub">en 2+ narrativas</div></div>
             <div class="stat-box"><div class="stat-label">MAYOR ALCANCE</div><div class="stat-val" id="s04-max">—</div><div class="stat-sub" id="s04-maxsub">medios</div></div>
           </div>
-          <div class="section-label">// OPERACIONES DETECTADAS</div>
+          <div class="section-label">// NARRATIVAS DETECTADAS</div>
           <div class="op-list" id="opList04"></div>
-          <div class="section-label">// POSIBLES OPERADORES RECURRENTES</div>
+          <div class="section-label">// NARRATIVAS RECURRENTES</div>
           <div class="rec-grid" id="recGrid04"></div>
           <div class="insight-bar" id="insight04">⚡ Cargando datos…</div>
         </div>
@@ -2207,7 +2187,29 @@
 const CONFIG = {
   apiUrl: 'https://warroom-b24.catconsultores.com.ar',
   projectId:   1397424302,
+  clientSlug:  'larreta',
 };
+
+// ── Failsafe: verificar que el HTML corresponde al cliente correcto ──
+(function validateClient() {
+  const SLUG_TO_PROJECT = {
+    'passaglia': 1397409048,
+    'jorgemacri': 1397413043,
+    'larreta':    1397424302,
+  };
+  const expected = SLUG_TO_PROJECT[CONFIG.clientSlug];
+  if (expected && expected !== CONFIG.projectId) {
+    console.error(`[FAILSAFE] CONFIG MISMATCH: clientSlug="${CONFIG.clientSlug}" espera projectId=${expected} pero tiene ${CONFIG.projectId}`);
+    document.body.innerHTML = `<div style="background:#1a0a0a;color:#ff3b5c;padding:40px;font-family:monospace;font-size:18px;text-align:center">
+      <h1>⚠ ERROR DE CONFIGURACIÓN</h1>
+      <p>Este dashboard (${CONFIG.clientSlug}) tiene projectId=${CONFIG.projectId} pero debería ser ${expected}.</p>
+      <p>Contactar al administrador.</p></div>`;
+  }
+  const pathSlug = location.pathname.match(/warroom-(\w+)/);
+  if (pathSlug && pathSlug[1] !== CONFIG.clientSlug) {
+    console.warn(`[FAILSAFE] URL path sugiere cliente "${pathSlug[1]}" pero CONFIG.clientSlug="${CONFIG.clientSlug}"`);
+  }
+})();
 
 // ══════════════════════════════════════════
 // SENTIMENT HELPER
@@ -2605,8 +2607,8 @@ function calcICS2(d) {
 function calcTM(d) {
   if (!d.length) return {score:0, status:'SIN DATOS'};
   const total = d.length;
-  const pos = d.filter(m => m.custom_sentiment === 'positive').length;
-  const neg = d.filter(m => m.custom_sentiment === 'negative').length;
+  const pos = d.filter(m => getSentiment(m) === 'positive').length;
+  const neg = d.filter(m => getSentiment(m) === 'negative').length;
   const score = parseFloat(((pos - neg) / total * 100).toFixed(1));
   let status = 'ESTABLE';
   if (score > 10) status = 'FAVORABLE';
@@ -2685,7 +2687,7 @@ function updatePlatformBars(d) {
   d.forEach(m => cats[m.category] = (cats[m.category]||0)+1);
   const sorted = Object.entries(cats).sort((a,b)=>b[1]-a[1]);
   const max = sorted[0]?.[1]||1;
-  const colors = {'Noticias':'var(--accent)','X (Twitter)':'#1d9bf0','Facebook':'#1877f2','TikTok':'#ff0050','Web':'var(--neutral)','Blogs':'var(--text-faint)'};
+  const colors = {'Noticias':'var(--accent)','X (Twitter)':'#1d9bf0','Facebook':'#1877f2','TikTok':'var(--accent)','Web':'var(--neutral)','Blogs':'var(--text-faint)'};
   const container = document.getElementById('platformBars');
   container.innerHTML = sorted.map(([cat,cnt]) => `
     <div class="plat-bar">
@@ -2722,8 +2724,8 @@ function renderDomains(d) {
       <div class="source-rank">${String(i+1).padStart(2,'0')}</div>
       <div class="source-icon" style="background:#1a1a2e;color:${ic}">${ic2||'◉'}</div>
       <div class="source-name">${dom}</div>
-      <div class="source-bar-wrap"><div class="source-bar-fill" style="width:${cnt/max*100}%;${hasNeg?'background:var(--red);opacity:0.6':''}"></div></div>
-      <div class="source-count" style="${hasNeg?'color:var(--red)':''}">${cnt}</div>
+      <div class="source-bar-wrap"><div class="source-bar-fill" style="width:${cnt/max*100}%"></div></div>
+      <div class="source-count">${cnt}</div>
     </div>`;
   }).join('');
 }
@@ -3312,7 +3314,7 @@ function o_lpRenderInd04() {
       <div class="op-top">
         <div class="op-size ${szSub}"><div class="op-size-num">${sz}</div><div class="op-size-label">MEDIOS</div></div>
         <div class="op-meta">
-          <div class="op-title" title="${(op.title||'').replace(/"/g,'&quot;')}">${op.title||'(Sin título)'}</div>
+          <div class="op-title" title="${(op.title||'').replace(/"/g,'&quot;')}" style="cursor:pointer;text-decoration:underline;text-decoration-color:rgba(255,255,255,.2)" onclick="openOpMentions(${JSON.stringify(op.mention_ids||[]).replace(/&/g,'&amp;').replace(/"/g,'&quot;')}, '${(op.title||'Sin título').replace(/'/g,"\\'")}')">${op.title||'(Sin título)'}</div>
           <div class="op-date">${dateStr} · ${op.category||'—'}</div>
         </div>
         <div class="op-badges">
@@ -3332,16 +3334,16 @@ function o_lpRenderInd04() {
   document.getElementById('lp2-recGrid04').innerHTML = recurring.map(r =>
     `<div class="rec-row">
       <div class="rec-domain">${r.domain}</div>
-      <div><div class="rec-count">${r.ops}</div><div class="rec-label">ops.</div></div>
+      <div><div class="rec-count">${r.ops}</div><div class="rec-label">narr.</div></div>
       <div class="rec-ops">${r.narrativas||'—'}</div>
     </div>`
   ).join('');
 
   const recNames = recurring.map(r=>`<span class="hl-r">${r.domain}</span>`).join(' y ');
   document.getElementById('lp2-insight04').innerHTML =
-    `⚡ Se detectaron <span class="hl-r">${stats.total_ops||0} operaciones coordinadas</span> con ` +
-    `<span class="hl-a">${stats.total_media||0} medios operadores</span>` +
-    (recNames ? ` · ${recNames} aparecen en 2+ operaciones distintas` : '') + '.';
+    `⚡ Se detectaron <span class="hl-r">${stats.total_ops||0} narrativas coordinadas</span> con ` +
+    `<span class="hl-a">${stats.total_media||0} actores</span>` +
+    (recNames ? ` · ${recNames} aparecen en 2+ narrativas distintas` : '') + '.';
 }
 
 // ── IND.05 ───────────────────────────────
@@ -3814,7 +3816,7 @@ function p2RenderInd03(listenData) {
       <div class="op-top">
         <div class="op-size ${szSub}"><div class="op-size-num">${sz}</div><div class="op-size-label">MEDIOS</div></div>
         <div class="op-meta">
-          <div class="op-title" title="${(op.title||'').replace(/"/g,'&quot;')}">${op.title||'(Sin título)'}</div>
+          <div class="op-title" title="${(op.title||'').replace(/"/g,'&quot;')}" style="cursor:pointer;text-decoration:underline;text-decoration-color:rgba(255,255,255,.2)" onclick="openOpMentions(${JSON.stringify(op.mention_ids||[]).replace(/&/g,'&amp;').replace(/"/g,'&quot;')}, '${(op.title||'Sin título').replace(/'/g,"\\'")}')">${op.title||'(Sin título)'}</div>
           <div class="op-date">${dateStr} · ${op.category||'—'}</div>
         </div>
         <div class="op-badges">
@@ -3834,16 +3836,16 @@ function p2RenderInd03(listenData) {
   document.getElementById('recGrid04').innerHTML = recurring.map(r =>
     `<div class="rec-row">
       <div class="rec-domain">${r.domain}</div>
-      <div><div class="rec-count">${r.ops}</div><div class="rec-label">ops.</div></div>
+      <div><div class="rec-count">${r.ops}</div><div class="rec-label">narr.</div></div>
       <div class="rec-ops">${r.narrativas||'—'}</div>
     </div>`
   ).join('');
 
   const recNames = recurring.map(r=>`<span class="hl-r">${r.domain}</span>`).join(' y ');
   document.getElementById('insight04').innerHTML =
-    `⚡ Se detectaron <span class="hl-r">${stats.total_ops||0} posibles coordinaciones</span> de ` +
+    `⚡ Se detectaron <span class="hl-r">${stats.total_ops||0} narrativas coordinadas</span> con ` +
     `<span class="hl-a">${stats.total_media||0} actores</span>` +
-    (recNames ? ` · ${recNames} aparecen en 2+ operaciones distintas` : '') + '.';
+    (recNames ? ` · ${recNames} aparecen en 2+ narrativas distintas` : '') + '.';
 }
 
 // ── P2 IND.04 — Reach S vs NS (7 días) ────
@@ -4409,7 +4411,6 @@ function buildCloud(terms, maxShow, from, to) {
 }
 
 async function openTermMentions(term, from, to) {
-  document.getElementById('narrativaModal').classList.remove('open');
   document.getElementById('drawerTitle').textContent = term.toUpperCase();
   document.getElementById('drawerSubtitle').textContent = 'Cargando menciones…';
   document.getElementById('drawerOverlay').classList.add('open');
@@ -4428,6 +4429,17 @@ async function openTermMentions(term, from, to) {
   }
 }
 
+function openOpMentions(mentionIds, title) {
+  const ids = new Set((mentionIds||[]).map(String));
+  const matches = ALL_MENTIONS.filter(m => ids.has(String(m.mention_id)));
+  document.getElementById('drawerTitle').textContent = (title||'Operación detectada').toUpperCase();
+  document.getElementById('drawerSubtitle').textContent =
+    `${matches.length} mención${matches.length!==1?'es':''} en ${ids.size} medio${ids.size!==1?'s':''}`;
+  document.getElementById('drawerOverlay').classList.add('open');
+  document.getElementById('drawer').classList.add('open');
+  renderDrawerMentions(matches, []);
+}
+
 function renderNarrativa() {
   const body = document.getElementById('narrativaBody');
   if (!NARRATIVA_DATA || !NARRATIVA_DATA.weeks) {
@@ -4440,34 +4452,11 @@ function renderNarrativa() {
         <span class="narrativa-week-label">${w.label.toUpperCase()}</span>
         <span class="narrativa-week-dates">${w.from} / ${w.to}</span>
       </div>
-      <div class="narrativa-cloud">${buildCloud(w.terms, 16, w.from, w.to)}</div>
-      ${w.terms.length > 16 ? `<span class="narrativa-more" onclick="openNarrativaModal(${i})">+ ver todos (${w.terms.length})</span>` : ''}
+      <div class="narrativa-cloud">${buildCloud(w.terms, 40, w.from, w.to)}</div>
     </div>
   `).join('');
 }
 
-function openNarrativaModal(weekIdx) {
-  const modal     = document.getElementById('narrativaModal');
-  const modalBody = document.getElementById('narrativaModalBody');
-  modalBody.innerHTML = NARRATIVA_DATA.weeks.map((w, i) => {
-    const active = i === weekIdx ? 'border-left:2px solid var(--accent);padding-left:10px;' : '';
-    return `
-      <div class="narrativa-modal-week" style="${active}">
-        <div style="font-family:var(--font-mono);font-size:9px;color:var(--text-dim);margin-bottom:8px">
-          ${w.label.toUpperCase()} &nbsp; <span style="color:var(--accent)">${w.from} → ${w.to}</span>
-        </div>
-        <div>${buildCloud(w.terms, 40, w.from, w.to)}</div>
-      </div>`;
-  }).join('');
-  modal.classList.add('open');
-}
-
-function closeNarrativaModal() {
-  document.getElementById('narrativaModal').classList.remove('open');
-}
-document.getElementById('narrativaModal').addEventListener('click', function(e) {
-  if (e.target === this) closeNarrativaModal();
-});
 </script>
 </body>
 </html>

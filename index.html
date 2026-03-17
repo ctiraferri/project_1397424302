@@ -60,7 +60,7 @@
     background: repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.08) 2px,rgba(0,0,0,0.08) 4px);
     pointer-events:none;
   }
-  .wrapper { position:relative; z-index:1; max-width:1680px; margin:0 auto; padding:16px 20px 30px; }
+  .wrapper { position:relative; z-index:1; max-width:1680px; margin:0 auto; padding:16px 20px 30px; overflow-x:hidden; }
 
   /* HEADER */
   header {
@@ -791,6 +791,7 @@
   #p2ModalOverlay .lp-eff-mid  { color:var(--yellow); }
   #p2ModalOverlay .lp-eff-low  { color:var(--red); }
   /* Responsive P2 */
+  @media (max-width:1400px) { #page2 .cards-grid { grid-template-columns:repeat(5,1fr); } }
   @media (max-width:1100px) {
     #page2 .row-1, #page2 .row-3 { grid-template-columns:1fr; }
     #page2 .ica-layout { grid-template-columns:180px 1fr; }
@@ -1101,6 +1102,7 @@
   #p2ModalOverlay .lp-eff-mid  { color:var(--yellow); }
   #p2ModalOverlay .lp-eff-low  { color:var(--red); }
   /* Responsive P2 */
+  @media (max-width:1400px) { #page3 .cards-grid { grid-template-columns:repeat(5,1fr); } }
   @media (max-width:1100px) {
     #page3 .row-1, #page3 .row-3 { grid-template-columns:1fr; }
     #page3 .ica-layout { grid-template-columns:180px 1fr; }
@@ -1366,7 +1368,7 @@
         <div class="page-menu" id="pageMenu">
           <button class="page-menu-item active" onclick="switchPage(1)">PÁG. 01 / OVERVIEW</button>
           <button class="page-menu-item" onclick="switchPage(2)">PÁG. 02 / RADAR</button>
-          <button class="page-menu-item" onclick="switchPage(3)">PÁG. 03 / MENCIONES</button>
+          <button class="page-menu-item" onclick="switchPage(3)" style="display:none">PÁG. 03 / MENCIONES</button>
         </div>
       </div>
       <div class="live-badge"><div class="live-dot"></div>LIVE · BBDD ACTIVA</div>

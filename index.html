@@ -756,7 +756,7 @@
   #p2ModalOverlay .lp-plat-btn { font-family:var(--font-mono); font-size:8px; letter-spacing:1px; padding:3px 8px; border:1px solid var(--border); color:var(--text-faint); background:transparent; cursor:pointer; transition:all 0.15s; }
   #p2ModalOverlay .lp-plat-btn.fb.active { border-color:#1877f2; background:rgba(24,119,242,0.15); color:#fff; }
   #p2ModalOverlay .lp-plat-btn.tt.active { border-color:#aaa; background:rgba(200,200,200,0.1); color:#fff; }
-  #p2ModalOverlay .lp-plat-btn.ig.active { border-color:#e1306c; background:rgba(225,48,108,0.15); color:#fff; }
+  #p2ModalOverlay .lp-plat-btn.ig.active { border-color:#c77dff; background:rgba(199,125,255,0.15); color:#fff; }
   #p2ModalOverlay .lp-plat-btn.x.active  { border-color:#1da1f2; background:rgba(29,161,242,0.15); color:#fff; }
   #p2ModalOverlay .lp-plat-btn.all.active { border-color:var(--accent); background:var(--accent-dim); color:var(--accent); }
   #p2ModalOverlay .lp-modal-body { overflow-y:auto; flex:1; }
@@ -775,7 +775,7 @@
   #p2ModalOverlay .lp-plat-chip { display:inline-flex; align-items:center; gap:5px; padding:2px 7px; border-radius:2px; font-family:var(--font-mono); font-size:9px; letter-spacing:1px; }
   #p2ModalOverlay .lp-plat-chip.fb { background:rgba(24,119,242,0.15); color:#1877f2; border:1px solid rgba(24,119,242,0.3); }
   #p2ModalOverlay .lp-plat-chip.tt { background:rgba(200,200,200,0.08); color:#ccc; border:1px solid rgba(200,200,200,0.2); }
-  #p2ModalOverlay .lp-plat-chip.ig { background:rgba(225,48,108,0.15); color:#e1306c; border:1px solid rgba(225,48,108,0.3); }
+  #p2ModalOverlay .lp-plat-chip.ig { background:rgba(199,125,255,0.15); color:#c77dff; border:1px solid rgba(199,125,255,0.3); }
   #p2ModalOverlay .lp-plat-chip.x  { background:rgba(29,161,242,0.12); color:#1da1f2; border:1px solid rgba(29,161,242,0.3); }
   #p2ModalOverlay .lp-eff-high { color:var(--green); }
   #p2ModalOverlay .lp-eff-mid  { color:var(--yellow); }
@@ -1066,7 +1066,7 @@
   #p2ModalOverlay .lp-plat-btn { font-family:var(--font-mono); font-size:8px; letter-spacing:1px; padding:3px 8px; border:1px solid var(--border); color:var(--text-faint); background:transparent; cursor:pointer; transition:all 0.15s; }
   #p2ModalOverlay .lp-plat-btn.fb.active { border-color:#1877f2; background:rgba(24,119,242,0.15); color:#fff; }
   #p2ModalOverlay .lp-plat-btn.tt.active { border-color:#aaa; background:rgba(200,200,200,0.1); color:#fff; }
-  #p2ModalOverlay .lp-plat-btn.ig.active { border-color:#e1306c; background:rgba(225,48,108,0.15); color:#fff; }
+  #p2ModalOverlay .lp-plat-btn.ig.active { border-color:#c77dff; background:rgba(199,125,255,0.15); color:#fff; }
   #p2ModalOverlay .lp-plat-btn.x.active  { border-color:#1da1f2; background:rgba(29,161,242,0.15); color:#fff; }
   #p2ModalOverlay .lp-plat-btn.all.active { border-color:var(--accent); background:var(--accent-dim); color:var(--accent); }
   #p2ModalOverlay .lp-modal-body { overflow-y:auto; flex:1; }
@@ -1085,7 +1085,7 @@
   #p2ModalOverlay .lp-plat-chip { display:inline-flex; align-items:center; gap:5px; padding:2px 7px; border-radius:2px; font-family:var(--font-mono); font-size:9px; letter-spacing:1px; }
   #p2ModalOverlay .lp-plat-chip.fb { background:rgba(24,119,242,0.15); color:#1877f2; border:1px solid rgba(24,119,242,0.3); }
   #p2ModalOverlay .lp-plat-chip.tt { background:rgba(200,200,200,0.08); color:#ccc; border:1px solid rgba(200,200,200,0.2); }
-  #p2ModalOverlay .lp-plat-chip.ig { background:rgba(225,48,108,0.15); color:#e1306c; border:1px solid rgba(225,48,108,0.3); }
+  #p2ModalOverlay .lp-plat-chip.ig { background:rgba(199,125,255,0.15); color:#c77dff; border:1px solid rgba(199,125,255,0.3); }
   #p2ModalOverlay .lp-plat-chip.x  { background:rgba(29,161,242,0.12); color:#1da1f2; border:1px solid rgba(29,161,242,0.3); }
   #p2ModalOverlay .lp-eff-high { color:var(--green); }
   #p2ModalOverlay .lp-eff-mid  { color:var(--yellow); }
@@ -2999,20 +2999,20 @@ let lpOldDonutChart  = null;
 const O_LP_PLAT = {
   'facebook.com':  { chip:'fb', label:'Facebook',  color:'#1877f2', icon:'f' },
   'tiktok.com':    { chip:'tt', label:'TikTok',    color:'#cccccc', icon:'♪' },
-  'instagram.com': { chip:'ig', label:'Instagram', color:'#e1306c', icon:'◈' },
+  'instagram.com': { chip:'ig', label:'Instagram', color:'#c77dff', icon:'◈' },
   'x.com':         { chip:'x',  label:'X',         color:'#1da1f2', icon:'✦' },
 };
 const O_LP_PLATFORMS = [
   { key:'facebook.com',  label:'Facebook',    color:'#1877f2', colorDim:'rgba(24,119,242,0.15)', icon:'f' },
   { key:'tiktok.com',    label:'TikTok',      color:'#cccccc', colorDim:'rgba(200,200,200,0.10)', icon:'♪' },
-  { key:'instagram.com', label:'Instagram',   color:'#e1306c', colorDim:'rgba(225,48,108,0.15)', icon:'◈' },
+  { key:'instagram.com', label:'Instagram',   color:'#c77dff', colorDim:'rgba(199,125,255,0.15)', icon:'◈' },
   { key:'x.com',         label:'X / Twitter', color:'#1da1f2', colorDim:'rgba(29,161,242,0.12)', icon:'✦' },
 ];
 const O_LP_FILTERS03 = [
   { key:'all',          label:'TODAS',    icon:'·', color:'#00d4ff', dot:'#00d4ff' },
   { key:'facebook.com', label:'FACEBOOK', icon:'f', color:'#1877f2', dot:'#1877f2' },
   { key:'tiktok.com',   label:'TIKTOK',   icon:'♪', color:'#cccccc', dot:'#cccccc' },
-  { key:'instagram.com',label:'INSTAGRAM',icon:'◈', color:'#e1306c', dot:'#e1306c' },
+  { key:'instagram.com',label:'INSTAGRAM',icon:'◈', color:'#c77dff', dot:'#c77dff' },
   { key:'x.com',        label:'X',        icon:'✦', color:'#1da1f2', dot:'#1da1f2' },
 ];
 
@@ -3514,20 +3514,20 @@ let lpDonutChart  = null;
 const LP_PLAT = {
   'facebook.com':  { chip:'fb', label:'Facebook',  color:'#1877f2', icon:'f' },
   'tiktok.com':    { chip:'tt', label:'TikTok',    color:'#cccccc', icon:'♪' },
-  'instagram.com': { chip:'ig', label:'Instagram', color:'#e1306c', icon:'◈' },
+  'instagram.com': { chip:'ig', label:'Instagram', color:'#c77dff', icon:'◈' },
   'x.com':         { chip:'x',  label:'X',         color:'#1da1f2', icon:'✦' },
 };
 const LP_PLATFORMS = [
   { key:'facebook.com',  label:'Facebook',    color:'#1877f2', colorDim:'rgba(24,119,242,0.15)', icon:'f' },
   { key:'tiktok.com',    label:'TikTok',      color:'#cccccc', colorDim:'rgba(200,200,200,0.10)', icon:'♪' },
-  { key:'instagram.com', label:'Instagram',   color:'#e1306c', colorDim:'rgba(225,48,108,0.15)', icon:'◈' },
+  { key:'instagram.com', label:'Instagram',   color:'#c77dff', colorDim:'rgba(199,125,255,0.15)', icon:'◈' },
   { key:'x.com',         label:'X / Twitter', color:'#1da1f2', colorDim:'rgba(29,161,242,0.12)', icon:'✦' },
 ];
 const LP_FILTERS03 = [
   { key:'all',          label:'TODAS',    icon:'·', color:'#00d4ff', dot:'#00d4ff' },
   { key:'facebook.com', label:'FACEBOOK', icon:'f', color:'#1877f2', dot:'#1877f2' },
   { key:'tiktok.com',   label:'TIKTOK',   icon:'♪', color:'#cccccc', dot:'#cccccc' },
-  { key:'instagram.com',label:'INSTAGRAM',icon:'◈', color:'#e1306c', dot:'#e1306c' },
+  { key:'instagram.com',label:'INSTAGRAM',icon:'◈', color:'#c77dff', dot:'#c77dff' },
   { key:'x.com',        label:'X',        icon:'✦', color:'#1da1f2', dot:'#1da1f2' },
 ];
 
@@ -3599,7 +3599,7 @@ let p2QualCats = {};  // stored for modal access
 
 const P2_PLAT_META = {
   'Facebook':    { color:'#1877f2', icon:'f' },
-  'Instagram':   { color:'#e1306c', icon:'◈' },
+  'Instagram':   { color:'#c77dff', icon:'◈' },
   'TikTok':      { color:'#cccccc', icon:'♪' },
   'X (Twitter)': { color:'#1da1f2', icon:'✦' },
 };

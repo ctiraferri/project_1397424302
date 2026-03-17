@@ -637,6 +637,7 @@
   #page2 .filter-btn .fb-dot { width:6px; height:6px; border-radius:1px; }
   #page2 .filter-btn.active { color:var(--current-color,var(--accent)); border-color:var(--current-color,var(--accent)); background:rgba(0,0,0,0.3); }
   #page2 .filter-btn:hover  { color:var(--current-color,var(--accent)); border-color:var(--current-color,var(--accent)); }
+  #page2 .cards-tier-label { font-family:var(--font-mono); font-size:8px; letter-spacing:2px; color:var(--text-dim); margin-bottom:8px; margin-top:4px; }
   #page2 .cards-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:10px; margin-bottom:14px; }
   #page2 .eff-card { background:var(--bg-card); border:1px solid var(--border-dim); padding:12px 12px 10px; display:flex; flex-direction:column; gap:6px; }
   #page2 .eff-card.rank1 { border-top:2px solid var(--green); }
@@ -1691,6 +1692,9 @@
           <div class="panel-title">IND. 03 — CANALES</div>
         </div>
         <div class="filter-bar" id="filterBar03"></div>
+        <div class="cards-tier-label" id="tierLabel500k">+500K FOLLOWERS</div>
+        <div class="cards-grid" id="cardsGrid03hi"></div>
+        <div class="cards-tier-label" id="tierLabel10k">ENTRE 500K Y 10K FOLLOWERS</div>
         <div class="cards-grid" id="cardsGrid03"></div>
       </div>
 
@@ -3248,20 +3252,20 @@ function o_lpBuildFilters03() {
   });
 }
 
-function o_lpRenderCards03() {
-  if (o_lpInfData.length === 0) {
-    document.getElementById('cardsGrid03').innerHTML = O_LP_NO_DATA_HTML;
+function o_lpRenderCardsTier(items, gridId, labelId) {
+  const grid = document.getElementById(gridId);
+  const label = document.getElementById(labelId);
+  if (!grid) return;
+  if (items.length === 0) {
+    grid.style.display = 'none';
+    if (label) label.style.display = 'none';
     return;
   }
-  const qualified = o_lpInfData.filter(r => r.followers >= 10000 && r.followers <= 500000);
-  const pool   = o_lpActiveFilter03==='all' ? qualified : qualified.filter(r=>r.domain===o_lpActiveFilter03);
-  const sorted = [...pool].sort((a,b)=>b.eff-a.eff);
-  const top5   = sorted.slice(0,5);
+  grid.style.display = '';
+  if (label) label.style.display = '';
+  const top5 = items.slice(0,5);
   while (top5.length < 5) top5.push(null);
   const maxEff = top5[0]?.eff || 1;
-
-  const grid = document.getElementById('cardsGrid03');
-  if (!grid) return;
   grid.innerHTML = top5.map((r,i) => {
     if (!r) return `<div class="eff-card" style="opacity:0.15;pointer-events:none;"></div>`;
     const f = O_LP_FILTERS03.find(f=>f.key===r.domain) || { label:r.domain, icon:'●', color:'#5a7a94', dot:'#5a7a94' };
@@ -3281,7 +3285,26 @@ function o_lpRenderCards03() {
       <div class="eff-bar-wrap"><div class="eff-bar-fill" style="width:${barPct}%;background:${barColor}"></div></div>
     </div>`;
   }).join('');
+}
 
+function o_lpRenderCards03() {
+  if (o_lpInfData.length === 0) {
+    document.getElementById('cardsGrid03hi').style.display = 'none';
+    document.getElementById('tierLabel500k').style.display = 'none';
+    document.getElementById('cardsGrid03').innerHTML = O_LP_NO_DATA_HTML;
+    document.getElementById('tierLabel10k').style.display = 'none';
+    return;
+  }
+  const applyFilter = arr => o_lpActiveFilter03==='all' ? arr : arr.filter(r=>r.domain===o_lpActiveFilter03);
+
+  const hiRaw  = o_lpInfData.filter(r => r.followers > 500000);
+  const loRaw  = o_lpInfData.filter(r => r.followers >= 10000 && r.followers <= 500000);
+
+  const hiPool = [...applyFilter(hiRaw)].sort((a,b)=>b.eff-a.eff);
+  const loPool = [...applyFilter(loRaw)].sort((a,b)=>b.eff-a.eff);
+
+  o_lpRenderCardsTier(hiPool, 'cardsGrid03hi', 'tierLabel500k');
+  o_lpRenderCardsTier(loPool, 'cardsGrid03', 'tierLabel10k');
 }
 
 // ── IND.04 ───────────────────────────────

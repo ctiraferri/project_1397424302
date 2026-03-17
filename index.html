@@ -1385,6 +1385,7 @@
     <button class="filter-btn reset" onclick="resetFilter()">RESET</button>
     <button class="filter-btn preset" onclick="filterCurrentMonth()">MES ACTUAL</button>
     <button class="filter-btn preset" onclick="filterPrevMonth()">MES ANT.</button>
+    <button class="filter-btn preset" onclick="filterLast48h()">Últ. 48hs.</button>
     <div class="filter-count">Mostrando <span id="filteredCount">0</span> menciones</div>
   </div>
 
@@ -2377,6 +2378,15 @@ function filterPrevMonth() {
   const d = String(last.getDate()).padStart(2, '0');
   document.getElementById('dateFrom').value = `${y}-${m}-01`;
   document.getElementById('dateTo').value   = `${y}-${m}-${d}`;
+  applyFilter();
+}
+function filterLast48h() {
+  const now = new Date();
+  const yesterday = new Date(now.getTime() - 1*86400000);
+  const twoDaysAgo = new Date(now.getTime() - 2*86400000);
+  const fmt = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  document.getElementById('dateFrom').value = fmt(twoDaysAgo);
+  document.getElementById('dateTo').value   = fmt(yesterday);
   applyFilter();
 }
 function clearKwFilter() {

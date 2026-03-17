@@ -638,22 +638,32 @@
   #page2 .filter-btn.active { color:var(--current-color,var(--accent)); border-color:var(--current-color,var(--accent)); background:rgba(0,0,0,0.3); }
   #page2 .filter-btn:hover  { color:var(--current-color,var(--accent)); border-color:var(--current-color,var(--accent)); }
   #page2 .cards-tier-label { font-family:var(--font-mono); font-size:8px; letter-spacing:2px; color:var(--text-dim); margin-bottom:8px; margin-top:4px; }
-  #page2 .cards-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:10px; margin-bottom:14px; }
-  #page2 .eff-card { background:var(--bg-card); border:1px solid var(--border-dim); padding:12px 12px 10px; display:flex; flex-direction:column; gap:6px; }
-  #page2 .eff-card.rank1 { border-top:2px solid var(--green); }
-  #page2 .eff-card.rank2 { border-top:2px solid rgba(0,255,136,0.5); }
-  #page2 .eff-card.rank3 { border-top:2px solid rgba(0,255,136,0.25); }
+  #page2 .cards-grid { display:grid; grid-template-columns:repeat(10,1fr); gap:10px; margin-bottom:14px; }
+  #page2 .eff-card { background:var(--bg-card); border:1px solid var(--border-dim); padding:8px; display:flex; flex-direction:column; gap:6px; }
+  #page2 .eff-card.rank1 { border-top:2px solid transparent; }
+  #page2 .eff-card.rank2 { border-top:2px solid transparent; }
+  #page2 .eff-card.rank3 { border-top:2px solid transparent; }
   #page2 .eff-platform { display:flex; align-items:center; gap:6px; }
-  #page2 .eff-icon { width:16px; height:16px; border-radius:2px; display:flex; align-items:center; justify-content:center; font-size:9px; flex-shrink:0; }
+  #page2 .eff-icon { width:12px; height:12px; border-radius:2px; display:flex; align-items:center; justify-content:center; font-size:9px; flex-shrink:0; }
   #page2 .eff-platform-name { font-family:var(--font-mono); font-size:8px; letter-spacing:2px; }
   #page2 .eff-rank { font-family:var(--font-mono); font-size:8px; color:var(--text-faint); margin-left:auto; }
-  #page2 .eff-name { font-family:var(--font-ui); font-size:14px; font-weight:600; color:var(--text-main); line-height:1.2; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-  #page2 .eff-score { font-family:var(--font-display); font-size:34px; line-height:1; }
+  #page2 .eff-name { font-family:var(--font-ui); font-size:11px; font-weight:600; color:var(--text-main); line-height:1.2; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  #page2 .eff-score { font-family:var(--font-display); font-size:20px; line-height:1; }
   #page2 .eff-score.high { color:var(--green); text-shadow:0 0 12px rgba(0,255,136,0.4); }
   #page2 .eff-score.mid  { color:var(--yellow); }
   #page2 .eff-score.low  { color:var(--red); }
   #page2 .eff-bar-wrap { height:2px; background:var(--border-dim); width:100%; }
   #page2 .eff-bar-fill { height:100%; }
+  .cards-grid.tier-hi .eff-score { color: var(--accent); }
+  .cards-grid.tier-hi .eff-bar-fill { background: var(--accent); }
+  .cards-grid.tier-hi .eff-card.rank1 { border-top-color: var(--accent); }
+  .cards-grid.tier-hi .eff-card.rank2 { border-top-color: rgba(0,212,255,0.5); }
+  .cards-grid.tier-hi .eff-card.rank3 { border-top-color: rgba(0,212,255,0.25); }
+  .cards-grid.tier-lo .eff-score { color: #ff9f43; }
+  .cards-grid.tier-lo .eff-bar-fill { background: #ff9f43; }
+  .cards-grid.tier-lo .eff-card.rank1 { border-top-color: #ff9f43; }
+  .cards-grid.tier-lo .eff-card.rank2 { border-top-color: rgba(255,159,67,0.5); }
+  .cards-grid.tier-lo .eff-card.rank3 { border-top-color: rgba(255,159,67,0.25); }
   #page2 .eff-sub { font-family:var(--font-mono); font-size:9px; color:var(--text-dim); line-height:1.4; }
   #page2 .eff-men-inline { font-size:55%; opacity:0.5; font-weight:400; letter-spacing:0; }
   #page2 .eff-interp { font-family:var(--font-mono); font-size:8px; letter-spacing:1px; padding:2px 5px; display:inline-block; margin-top:2px; }
@@ -785,7 +795,7 @@
     #page2 .row-1, #page2 .row-3 { grid-template-columns:1fr; }
     #page2 .ica-layout { grid-template-columns:180px 1fr; }
     #page2 .ind02-layout { grid-template-columns:160px 1fr; }
-    #page2 .cards-grid { grid-template-columns:repeat(3,1fr); }
+    #page2 .cards-grid { grid-template-columns:repeat(5,1fr); }
   }
   @media (max-width:640px) {
     #page2 .row-1, #page2 .row-3 { grid-template-columns:1fr; }
@@ -920,17 +930,17 @@
   #page3 .filter-btn .fb-dot { width:6px; height:6px; border-radius:1px; }
   #page3 .filter-btn.active { color:var(--current-color,var(--accent)); border-color:var(--current-color,var(--accent)); background:rgba(0,0,0,0.3); }
   #page3 .filter-btn:hover  { color:var(--current-color,var(--accent)); border-color:var(--current-color,var(--accent)); }
-  #page3 .cards-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:10px; margin-bottom:14px; }
-  #page3 .eff-card { background:var(--bg-card); border:1px solid var(--border-dim); padding:12px 12px 10px; display:flex; flex-direction:column; gap:6px; }
-  #page3 .eff-card.rank1 { border-top:2px solid var(--green); }
-  #page3 .eff-card.rank2 { border-top:2px solid rgba(0,255,136,0.5); }
-  #page3 .eff-card.rank3 { border-top:2px solid rgba(0,255,136,0.25); }
+  #page3 .cards-grid { display:grid; grid-template-columns:repeat(10,1fr); gap:10px; margin-bottom:14px; }
+  #page3 .eff-card { background:var(--bg-card); border:1px solid var(--border-dim); padding:8px; display:flex; flex-direction:column; gap:6px; }
+  #page3 .eff-card.rank1 { border-top:2px solid transparent; }
+  #page3 .eff-card.rank2 { border-top:2px solid transparent; }
+  #page3 .eff-card.rank3 { border-top:2px solid transparent; }
   #page3 .eff-platform { display:flex; align-items:center; gap:6px; }
-  #page3 .eff-icon { width:16px; height:16px; border-radius:2px; display:flex; align-items:center; justify-content:center; font-size:9px; flex-shrink:0; }
+  #page3 .eff-icon { width:12px; height:12px; border-radius:2px; display:flex; align-items:center; justify-content:center; font-size:9px; flex-shrink:0; }
   #page3 .eff-platform-name { font-family:var(--font-mono); font-size:8px; letter-spacing:2px; }
   #page3 .eff-rank { font-family:var(--font-mono); font-size:8px; color:var(--text-faint); margin-left:auto; }
-  #page3 .eff-name { font-family:var(--font-ui); font-size:14px; font-weight:600; color:var(--text-main); line-height:1.2; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-  #page3 .eff-score { font-family:var(--font-display); font-size:34px; line-height:1; }
+  #page3 .eff-name { font-family:var(--font-ui); font-size:11px; font-weight:600; color:var(--text-main); line-height:1.2; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  #page3 .eff-score { font-family:var(--font-display); font-size:20px; line-height:1; }
   #page3 .eff-score.high { color:var(--green); text-shadow:0 0 12px rgba(0,255,136,0.4); }
   #page3 .eff-score.mid  { color:var(--yellow); }
   #page3 .eff-score.low  { color:var(--red); }
@@ -1095,7 +1105,7 @@
     #page3 .row-1, #page3 .row-3 { grid-template-columns:1fr; }
     #page3 .ica-layout { grid-template-columns:180px 1fr; }
     #page3 .ind02-layout { grid-template-columns:160px 1fr; }
-    #page3 .cards-grid { grid-template-columns:repeat(3,1fr); }
+    #page3 .cards-grid { grid-template-columns:repeat(5,1fr); }
   }
   @media (max-width:640px) {
     #page3 .row-1, #page3 .row-3 { grid-template-columns:1fr; }
@@ -1414,12 +1424,12 @@
       <div class="ics-bar-container">
         <div class="ics-bar-track">
           <div class="ics-bar-segments">
-            <span class="seg-monitorear" style="flex:45"></span><span class="seg-estable" style="flex:10"></span><span class="seg-favorable" style="flex:45"></span>
+            <span class="seg-monitorear" style="flex:30"></span><span class="seg-estable" style="flex:40"></span><span class="seg-favorable" style="flex:30"></span>
           </div>
           <div class="ics-bar-indicator" id="icsIndicator" style="left:50%"></div>
         </div>
         <div class="ics-scale">
-          <span>-100 MONITOREAR</span><span>-10</span><span>0</span><span>+10</span><span>+100 FAVORABLE</span>
+          <span>-100 CRISIS</span><span>-40</span><span>0</span><span>+40</span><span>+100 FAVORABLE</span>
         </div>
       </div>
     </div>
@@ -1691,7 +1701,7 @@
         <div class="panel-header" data-color="green">
           <div class="panel-title">IND. 03 — CANALES</div>
         </div>
-        <div class="filter-bar" id="filterBar03"></div>
+        <!-- filter removed -->
         <div class="cards-tier-label" id="tierLabel500k">+500K FOLLOWERS</div>
         <div class="cards-grid" id="cardsGrid03hi"></div>
         <div class="cards-tier-label" id="tierLabel10k">ENTRE 500K Y 10K FOLLOWERS</div>
@@ -2029,7 +2039,10 @@
         <div class="panel-header" data-color="green">
           <div class="panel-title">IND. 03 — CANALES</div>
         </div>
-        <div class="filter-bar" id="p3-filterBar03"></div>
+        <!-- filter removed -->
+        <div class="cards-tier-label" id="p3-tierLabel500k">+500K FOLLOWERS</div>
+        <div class="cards-grid" id="p3-cardsGrid03hi"></div>
+        <div class="cards-tier-label" id="p3-tierLabel10k">ENTRE 500K Y 10K FOLLOWERS</div>
         <div class="cards-grid" id="p3-cardsGrid03"></div>
       </div>
 
@@ -2427,10 +2440,10 @@ function updateAll() {
   // Color dinámico del número según semáforo
   const icsNumEl = document.getElementById('icsNumber');
   const icsStatEl = document.getElementById('icsStatus');
-  if (tm.score > 10) {
+  if (tm.score > 40) {
     icsNumEl.style.color = 'var(--green)'; icsNumEl.style.textShadow = '0 0 30px rgba(0,255,136,0.5)';
     icsStatEl.style.color = 'var(--green)';
-  } else if (tm.score < -10) {
+  } else if (tm.score < -40) {
     icsNumEl.style.color = 'var(--red)'; icsNumEl.style.textShadow = '0 0 30px rgba(255,59,48,0.5)';
     icsStatEl.style.color = 'var(--red)';
   } else {
@@ -2440,8 +2453,8 @@ function updateAll() {
 
   // Semáforo
   ['sem0','sem1','sem2'].forEach(id => document.getElementById(id).classList.remove('active'));
-  if (tm.score < -10)     document.getElementById('sem0').classList.add('active');
-  else if (tm.score <= 10) document.getElementById('sem1').classList.add('active');
+  if (tm.score < -40)     document.getElementById('sem0').classList.add('active');
+  else if (tm.score <= 40) document.getElementById('sem1').classList.add('active');
   else                     document.getElementById('sem2').classList.add('active');
 
   // ICS 2.0
@@ -2615,8 +2628,8 @@ function calcTM(d) {
   const neg = d.filter(m => getSentiment(m) === 'negative').length;
   const score = parseFloat(((pos - neg) / total * 100).toFixed(1));
   let status = 'ESTABLE';
-  if (score > 10) status = 'FAVORABLE';
-  else if (score < -10) status = 'MONITOREAR';
+  if (score > 40) status = 'FAVORABLE';
+  else if (score < -40) status = 'CRISIS';
   return {score, status};
 }
 
@@ -2872,7 +2885,7 @@ const CALCS = {
   ics: {
     title: 'TEMPERATURA DE MENCIONES (TM)',
     formula: 'TM = ((Positivas − Negativas) / Total) × 100',
-    body: 'Mide el balance neto del sentimiento propio. Escala −100 a +100. Favorable >+10 · Estable −10 a +10 · Monitorear <−10'
+    body: 'Mide el balance neto del sentimiento propio. Escala −100 a +100. Favorable >+40 · Estable −40 a +40 · Crisis <−40'
   },
   total: {
     title: 'MENCIONES TOTALES',
@@ -2990,7 +3003,7 @@ let oldP2Data        = null;
 let o_lpInfData     = [];
 let o_lpGroups      = [];
 let o_lpSortKey     = 'reach';
-let o_lpActiveFilter03 = 'all';
+// removed
 let o_lpModalSortKey = 'reach', o_lpModalSortDir = -1;
 let o_lpModalPlatFilter = 'all', o_lpModalDataset = null;
 let lpOldDonutChart  = null;
@@ -3008,13 +3021,7 @@ const O_LP_PLATFORMS = [
   { key:'instagram.com', label:'Instagram',   color:'#c77dff', colorDim:'rgba(199,125,255,0.15)', icon:'◈' },
   { key:'x.com',         label:'X / Twitter', color:'#1da1f2', colorDim:'rgba(29,161,242,0.12)', icon:'✦' },
 ];
-const O_LP_FILTERS03 = [
-  { key:'all',          label:'TODAS',    icon:'·', color:'#00d4ff', dot:'#00d4ff' },
-  { key:'facebook.com', label:'FACEBOOK', icon:'f', color:'#1877f2', dot:'#1877f2' },
-  { key:'tiktok.com',   label:'TIKTOK',   icon:'♪', color:'#cccccc', dot:'#cccccc' },
-  { key:'instagram.com',label:'INSTAGRAM',icon:'◈', color:'#c77dff', dot:'#c77dff' },
-  { key:'x.com',        label:'X',        icon:'✦', color:'#1da1f2', dot:'#1da1f2' },
-];
+// removed
 
 // ── Helpers ───────────────────────────────
 function o_lpFmtK(n) {
@@ -3238,21 +3245,9 @@ function o_lpRenderInd02() {
 }
 
 // ── IND.03 ───────────────────────────────
-function o_lpBuildFilters03() {
-  const bar = document.getElementById('filterBar03');
-  if (!bar) return;
-  bar.innerHTML = `<div class="filter-label">RED:</div>`;
-  O_LP_FILTERS03.forEach(f => {
-    const btn = document.createElement('button');
-    btn.className = 'filter-btn' + (f.key===o_lpActiveFilter03?' active':'');
-    btn.style.setProperty('--current-color', f.color);
-    btn.innerHTML = `<span class="fb-dot" style="background:${f.dot}"></span>${f.label}`;
-    btn.onclick = () => { o_lpActiveFilter03=f.key; o_lpBuildFilters03(); o_lpRenderCards03(); };
-    bar.appendChild(btn);
-  });
-}
+function o_lpBuildFilters03() { /* filter removed */ }
 
-function o_lpRenderCardsTier(items, gridId, labelId) {
+function o_lpRenderCardsTier(items, gridId, labelId, tierClass) {
   const grid = document.getElementById(gridId);
   const label = document.getElementById(labelId);
   if (!grid) return;
@@ -3263,13 +3258,14 @@ function o_lpRenderCardsTier(items, gridId, labelId) {
   }
   grid.style.display = '';
   if (label) label.style.display = '';
-  const top5 = items.slice(0,5);
-  while (top5.length < 5) top5.push(null);
-  const maxEff = top5[0]?.eff || 1;
-  grid.innerHTML = top5.map((r,i) => {
+  grid.className = 'cards-grid ' + tierClass;
+  const top10 = items.slice(0,10);
+  while (top10.length < 10) top10.push(null);
+  const maxFollowers = top10[0]?.followers || 1;
+  grid.innerHTML = top10.map((r,i) => {
     if (!r) return `<div class="eff-card" style="opacity:0.15;pointer-events:none;"></div>`;
-    const f = O_LP_FILTERS03.find(f=>f.key===r.domain) || { label:r.domain, icon:'●', color:'#5a7a94', dot:'#5a7a94' };
-    const barPct   = (r.eff/maxEff*100).toFixed(1);
+    const f = O_LP_PLAT[r.domain] || { label:r.domain, icon:'●', color:'#5a7a94' };
+    const barPct   = (r.followers/maxFollowers*100).toFixed(1);
     const rankCls  = i===0?'rank1':i===1?'rank2':i===2?'rank3':'';
     return `<div class="eff-card ${rankCls}">
       <div class="eff-platform">
@@ -3278,8 +3274,8 @@ function o_lpRenderCardsTier(items, gridId, labelId) {
         <div class="eff-rank">#${i+1}</div>
       </div>
       <div class="eff-name" title="${r.name}">${r.name}</div>
-      <div class="eff-score" style="color:var(--accent)">${o_lpFmtK(r.followers)} <span class="eff-men-inline" style="color:var(--accent);opacity:0.6">/ ${r.mentions} Men.</span></div>
-      <div class="eff-bar-wrap"><div class="eff-bar-fill" style="width:${barPct}%;background:var(--accent)"></div></div>
+      <div class="eff-score">${o_lpFmtK(r.followers)} <span class="eff-men-inline">/ ${r.mentions} Men.</span></div>
+      <div class="eff-bar-wrap"><div class="eff-bar-fill" style="width:${barPct}%"></div></div>
     </div>`;
   }).join('');
 }
@@ -3292,16 +3288,12 @@ function o_lpRenderCards03() {
     document.getElementById('tierLabel10k').style.display = 'none';
     return;
   }
-  const applyFilter = arr => o_lpActiveFilter03==='all' ? arr : arr.filter(r=>r.domain===o_lpActiveFilter03);
 
-  const hiRaw  = o_lpInfData.filter(r => r.followers > 500000);
-  const loRaw  = o_lpInfData.filter(r => r.followers >= 10000 && r.followers <= 500000);
+  const hiPool = [...o_lpInfData.filter(r => r.followers > 500000)].sort((a,b)=>b.followers-a.followers);
+  const loPool = [...o_lpInfData.filter(r => r.followers >= 10000 && r.followers <= 500000)].sort((a,b)=>b.followers-a.followers);
 
-  const hiPool = [...applyFilter(hiRaw)].sort((a,b)=>b.eff-a.eff);
-  const loPool = [...applyFilter(loRaw)].sort((a,b)=>b.eff-a.eff);
-
-  o_lpRenderCardsTier(hiPool, 'cardsGrid03hi', 'tierLabel500k');
-  o_lpRenderCardsTier(loPool, 'cardsGrid03', 'tierLabel10k');
+  o_lpRenderCardsTier(hiPool, 'cardsGrid03hi', 'tierLabel500k', 'tier-hi');
+  o_lpRenderCardsTier(loPool, 'cardsGrid03', 'tierLabel10k', 'tier-lo');
 }
 
 // ── IND.04 ───────────────────────────────
@@ -3505,7 +3497,7 @@ let p3Data        = null;
 let lpInfData     = [];
 let lpGroups      = [];
 let lpSortKey     = 'reach';
-let lpActiveFilter03 = 'all';
+// removed
 let lpModalSortKey = 'reach', lpModalSortDir = -1;
 let lpModalPlatFilter = 'all', lpModalDataset = null;
 let lpDonutChart  = null;
@@ -3523,13 +3515,7 @@ const LP_PLATFORMS = [
   { key:'instagram.com', label:'Instagram',   color:'#c77dff', colorDim:'rgba(199,125,255,0.15)', icon:'◈' },
   { key:'x.com',         label:'X / Twitter', color:'#1da1f2', colorDim:'rgba(29,161,242,0.12)', icon:'✦' },
 ];
-const LP_FILTERS03 = [
-  { key:'all',          label:'TODAS',    icon:'·', color:'#00d4ff', dot:'#00d4ff' },
-  { key:'facebook.com', label:'FACEBOOK', icon:'f', color:'#1877f2', dot:'#1877f2' },
-  { key:'tiktok.com',   label:'TIKTOK',   icon:'♪', color:'#cccccc', dot:'#cccccc' },
-  { key:'instagram.com',label:'INSTAGRAM',icon:'◈', color:'#c77dff', dot:'#c77dff' },
-  { key:'x.com',        label:'X',        icon:'✦', color:'#1da1f2', dot:'#1da1f2' },
-];
+// removed
 
 // ── Helpers ───────────────────────────────
 function lpFmtK(n) {
@@ -3967,7 +3953,7 @@ function p3RenderAll() {
   if (!p3Data) return;
   p3RenderInd01();
   p3RenderInd02();
-  p3BuildFilters03(); p3RenderCards03();
+  p3RenderCards03();
 }
 
 // ── P3 IND.01 ─────────────────────────────
@@ -4110,46 +4096,27 @@ function p3RenderInd02() {
 }
 
 // ── P3 IND.03 ─────────────────────────────
-function p3BuildFilters03() {
-  const bar = document.getElementById('p3-filterBar03');
-  if (!bar) return;
-  bar.innerHTML = `<div class="filter-label">RED:</div>`;
-  LP_FILTERS03.forEach(f => {
-    const btn = document.createElement('button');
-    btn.className = 'filter-btn' + (f.key===lpActiveFilter03?' active':'');
-    btn.style.setProperty('--current-color', f.color);
-    btn.innerHTML = `<span class="fb-dot" style="background:${f.dot}"></span>${f.label}`;
-    btn.onclick = () => { lpActiveFilter03=f.key; p3BuildFilters03(); p3RenderCards03(); };
-    bar.appendChild(btn);
-  });
-}
+function p3BuildFilters03() { /* filter removed */ }
 
-function p3RenderCards03() {
-  if (lpInfData.length === 0) {
-    document.getElementById('p3-cardsGrid03').innerHTML = LP_NO_DATA_HTML;
+function p3RenderCardsTier(items, gridId, labelId, tierClass) {
+  const grid = document.getElementById(gridId);
+  const label = document.getElementById(labelId);
+  if (!grid) return;
+  if (items.length === 0) {
+    grid.style.display = 'none';
+    if (label) label.style.display = 'none';
     return;
   }
-  // Filtro global: descartar tercio inferior de reach
-  const byReach = [...lpInfData].sort((a,b) => b.reach - a.reach);
-  const cutIndex = Math.ceil(byReach.length * 2 / 3);
-  const afterReachFilter = byReach.length >= 3 ? byReach.slice(0, cutIndex) : [...byReach];
-  const excludedCount = lpInfData.length - afterReachFilter.length;
-
-  const pool   = lpActiveFilter03==='all' ? afterReachFilter : afterReachFilter.filter(r=>r.domain===lpActiveFilter03);
-  const sorted = [...pool].sort((a,b)=>b.eff-a.eff);
-  const top5   = sorted.slice(0,5);
-  while (top5.length < 5) top5.push(null);
-  const maxEff = top5[0]?.eff || 1;
-
-  const grid = document.getElementById('p3-cardsGrid03');
-  if (!grid) return;
-  grid.innerHTML = top5.map((r,i) => {
+  grid.style.display = '';
+  if (label) label.style.display = '';
+  grid.className = 'cards-grid ' + tierClass;
+  const top10 = items.slice(0,10);
+  while (top10.length < 10) top10.push(null);
+  const maxFollowers = top10[0]?.followers || 1;
+  grid.innerHTML = top10.map((r,i) => {
     if (!r) return `<div class="eff-card" style="opacity:0.15;pointer-events:none;"></div>`;
-    const f = LP_FILTERS03.find(f=>f.key===r.domain) || { label:r.domain, icon:'●', color:'#5a7a94', dot:'#5a7a94' };
-    const ec = lpEffClass(r.eff);
-    const [ilabel, iclass] = lpInterpLabel(r.eff);
-    const barPct   = (r.eff/maxEff*100).toFixed(1);
-    const barColor = r.eff>=2?'var(--green)':r.eff>=0.5?'var(--yellow)':'var(--red)';
+    const f = LP_PLAT[r.domain] || { label:r.domain, icon:'●', color:'#5a7a94' };
+    const barPct   = (r.followers/maxFollowers*100).toFixed(1);
     const rankCls  = i===0?'rank1':i===1?'rank2':i===2?'rank3':'';
     return `<div class="eff-card ${rankCls}">
       <div class="eff-platform">
@@ -4158,11 +4125,29 @@ function p3RenderCards03() {
         <div class="eff-rank">#${i+1}</div>
       </div>
       <div class="eff-name" title="${r.name}">${r.name}</div>
-      <div class="eff-score ${ec}">${lpFmtK(r.followers)} <span class="eff-men-inline">/ ${r.mentions} Men.</span></div>
-      <div class="eff-bar-wrap"><div class="eff-bar-fill" style="width:${barPct}%;background:${barColor}"></div></div>
+      <div class="eff-score">${lpFmtK(r.followers)} <span class="eff-men-inline">/ ${r.mentions} Men.</span></div>
+      <div class="eff-bar-wrap"><div class="eff-bar-fill" style="width:${barPct}%"></div></div>
     </div>`;
   }).join('');
+}
 
+function p3RenderCards03() {
+  if (lpInfData.length === 0) {
+    const hiGrid = document.getElementById('p3-cardsGrid03hi');
+    const hiLabel = document.getElementById('p3-tierLabel500k');
+    if (hiGrid) hiGrid.style.display = 'none';
+    if (hiLabel) hiLabel.style.display = 'none';
+    document.getElementById('p3-cardsGrid03').innerHTML = LP_NO_DATA_HTML;
+    const loLabel = document.getElementById('p3-tierLabel10k');
+    if (loLabel) loLabel.style.display = 'none';
+    return;
+  }
+
+  const hiPool = [...lpInfData.filter(r => r.followers > 500000)].sort((a,b)=>b.followers-a.followers);
+  const loPool = [...lpInfData.filter(r => r.followers >= 10000 && r.followers <= 500000)].sort((a,b)=>b.followers-a.followers);
+
+  p3RenderCardsTier(hiPool, 'p3-cardsGrid03hi', 'p3-tierLabel500k', 'tier-hi');
+  p3RenderCardsTier(loPool, 'p3-cardsGrid03', 'p3-tierLabel10k', 'tier-lo');
 }
 
 // ── Sparkline (shared) ─────────────────────

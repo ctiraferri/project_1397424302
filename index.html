@@ -1324,6 +1324,10 @@
   .narrativa-cloud { line-height:1.6; }
   .nterm { display:inline-block; margin:2px 3px; padding:2px 7px; border:1px solid currentColor; font-family:var(--font-mono); cursor:pointer; transition:opacity 0.2s; }
   .nterm:hover { opacity:0.7; }
+
+  /* ── Google Trends Panel ────────────────────────────── */
+  /* Google Trends embed (live widget) */
+
   /* Panel & Modal Briefing IA */
   #briefingPanel { overflow-y:auto; }
   #briefingPanel .panel-title { font-size:9px; letter-spacing:2px; margin-bottom:10px; padding-bottom:8px; }
@@ -1369,6 +1373,7 @@
           <button class="page-menu-item active" onclick="switchPage(1)">PÁG. 01 / OVERVIEW</button>
           <button class="page-menu-item" onclick="switchPage(2)">PÁG. 02 / RADAR</button>
           <button class="page-menu-item" onclick="switchPage(3)" style="display:none">PÁG. 03 / MENCIONES</button>
+          <button class="page-menu-item" onclick="switchPage(5)">PÁG. 03 / G TRENDS</button>
         </div>
       </div>
       <div class="live-badge"><div class="live-dot"></div>LIVE · BBDD ACTIVA</div>
@@ -1610,7 +1615,6 @@
       </div>
     </div>
   </div>
-
   </div><!-- /page1 -->
 
   <!-- PÁGINA 2: LISTENING (OLD) -->
@@ -2053,6 +2057,50 @@
 
   </div><!-- /page4 -->
 
+  <!-- ═══════════════════════════════════════════ PAGE 5: G TRENDS ═══════════════════════════════════════════ -->
+  <div id="page5" class="page-section">
+
+    <div class="panel" style="padding:20px">
+      <div class="panel-title" style="margin-bottom:16px">GOOGLE TRENDS · INTERÉS PÚBLICO (LIVE)</div>
+      <div id="gtrendsEmbedWrap" style="width:100%;min-height:420px;overflow:visible">
+        <script type="text/javascript" src="https://ssl.gstatic.com/trends_nrtr/4356_RC01/embed_loader.js"></script>
+        <script type="text/javascript">
+          trends.embed.renderExploreWidget("TIMESERIES", {"comparisonItem":[{"keyword":"/g/11ksg22gb","geo":"AR-C","time":"now 7-d"}],"category":0,"property":""}, {"exploreQuery":"date=now%207-d&geo=AR-C&q=%2Fg%2F11ksg22gb&hl=es&legacy","guestPath":"https://trends.google.es:443/trends/embed/"});
+        </script>
+      </div>
+    </div>
+    <style>
+      #gtrendsEmbedWrap iframe, #gtrendsGeoWrap iframe, #gtrendsTopicsWrap iframe, #gtrendsQueriesWrap iframe { width:100% !important; min-height:400px !important; border:0; }
+    </style>
+    <div class="panel" style="padding:20px;margin-top:16px">
+      <div id="gtrendsGeoWrap" style="width:100%;min-height:420px;overflow:visible">
+        <script type="text/javascript" src="https://ssl.gstatic.com/trends_nrtr/4356_RC01/embed_loader.js"></script>
+        <script type="text/javascript">
+          trends.embed.renderExploreWidget("GEO_MAP", {"comparisonItem":[{"keyword":"/g/11ksg22gb","geo":"AR-C","time":"now 7-d"}],"category":0,"property":""}, {"exploreQuery":"date=now%207-d&geo=AR-C&q=%2Fg%2F11ksg22gb&hl=es&legacy","guestPath":"https://trends.google.es:443/trends/embed/"});
+        </script>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px">
+      <div class="panel" style="padding:20px">
+        <div id="gtrendsTopicsWrap" style="width:100%;min-height:420px;overflow:visible">
+          <script type="text/javascript" src="https://ssl.gstatic.com/trends_nrtr/4356_RC01/embed_loader.js"></script>
+          <script type="text/javascript">
+            trends.embed.renderExploreWidget("RELATED_TOPICS", {"comparisonItem":[{"keyword":"/g/11ksg22gb","geo":"AR-C","time":"now 7-d"}],"category":0,"property":""}, {"exploreQuery":"date=now%207-d&geo=AR-C&q=%2Fg%2F11ksg22gb&hl=es&legacy","guestPath":"https://trends.google.es:443/trends/embed/"});
+          </script>
+        </div>
+      </div>
+      <div class="panel" style="padding:20px">
+        <div id="gtrendsQueriesWrap" style="width:100%;min-height:420px;overflow:visible">
+          <script type="text/javascript" src="https://ssl.gstatic.com/trends_nrtr/4356_RC01/embed_loader.js"></script>
+          <script type="text/javascript">
+            trends.embed.renderExploreWidget("RELATED_QUERIES", {"comparisonItem":[{"keyword":"/g/11ksg22gb","geo":"AR-C","time":"now 7-d"}],"category":0,"property":""}, {"exploreQuery":"date=now%207-d&geo=AR-C&q=%2Fg%2F11ksg22gb&hl=es&legacy","guestPath":"https://trends.google.es:443/trends/embed/"});
+          </script>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /page5 -->
+
   <footer>
     <span>// WAR ROOM DIGITAL · INTELIGENCIA NARRATIVA, OPORTUNIDADES Y RIESGO POLÍTICO</span>
     <span>FUENTE: BRAND24 + INGESTA AUTOMATIZADA + GOOGLE TRENDS · IA ESTRATEGICA</span>
@@ -2272,6 +2320,7 @@ function switchPage(n) {
   if (n === 2 && !oldP2Initialized) { oldP2Initialized = true; oldP2Init(); }
   if (n === 3 && !p2Initialized) { p2Initialized = true; p2Init(); }
   if (n === 3 && !p3Initialized) { p3Initialized = true; p3Init(); }
+  // page5 uses live Google Trends embed — no JS load needed
 }
 function togglePageMenu() {
   document.getElementById('pageNav').classList.toggle('open');
@@ -2346,6 +2395,7 @@ function applyFilter() {
   if (oldP2Initialized) oldP2LoadData();
   if (p3Initialized) p3LoadData();
   loadBriefing();
+  // page5 uses live Google Trends embed — no reload needed
 }
 function resetFilter() {
   const _localToday = (d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`)(new Date());
@@ -4474,6 +4524,10 @@ function openOpMentions(mentionIds, title) {
   document.getElementById('drawer').classList.add('open');
   renderDrawerMentions(matches, []);
 }
+
+// ══════════════════════════════════════════
+// GOOGLE TRENDS — removed (page5 uses live embed)
+// ══════════════════════════════════════════
 
 function renderNarrativa() {
   const body = document.getElementById('narrativaBody');

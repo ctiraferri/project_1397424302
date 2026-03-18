@@ -1314,7 +1314,7 @@
     .p2-ica-number { font-size:56px; }
   }
 
-  /* ── Narrativa Dominante ────────────────────────────── */
+  /* ── Términos Asociados ────────────────────────────── */
   .narrativa-section { display:flex; flex-direction:column; gap:0; height:100%; }
   .narrativa-week { flex:1; padding:8px 0; border-bottom:1px solid var(--border-dim); overflow:visible; position:relative; }
   .narrativa-week:last-child { border-bottom:none; }
@@ -1574,9 +1574,9 @@
   <!-- BOTTOM GRID -->
   <div class="bottom-grid">
 
-    <!-- NARRATIVA DOMINANTE -->
+    <!-- TÉRMINOS ASOCIADOS -->
     <div class="panel" id="narrativaPanel">
-      <div class="panel-title">NARRATIVA DOMINANTE</div>
+      <div class="panel-title">TÉRMINOS ASOCIADOS</div>
       <div class="narrativa-section" id="narrativaBody">
         <div style="font-family:var(--font-mono);font-size:9px;color:var(--text-dim);">Cargando...</div>
       </div>
@@ -4336,7 +4336,7 @@ function lpRenderModal() {
   }).join('');
 }
 
-// ── Narrativa Dominante ────────────────────────────────────────
+// ── Términos Asociados ────────────────────────────────────────
 let NARRATIVA_DATA = null;
 
 // ── Briefing IA ────────────────────────────────────────────────
@@ -4401,10 +4401,10 @@ function openBriefingModal() {
     `<p><strong>Polarización:</strong> ${b.polarizacion_pct}%</p>` +
     `<p><strong>ICS 2.0:</strong> ${b.ics2_score !== undefined ? b.ics2_score : '—'} [${esc(b.ics2_status || '')}]</p>` +
     (b.ics2_formula ? `<p style="color:#8ba3b8;font-size:10px">${esc(b.ics2_formula)}</p>` : '');
-  // Top 5 narrativas
+  // Top 5 términos
   const narrs = b.top5_narrativas || [];
   if (narrs.length) {
-    briefingHtml += '<p><strong>Top 5 narrativas:</strong></p><ul>';
+    briefingHtml += '<p><strong>Top 5 términos:</strong></p><ul>';
     narrs.forEach(n => {
       const term = esc(n.narrativa || n.term || '');
       const sentPred = n.sentimiento_predominante || (n.neg > n.pos ? 'neg' : n.pos > n.neg ? 'pos' : 'neu');
@@ -4413,10 +4413,10 @@ function openBriefingModal() {
     });
     briefingHtml += '</ul>';
   }
-  // Narrativas negativas en baja
+  // Términos negativos en baja
   const negBaja = b.narrativas_negativas_en_baja || [];
   if (negBaja.length) {
-    briefingHtml += '<p><strong>Narrativas negativas en baja:</strong></p><ul>';
+    briefingHtml += '<p><strong>Términos negativos en baja:</strong></p><ul>';
     negBaja.forEach(n => {
       briefingHtml += `<li>${esc(n.narrativa || n.term || '')} — actual: ${n.actual || n.curr_n || 0}, hace 2 sem: ${n.hace_2_semanas || n.prev_n || 0} (<span style="color:#4caf50">${n.variacion_pct || n.delta_pct || 0}%</span>)</li>`;
     });

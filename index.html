@@ -2191,12 +2191,10 @@
     <div id="briefingModalBriefing"></div>
     <div class="briefing-modal-section">// 2. RIESGO REPUTACIONAL</div>
     <div id="briefingModalRiesgo"></div>
-    <div class="briefing-modal-section">// 3. EFICIENCIA DE AMPLIFICACIÓN</div>
-    <div id="briefingModalEficiencia"></div>
+    <div class="briefing-modal-section">// 3. INFLUENCERS Y CANALES</div>
+    <div id="briefingModalInfluencers"></div>
     <div class="briefing-modal-section">// 4. NARRATIVAS Y TEMAS</div>
     <div id="briefingModalNarrativas"></div>
-    <div class="briefing-modal-section">// 5. PRIORIDADES DE ACCIÓN</div>
-    <ul id="briefingModalPrioridades"></ul>
   </div>
 </div>
 
@@ -4326,14 +4324,16 @@ function renderBriefing(data) {
   if (!body) return;
   const esc = s => (s||'').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   const b = data.briefing || {};
-  const score = b.tm_score !== undefined ? b.tm_score : (b.ics_score !== undefined ? b.ics_score : '—');
-  const label = esc(b.tm_label || b.ics_label || '');
+  const score = b.tm_score !== undefined ? b.tm_score : '—';
+  const label = esc(b.tm_label || '');
   const sent  = esc(b.sentimiento || '');
-  const narr  = esc(b.narrativa_dominante || '');
+  const ics2  = b.ics2_score !== undefined ? b.ics2_score : '—';
+  const ics2s = esc(b.ics2_status || '');
+  const narrs = (b.top5_narrativas || []).slice(0, 3).map(n => esc(n.narrativa || n.term || '')).join(', ');
   body.innerHTML =
-    `<p><strong>TM:</strong> ${score > 0 ? '+' : ''}${score} — ${label}</p>` +
+    `<p><strong>TM:</strong> ${score > 0 ? '+' : ''}${score} — ${label} · <strong>ICS 2.0:</strong> ${ics2} [${ics2s}]</p>` +
     `<p>${sent}</p>` +
-    `<p>${narr}</p>` +
+    (narrs ? `<p style="color:#8ba3b8;font-size:10px">Top: ${narrs}</p>` : '') +
     `<span class="briefing-link" onclick="openBriefingModal()">[ VER ANÁLISIS COMPLETO → ]</span>`;
 }
 
@@ -4342,40 +4342,58 @@ function openBriefingModal() {
   const esc = s => (s||'').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   document.getElementById('briefingModalDateRange').textContent = `${BRIEFING_DATA.from_date} → ${BRIEFING_DATA.to_date}`;
 
+  // 1. BRIEFING
   const b = BRIEFING_DATA.briefing || {};
-  const bTmScore = b.tm_score !== undefined ? b.tm_score : (b.ics_score !== undefined ? b.ics_score : '—');
-  const bTmLabel = esc(b.tm_label || b.ics_label || '');
-  document.getElementById('briefingModalBriefing').innerHTML =
+  const bTmScore = b.tm_score !== undefined ? b.tm_score : '—';
+  const bTmLabel = esc(b.tm_label || '');
+  let briefingHtml =
     `<p><strong>TM:</strong> ${bTmScore > 0 ? '+' : ''}${bTmScore} — ${bTmLabel}</p>` +
     `<p><strong>Sentimiento:</strong> ${esc(b.sentimiento)}</p>` +
     `<p><strong>Polarización:</strong> ${b.polarizacion_pct}%</p>` +
-    `<p><strong>Narrativa dominante:</strong> ${esc(b.narrativa_dominante)}</p>`;
+    `<p><strong>ICS 2.0:</strong> ${b.ics2_score !== undefined ? b.ics2_score : '—'} [${esc(b.ics2_status || '')}]</p>` +
+    (b.ics2_formula ? `<p style="color:#8ba3b8;font-size:10px">${esc(b.ics2_formula)}</p>` : '');
+  // Top 5 narrativas
+  const narrs = b.top5_narrativas || [];
+  if (narrs.length) {
+    briefingHtml += '<p><strong>Top 5 narrativas:</strong></p><ul>';
+    narrs.forEach(n => {
+      const term = esc(n.narrativa || n.term || '');
+      const sentPred = n.sentimiento_predominante || (n.neg > n.pos ? 'neg' : n.pos > n.neg ? 'pos' : 'neu');
+      const col = sentPred === 'neg' ? '#e05555' : sentPred === 'pos' ? '#4caf50' : '#8ba3b8';
+      briefingHtml += `<li>${term} — <span style="color:${col}">${n.menciones || n.n || 0} menciones</span></li>`;
+    });
+    briefingHtml += '</ul>';
+  }
+  // Narrativas negativas en baja
+  const negBaja = b.narrativas_negativas_en_baja || [];
+  if (negBaja.length) {
+    briefingHtml += '<p><strong>Narrativas negativas en baja:</strong></p><ul>';
+    negBaja.forEach(n => {
+      briefingHtml += `<li>${esc(n.narrativa || n.term || '')} — actual: ${n.actual || n.curr_n || 0}, hace 2 sem: ${n.hace_2_semanas || n.prev_n || 0} (<span style="color:#4caf50">${n.variacion_pct || n.delta_pct || 0}%</span>)</li>`;
+    });
+    briefingHtml += '</ul>';
+  }
+  document.getElementById('briefingModalBriefing').innerHTML = briefingHtml;
 
+  // 2. RIESGO REPUTACIONAL
   const r = BRIEFING_DATA.riesgo_reputacional || {};
   document.getElementById('briefingModalRiesgo').innerHTML =
     `<p><strong>Señales de crisis:</strong> ${esc(r.senales_crisis)}</p>` +
     `<p><strong>Métricas de alerta:</strong> ${esc(r.metricas_alerta)}</p>` +
     `<p><strong>Tendencia polarización:</strong> ${esc(r.tendencia_polarizacion)}</p>`;
 
-  const ef = BRIEFING_DATA.eficiencia_amplificacion || {};
-  document.getElementById('briefingModalEficiencia').innerHTML =
-    `<p><strong>ICA:</strong> ${ef.ica_pct}% — ${esc(ef.ica_interpretacion)}</p>` +
-    `<p><strong>Red mayor alcance:</strong> ${esc(ef.red_mayor_alcance)}</p>` +
-    `<p><strong>Análisis Nx:</strong> ${esc(ef.nx_analisis)}</p>`;
+  // 3. INFLUENCERS Y CANALES
+  const ic = BRIEFING_DATA.influencers_canales || {};
+  document.getElementById('briefingModalInfluencers').innerHTML =
+    `<p><strong>Top por menciones:</strong> ${esc(ic.top_por_menciones)}</p>` +
+    `<p><strong>Top por seguidores:</strong> ${esc(ic.top_por_seguidores)}</p>` +
+    `<p><strong>Canales principales:</strong> ${esc(ic.canales_principales)}</p>`;
 
+  // 4. NARRATIVAS Y TEMAS
   const n = BRIEFING_DATA.narrativas_temas || {};
   document.getElementById('briefingModalNarrativas').innerHTML =
     `<p><strong>Narrativas dominantes:</strong> ${esc(n.narrativas_dominantes)}</p>` +
-    `<p><strong>Temas articuladores:</strong> ${esc(n.temas_articuladores)}</p>` +
-    `<p><strong>Impactos políticos:</strong> ${esc(n.impactos_politicos)}</p>`;
-
-  const prios = BRIEFING_DATA.prioridades_accion || [];
-  document.getElementById('briefingModalPrioridades').innerHTML = prios.map(p => {
-    const col = p.urgencia === 'alta' ? '#e05555' : p.urgencia === 'media' ? '#e0a855' : '#55a8e0';
-    return `<li><span style="color:${col};font-weight:bold">[${esc(p.urgencia).toUpperCase()}]</span> ` +
-           `<strong>${esc(p.accion)}</strong> — ${esc(p.objetivo)} ` +
-           `<span style="color:#8ba3b8">(${esc(p.metrica)})</span></li>`;
-  }).join('');
+    `<p><strong>Temas articuladores:</strong> ${esc(n.temas_articuladores)}</p>`;
 
   document.getElementById('briefingModal').classList.add('open');
 }

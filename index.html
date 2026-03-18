@@ -1347,6 +1347,52 @@
   .briefing-modal-box ul { margin:0; padding-left:16px; }
   .briefing-modal-box li { font-family:var(--font-mono); font-size:12px; color:#c9d9e8; line-height:1.7; }
   #briefingModalDateRange { font-family:var(--font-mono); font-size:9px; color:var(--text-dim); margin-bottom:12px; letter-spacing:1px; }
+
+  /* ── Page 6: Narrativa IA ── */
+  .narrativa-ia-header { margin-bottom:16px; }
+  .narrativa-ia-title { font-family:var(--font-display); font-size:20px; letter-spacing:3px; color:var(--accent); }
+  .narrativa-ia-nav { display:flex; align-items:center; gap:10px; margin-top:6px; }
+  .narrativa-ia-nav-btn {
+    background:var(--accent-dim); border:1px solid var(--accent-brd); color:var(--accent);
+    font-size:11px; padding:4px 10px; cursor:pointer; font-family:var(--font-mono); letter-spacing:1px;
+  }
+  .narrativa-ia-nav-btn:hover { background:rgba(0,212,255,0.2); }
+  .narrativa-ia-nav-btn:disabled { opacity:0.3; cursor:default; }
+  .narrativa-ia-dates { font-family:var(--font-mono); font-size:10px; color:var(--text-dim); letter-spacing:1px; }
+  .narrativa-ia-stats { font-family:var(--font-mono); font-size:9px; color:var(--text-dim); margin-top:2px; }
+  .narrativa-ia-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  @media (max-width:900px) { .narrativa-ia-grid { grid-template-columns:1fr; } }
+  .narrativa-ia-card-full { grid-column:1 / -1; }
+  .narrativa-ia-card {
+    background:var(--bg-card); border:1px solid var(--border-dim); border-radius:6px; overflow:hidden;
+  }
+  .narrativa-ia-card-header {
+    font-family:var(--font-mono); font-size:10px; letter-spacing:2px; color:var(--text-dim);
+    padding:10px 14px; border-bottom:1px solid var(--border-dim); background:rgba(0,212,255,0.04);
+  }
+  .narrativa-ia-hdr-green { border-top:2px solid #4caf50; color:#4caf50; }
+  .narrativa-ia-hdr-red   { border-top:2px solid #e05555; color:#e05555; }
+  .narrativa-ia-hdr-yellow { border-top:2px solid #f5a623; color:#f5a623; }
+  .narrativa-ia-hdr-accent { border-top:2px solid var(--accent); color:var(--accent); }
+  .narrativa-ia-card-body {
+    padding:14px; font-family:var(--font-mono); font-size:12px; color:#c9d9e8; line-height:1.7;
+  }
+  .narrativa-ia-loading { font-size:10px; color:var(--text-dim); }
+  .narrativa-ia-narr-list { list-style:none; padding:0; margin:8px 0 0; }
+  .narrativa-ia-narr-list li { padding:5px 0; border-bottom:1px solid var(--border-dim); }
+  .narrativa-ia-narr-list li:last-child { border-bottom:none; }
+  .narrativa-ia-tag { display:inline-block; padding:2px 8px; border-radius:3px; font-size:9px; letter-spacing:1px; margin-right:6px; }
+  .narrativa-ia-tag-pos { background:rgba(76,175,80,0.15); color:#4caf50; }
+  .narrativa-ia-tag-neg { background:rgba(224,85,85,0.15); color:#e05555; }
+  .narrativa-ia-tag-neu { background:rgba(139,163,184,0.15); color:#8ba3b8; }
+  .narrativa-ia-delta { font-size:10px; margin-left:4px; }
+  .narrativa-ia-delta-up { color:#8ba3b8; }
+  .narrativa-ia-delta-down { color:#8ba3b8; }
+  .narrativa-ia-src { font-size:10px; color:var(--accent); text-decoration:none; }
+  .narrativa-ia-src:hover { text-decoration:underline; }
+  .narrativa-ia-adj-tags { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:10px; }
+  .narrativa-ia-adj-tag { display:inline-block; padding:4px 12px; border:1px solid var(--accent); border-radius:4px; font-size:11px; color:var(--accent); letter-spacing:1px; }
+  .narrativa-ia-adj-ctx { font-size:10px; color:var(--text-dim); margin-top:6px; }
 </style>
 </head>
 <body>
@@ -1374,6 +1420,7 @@
           <button class="page-menu-item" onclick="switchPage(2)">PÁG. 02 / RADAR</button>
           <button class="page-menu-item" onclick="switchPage(3)" style="display:none">PÁG. 03 / MENCIONES</button>
           <button class="page-menu-item" onclick="switchPage(5)">PÁG. 03 / G TRENDS</button>
+          <button class="page-menu-item" onclick="switchPage(6)">PÁG. 04 / NARRATIVA</button>
         </div>
       </div>
       <div class="live-badge"><div class="live-dot"></div>LIVE · BBDD ACTIVA</div>
@@ -2100,6 +2147,67 @@
 
   </div><!-- /page5 -->
 
+  <!-- ═══════════════════════════════════════════ PAGE 6: NARRATIVA IA ═══════════════════════════════════════════ -->
+  <div id="page6" class="page-section">
+
+    <div class="narrativa-ia-header">
+      <div class="narrativa-ia-title">ANÁLISIS NARRATIVO SEMANAL</div>
+      <div class="narrativa-ia-nav">
+        <button class="narrativa-ia-nav-btn" onclick="narrativaIAPrev()" id="narrativaIAPrevBtn" title="Semana anterior">◀</button>
+        <span class="narrativa-ia-dates" id="narrativaIADates">Cargando...</span>
+        <button class="narrativa-ia-nav-btn" onclick="narrativaIANext()" id="narrativaIANextBtn" title="Semana siguiente">▶</button>
+      </div>
+      <div class="narrativa-ia-stats" id="narrativaIAStats"></div>
+    </div>
+
+    <div class="narrativa-ia-grid">
+
+      <div class="narrativa-ia-card narrativa-ia-card-full">
+        <div class="narrativa-ia-card-header">RESUMEN GENERAL</div>
+        <div class="narrativa-ia-card-body" id="niaResumen">
+          <div class="narrativa-ia-loading">Cargando análisis...</div>
+        </div>
+      </div>
+
+      <div class="narrativa-ia-card">
+        <div class="narrativa-ia-card-header narrativa-ia-hdr-green">POSITIVAS EN CRECIMIENTO</div>
+        <div class="narrativa-ia-card-body" id="niaPositivas">
+          <div class="narrativa-ia-loading">—</div>
+        </div>
+      </div>
+
+      <div class="narrativa-ia-card">
+        <div class="narrativa-ia-card-header narrativa-ia-hdr-red">NEGATIVAS EN CRECIMIENTO</div>
+        <div class="narrativa-ia-card-body" id="niaNegativas">
+          <div class="narrativa-ia-loading">—</div>
+        </div>
+      </div>
+
+      <div class="narrativa-ia-card">
+        <div class="narrativa-ia-card-header narrativa-ia-hdr-green">NEGATIVAS QUE BAJARON</div>
+        <div class="narrativa-ia-card-body" id="niaDesaparecieron">
+          <div class="narrativa-ia-loading">—</div>
+        </div>
+      </div>
+
+      <div class="narrativa-ia-card">
+        <div class="narrativa-ia-card-header narrativa-ia-hdr-yellow">CONCEPTO CONTEXTUAL</div>
+        <div class="narrativa-ia-card-body" id="niaConcepto">
+          <div class="narrativa-ia-loading">—</div>
+        </div>
+      </div>
+
+      <div class="narrativa-ia-card narrativa-ia-card-full">
+        <div class="narrativa-ia-card-header narrativa-ia-hdr-accent">ADJETIVOS CALIFICATIVOS</div>
+        <div class="narrativa-ia-card-body" id="niaAdjetivos">
+          <div class="narrativa-ia-loading">—</div>
+        </div>
+      </div>
+
+    </div>
+
+  </div><!-- /page6 -->
+
   <footer>
     <span>// WAR ROOM DIGITAL · INTELIGENCIA NARRATIVA, OPORTUNIDADES Y RIESGO POLÍTICO</span>
     <span>FUENTE: BRAND24 + INGESTA AUTOMATIZADA + GOOGLE TRENDS · IA ESTRATEGICA</span>
@@ -2312,7 +2420,7 @@ function switchPage(n) {
   document.getElementById('pageNav').classList.remove('open');
   document.querySelector('.filter-count').style.display = n === 1 ? '' : 'none';
   // Filter bar visibility: hide on page 3 and 5
-  document.querySelector('.filter-bar').style.display = (n === 3 || n === 5) ? 'none' : '';
+  document.querySelector('.filter-bar').style.display = (n === 3 || n === 5 || n === 6) ? 'none' : '';
   // Window legend: show only on page 3
   const wl = document.getElementById('p2WindowLegend');
   if (wl) wl.style.display = (n === 3) ? '' : 'none';
@@ -2320,6 +2428,7 @@ function switchPage(n) {
   if (n === 3 && !p2Initialized) { p2Initialized = true; p2Init(); }
   if (n === 3 && !p3Initialized) { p3Initialized = true; p3Init(); }
   // page5 uses live Google Trends embed — no JS load needed
+  if (n === 6) loadNarrativaIA();
 }
 function togglePageMenu() {
   document.getElementById('pageNav').classList.toggle('open');
@@ -4543,6 +4652,164 @@ function renderNarrativa() {
       <div class="narrativa-cloud">${buildCloud(w.terms, 40, w.from, w.to)}</div>
     </div>
   `).join('');
+}
+
+// ── Narrativa IA (Page 6) ─────────────────────────────────────
+let NARRATIVA_IA_DATA = null;
+let _narrativaIAOffset = 0;
+let _narrativaIACache = {};
+
+const _niaFmt = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+
+function _niaWeekRange(offset) {
+  const today = new Date();
+  const yesterday = new Date(today); yesterday.setDate(today.getDate() - 1);
+  const to = new Date(yesterday); to.setDate(yesterday.getDate() - offset * 7);
+  const from = new Date(to); from.setDate(to.getDate() - 6);
+  return { from: _niaFmt(from), to: _niaFmt(to) };
+}
+
+async function loadNarrativaIA() {
+  const range = _niaWeekRange(_narrativaIAOffset);
+  const cacheKey = `${range.from}_${range.to}`;
+
+  const datesEl = document.getElementById('narrativaIADates');
+  if (datesEl) datesEl.textContent = `${range.from} → ${range.to}`;
+
+  const nextBtn = document.getElementById('narrativaIANextBtn');
+  if (nextBtn) nextBtn.disabled = (_narrativaIAOffset === 0);
+  const prevBtn = document.getElementById('narrativaIAPrevBtn');
+  if (prevBtn) prevBtn.disabled = (_narrativaIAMaxOffset !== null && _narrativaIAOffset >= _narrativaIAMaxOffset);
+
+  if (_narrativaIACache[cacheKey]) {
+    NARRATIVA_IA_DATA = _narrativaIACache[cacheKey];
+    renderNarrativaIA(NARRATIVA_IA_DATA);
+    return;
+  }
+
+  if (!NARRATIVA_IA_DATA) {
+    document.getElementById('niaResumen').innerHTML = '<div class="narrativa-ia-loading">Cargando análisis...</div>';
+  }
+
+  try {
+    const url = `${CONFIG.apiUrl}/api/v1/narrativa?project_id=${CONFIG.projectId}&from_date=${range.from}&to_date=${range.to}`;
+    const resp = await fetch(url, {
+      headers: { Accept: 'application/json', 'ngrok-skip-browser-warning': 'true' },
+      mode: 'cors',
+    });
+    if (resp.status === 404) {
+      _narrativaIAMaxOffset = _narrativaIAOffset - 1;
+      _narrativaIAOffset = Math.max(0, _narrativaIAOffset - 1);
+      const prevRange = _niaWeekRange(_narrativaIAOffset);
+      if (datesEl) datesEl.textContent = `${prevRange.from} → ${prevRange.to}`;
+      const pb = document.getElementById('narrativaIAPrevBtn'); if (pb) pb.disabled = true;
+      const nb = document.getElementById('narrativaIANextBtn'); if (nb) nb.disabled = (_narrativaIAOffset === 0);
+      const restoreKey = `${prevRange.from}_${prevRange.to}`;
+      if (_narrativaIACache[restoreKey]) renderNarrativaIA(_narrativaIACache[restoreKey]);
+      return;
+    }
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    NARRATIVA_IA_DATA = await resp.json();
+    _narrativaIACache[cacheKey] = NARRATIVA_IA_DATA;
+    renderNarrativaIA(NARRATIVA_IA_DATA);
+  } catch(e) {
+    console.warn('Narrativa IA no disponible:', e);
+    document.getElementById('niaResumen').innerHTML = '<div class="narrativa-ia-loading">Análisis narrativo no disponible para este período</div>';
+  }
+}
+
+let _narrativaIAMaxOffset = null;
+
+async function narrativaIAPrev() {
+  if (_narrativaIAMaxOffset !== null && _narrativaIAOffset >= _narrativaIAMaxOffset) return;
+  _narrativaIAOffset++;
+  await loadNarrativaIA();
+}
+function narrativaIANext() { if (_narrativaIAOffset > 0) { _narrativaIAOffset--; loadNarrativaIA(); } }
+
+function renderNarrativaIA(data) {
+  const esc = s => (s||'').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+  const statsEl = document.getElementById('narrativaIAStats');
+  if (statsEl) {
+    const cur = data.total_menciones_actual || 0;
+    const prev = data.total_menciones_anterior || 0;
+    const pct = prev > 0 ? (((cur - prev) / prev) * 100).toFixed(1) : 0;
+    const arrow = pct > 0 ? '▲' : pct < 0 ? '▼' : '—';
+    statsEl.textContent = `MENCIONES: ${cur} (sem. anterior: ${prev}) · ${arrow} ${Math.abs(pct)}%`;
+  }
+
+  const rg = data.resumen_general || {};
+  let resHtml = `<p>${esc(rg.texto)}</p>`;
+  const narrs = rg.narrativas || [];
+  if (narrs.length) {
+    resHtml += '<ul class="narrativa-ia-narr-list">';
+    narrs.forEach(n => {
+      const sent = (n.sentimiento || 'NEU').toUpperCase();
+      const cls = sent === 'POS' ? 'pos' : sent === 'NEG' ? 'neg' : 'neu';
+      resHtml += `<li><span class="narrativa-ia-tag narrativa-ia-tag-${cls}">${sent}</span><strong>${esc(n.nombre)}</strong> (${n.conteo || 0} menciones) — ${esc(n.descripcion)}</li>`;
+    });
+    resHtml += '</ul>';
+  }
+  document.getElementById('niaResumen').innerHTML = resHtml;
+
+  const pos = data.positivas_crecieron || [];
+  if (pos.length) {
+    document.getElementById('niaPositivas').innerHTML = '<ul class="narrativa-ia-narr-list">' +
+      pos.map(n => `<li><strong>${esc(n.nombre)}</strong> — ${n.conteo_actual||0} menciones <span class="narrativa-ia-delta narrativa-ia-delta-up">▲ ${n.delta_pct||0}%</span><br><span style="font-size:10px;color:var(--text-dim)">${esc(n.descripcion)}</span></li>`).join('') +
+      '</ul>';
+  } else {
+    document.getElementById('niaPositivas').innerHTML = '<div class="narrativa-ia-loading">Sin narrativas positivas en crecimiento</div>';
+  }
+
+  const neg = data.negativas_crecieron || [];
+  if (neg.length) {
+    document.getElementById('niaNegativas').innerHTML = '<ul class="narrativa-ia-narr-list">' +
+      neg.map(n => `<li><strong>${esc(n.nombre)}</strong> — ${n.conteo_actual||0} menciones <span class="narrativa-ia-delta narrativa-ia-delta-up">▲ ${n.delta_pct||0}%</span><br><span style="font-size:10px;color:var(--text-dim)">${esc(n.descripcion)}</span></li>`).join('') +
+      '</ul>';
+  } else {
+    document.getElementById('niaNegativas').innerHTML = '<div class="narrativa-ia-loading">Sin narrativas negativas en crecimiento</div>';
+  }
+
+  const desap = data.negativas_desaparecieron || [];
+  if (desap.length) {
+    document.getElementById('niaDesaparecieron').innerHTML = '<ul class="narrativa-ia-narr-list">' +
+      desap.map(n => `<li><strong>${esc(n.nombre)}</strong> — anterior: ${n.conteo_anterior||0}, actual: ${n.conteo_actual||0} <span class="narrativa-ia-delta narrativa-ia-delta-down">▼</span><br><span style="font-size:10px;color:var(--text-dim)">${esc(n.descripcion)}</span></li>`).join('') +
+      '</ul>';
+  } else {
+    document.getElementById('niaDesaparecieron').innerHTML = '<div class="narrativa-ia-loading">Sin narrativas negativas en baja</div>';
+  }
+
+  const fc = data.frase_contextual || {};
+  if (fc.concepto) {
+    let concHtml = `<p><strong>"${esc(fc.concepto)}"</strong> — ${fc.conteo||0} apariciones</p>`;
+    concHtml += `<p style="font-size:11px">${esc(fc.explicacion)}</p>`;
+    const fuentes = fc.fuentes || [];
+    if (fuentes.length) {
+      concHtml += '<p style="font-size:9px;color:var(--text-dim);margin-top:8px">FUENTES:</p>';
+      fuentes.forEach(f => {
+        const url = f.url || '#';
+        const dom = esc(f.dominio || f.domain || '');
+        concHtml += `<a href="${esc(url)}" target="_blank" rel="noopener" class="narrativa-ia-src">${dom}</a> `;
+      });
+    }
+    document.getElementById('niaConcepto').innerHTML = concHtml;
+  } else {
+    document.getElementById('niaConcepto').innerHTML = '<div class="narrativa-ia-loading">Sin concepto contextual detectado</div>';
+  }
+
+  const adjs = data.adjetivos || [];
+  if (adjs.length) {
+    let adjHtml = '<div class="narrativa-ia-adj-tags">';
+    adjs.forEach(a => { adjHtml += `<span class="narrativa-ia-adj-tag">${esc(a.adjetivo)}</span>`; });
+    adjHtml += '</div>';
+    adjs.forEach(a => {
+      adjHtml += `<div class="narrativa-ia-adj-ctx"><strong>${esc(a.adjetivo)}</strong> (${a.conteo||0}x) — ${esc(a.contexto)}</div>`;
+    });
+    document.getElementById('niaAdjetivos').innerHTML = adjHtml;
+  } else {
+    document.getElementById('niaAdjetivos').innerHTML = '<div class="narrativa-ia-loading">Sin adjetivos detectados</div>';
+  }
 }
 
 </script>

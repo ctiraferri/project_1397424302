@@ -2061,7 +2061,6 @@
   <div id="page5" class="page-section">
 
     <div class="panel" style="padding:20px">
-      <div class="panel-title" style="margin-bottom:16px">GOOGLE TRENDS · INTERÉS PÚBLICO (LIVE)</div>
       <div id="gtrendsEmbedWrap" style="width:100%;min-height:420px;overflow:visible">
         <script type="text/javascript" src="https://ssl.gstatic.com/trends_nrtr/4356_RC01/embed_loader.js"></script>
         <script type="text/javascript">
@@ -2312,8 +2311,8 @@ function switchPage(n) {
   if (activeItem) document.getElementById('pageSelectorLabel').textContent = activeItem.textContent;
   document.getElementById('pageNav').classList.remove('open');
   document.querySelector('.filter-count').style.display = n === 1 ? '' : 'none';
-  // Filter bar visibility: show on page 1 and 4, hide on page 3
-  document.querySelector('.filter-bar').style.display = (n === 3) ? 'none' : '';
+  // Filter bar visibility: hide on page 3 and 5
+  document.querySelector('.filter-bar').style.display = (n === 3 || n === 5) ? 'none' : '';
   // Window legend: show only on page 3
   const wl = document.getElementById('p2WindowLegend');
   if (wl) wl.style.display = (n === 3) ? '' : 'none';

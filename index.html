@@ -2184,7 +2184,7 @@
       </div>
 
       <div class="narrativa-ia-card">
-        <div class="narrativa-ia-card-header narrativa-ia-hdr-green">NEGATIVAS QUE BAJARON</div>
+        <div class="narrativa-ia-card-header narrativa-ia-hdr-green">BUENAS NOTICIAS: CRÍTICAS EN RETROCESO</div>
         <div class="narrativa-ia-card-body" id="niaDesaparecieron">
           <div class="narrativa-ia-loading">—</div>
         </div>
@@ -4771,13 +4771,18 @@ function renderNarrativaIA(data) {
     document.getElementById('niaNegativas').innerHTML = '<div class="narrativa-ia-loading">Sin narrativas negativas en crecimiento</div>';
   }
 
+  // Negativas en Retroceso (buena noticia)
   const desap = data.negativas_desaparecieron || [];
   if (desap.length) {
     document.getElementById('niaDesaparecieron').innerHTML = '<ul class="narrativa-ia-narr-list">' +
-      desap.map(n => `<li><strong>${esc(n.nombre)}</strong> — anterior: ${n.conteo_anterior||0}, actual: ${n.conteo_actual||0} <span class="narrativa-ia-delta narrativa-ia-delta-down">▼</span><br><span style="font-size:10px;color:var(--text-dim)">${esc(n.descripcion)}</span></li>`).join('') +
+      desap.map(n => {
+        const pct = n.delta_pct != null ? n.delta_pct : (n.conteo_anterior ? Math.round(((n.conteo_actual||0) - n.conteo_anterior) / n.conteo_anterior * 100) : -100);
+        const label = (n.conteo_actual||0) === 0 ? 'desapareció' : `pasó de ${n.conteo_anterior||0} a ${n.conteo_actual||0}`;
+        return `<li><strong>${esc(n.nombre)}</strong> <span class="narrativa-ia-delta narrativa-ia-delta-down" style="color:#00ff88">▼ ${Math.abs(pct)}%</span> — ${label}<br><span style="font-size:10px;color:var(--text-dim)">${esc(n.descripcion)}</span></li>`;
+      }).join('') +
       '</ul>';
   } else {
-    document.getElementById('niaDesaparecieron').innerHTML = '<div class="narrativa-ia-loading">Sin narrativas negativas en baja</div>';
+    document.getElementById('niaDesaparecieron').innerHTML = '<div class="narrativa-ia-loading">Sin críticas en retroceso esta semana</div>';
   }
 
   const fc = data.frase_contextual || {};

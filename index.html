@@ -1419,8 +1419,8 @@
           <button class="page-menu-item active" onclick="switchPage(1)">PÁG. 01 / OVERVIEW</button>
           <button class="page-menu-item" onclick="switchPage(2)">PÁG. 02 / RADAR</button>
           <button class="page-menu-item" onclick="switchPage(3)" style="display:none">PÁG. 03 / MENCIONES</button>
-          <button class="page-menu-item" onclick="switchPage(5)">PÁG. 03 / G TRENDS</button>
-          <button class="page-menu-item" onclick="switchPage(6)">PÁG. 04 / NARRATIVA</button>
+          <button class="page-menu-item" onclick="switchPage(5)" style="display:none">PÁG. 03 / G TRENDS</button>
+          <button class="page-menu-item" onclick="switchPage(6)">PÁG. 03 / NARRATIVA</button>
         </div>
       </div>
       <div class="live-badge"><div class="live-dot"></div>LIVE · BBDD ACTIVA</div>
@@ -2190,16 +2190,18 @@
         </div>
       </div>
 
+      <!-- Adjetivos Calificativos -->
       <div class="narrativa-ia-card">
-        <div class="narrativa-ia-card-header narrativa-ia-hdr-yellow">CONCEPTO CONTEXTUAL</div>
-        <div class="narrativa-ia-card-body" id="niaConcepto">
+        <div class="narrativa-ia-card-header narrativa-ia-hdr-accent">ADJETIVOS CALIFICATIVOS</div>
+        <div class="narrativa-ia-card-body" id="niaAdjetivos">
           <div class="narrativa-ia-loading">—</div>
         </div>
       </div>
 
-      <div class="narrativa-ia-card narrativa-ia-card-full">
-        <div class="narrativa-ia-card-header narrativa-ia-hdr-accent">ADJETIVOS CALIFICATIVOS</div>
-        <div class="narrativa-ia-card-body" id="niaAdjetivos">
+      <!-- Concepto Contextual (OCULTO) -->
+      <div class="narrativa-ia-card" style="display:none">
+        <div class="narrativa-ia-card-header narrativa-ia-hdr-yellow">CONCEPTO CONTEXTUAL</div>
+        <div class="narrativa-ia-card-body" id="niaConcepto">
           <div class="narrativa-ia-loading">—</div>
         </div>
       </div>

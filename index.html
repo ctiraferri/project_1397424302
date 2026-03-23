@@ -1391,7 +1391,8 @@
   .narrativa-ia-src { font-size:10px; color:var(--accent); text-decoration:none; }
   .narrativa-ia-src:hover { text-decoration:underline; }
   .narrativa-ia-adj-tags { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:10px; }
-  .narrativa-ia-adj-tag { display:inline-block; padding:4px 12px; border:1px solid var(--accent); border-radius:4px; font-size:11px; color:var(--accent); letter-spacing:1px; }
+  .narrativa-ia-adj-tag { display:inline-block; padding:4px 12px; border:1px solid var(--accent); border-radius:4px; font-size:11px; color:var(--accent); letter-spacing:1px; cursor:pointer; transition:background 0.2s; }
+  .narrativa-ia-adj-tag:hover { background:rgba(0,212,255,0.15); }
   .narrativa-ia-adj-ctx { font-size:10px; color:var(--text-dim); margin-top:6px; }
 </style>
 </head>
@@ -2195,7 +2196,7 @@
 
       <!-- Adjetivos Calificativos -->
       <div class="narrativa-ia-card">
-        <div class="narrativa-ia-card-header narrativa-ia-hdr-accent">ADJETIVOS CALIFICATIVOS</div>
+        <div class="narrativa-ia-card-header narrativa-ia-hdr-accent">ADJETIVOS CALIFICATIVOS INTERPRETADOS EN LAS NARRATIVAS</div>
         <div class="narrativa-ia-card-body" id="niaAdjetivos">
           <div class="narrativa-ia-loading">—</div>
         </div>
@@ -2730,7 +2731,7 @@ function updateAlerts(d, neg, pos, total, maxDay) {
   const alertDom = document.getElementById('alertDominio');
   if (topNegDom && neg > 0) {
     const pct = (topNegDom[1]/neg*100).toFixed(1);
-    alertDom.textContent = `${topNegDom[0]} concentra el ${pct}% de notas negativas`;
+    alertDom.textContent = `${topNegDom[0]} concentra el ${pct}% de menciones negativas`;
   } else {
     alertDom.textContent = 'Sin menciones negativas en el período';
   }
@@ -4515,18 +4516,6 @@ function openBriefingModal() {
     `<p><strong>Polarización:</strong> ${b.polarizacion_pct}%</p>` +
     `<p><strong>ICS 2.0:</strong> ${b.ics2_score !== undefined ? b.ics2_score : '—'} [${esc(b.ics2_status || '')}]</p>` +
     (b.ics2_formula ? `<p style="color:#8ba3b8;font-size:10px">${esc(b.ics2_formula)}</p>` : '');
-  // Top 5 términos
-  const narrs = b.top5_narrativas || [];
-  if (narrs.length) {
-    briefingHtml += '<p><strong>Top 5 términos:</strong></p><ul>';
-    narrs.forEach(n => {
-      const term = esc(n.narrativa || n.term || '');
-      const sentPred = n.sentimiento_predominante || (n.neg > n.pos ? 'neg' : n.pos > n.neg ? 'pos' : 'neu');
-      const col = sentPred === 'neg' ? '#e05555' : sentPred === 'pos' ? '#4caf50' : '#8ba3b8';
-      briefingHtml += `<li>${term} — <span style="color:${col}">${n.menciones || n.n || 0} menciones</span></li>`;
-    });
-    briefingHtml += '</ul>';
-  }
   // Términos negativos en baja
   const negBaja = b.narrativas_negativas_en_baja || [];
   if (negBaja.length) {
@@ -4684,7 +4673,7 @@ async function loadNarrativaIA() {
   const nextBtn = document.getElementById('narrativaIANextBtn');
   if (nextBtn) nextBtn.disabled = (_narrativaIAOffset === 0);
   const prevBtn = document.getElementById('narrativaIAPrevBtn');
-  if (prevBtn) prevBtn.disabled = (_narrativaIAMaxOffset !== null && _narrativaIAOffset >= _narrativaIAMaxOffset);
+  if (prevBtn) prevBtn.disabled = (_narrativaIAOffset >= 1);
 
   if (_narrativaIACache[cacheKey]) {
     NARRATIVA_IA_DATA = _narrativaIACache[cacheKey];
@@ -4726,7 +4715,7 @@ async function loadNarrativaIA() {
 let _narrativaIAMaxOffset = null;
 
 async function narrativaIAPrev() {
-  if (_narrativaIAMaxOffset !== null && _narrativaIAOffset >= _narrativaIAMaxOffset) return;
+  if (_narrativaIAOffset >= 1) return;  // Solo 2 semanas: actual (0) y anterior (1)
   _narrativaIAOffset++;
   await loadNarrativaIA();
 }
@@ -4811,15 +4800,48 @@ function renderNarrativaIA(data) {
   const adjs = data.adjetivos || [];
   if (adjs.length) {
     let adjHtml = '<div class="narrativa-ia-adj-tags">';
-    adjs.forEach(a => { adjHtml += `<span class="narrativa-ia-adj-tag">${esc(a.adjetivo)}</span>`; });
+    adjs.forEach((a, i) => {
+      const adj = esc(a.adjetivo);
+      adjHtml += `<span class="narrativa-ia-adj-tag" onclick="openDrawerAdjetivo(${i})" title="Click para ver menciones">${adj}</span>`;
+    });
     adjHtml += '</div>';
     adjs.forEach(a => {
-      adjHtml += `<div class="narrativa-ia-adj-ctx"><strong>${esc(a.adjetivo)}</strong> (${a.conteo||0}x) — ${esc(a.contexto)}</div>`;
+      const adj = esc(a.adjetivo);
+      adjHtml += `<div class="narrativa-ia-adj-ctx"><strong>${adj}</strong> (${a.conteo||0}x) — ${esc(a.contexto)}</div>`;
     });
     document.getElementById('niaAdjetivos').innerHTML = adjHtml;
   } else {
     document.getElementById('niaAdjetivos').innerHTML = '<div class="narrativa-ia-loading">Sin adjetivos detectados</div>';
   }
+}
+
+function openDrawerAdjetivo(idx) {
+  if (!NARRATIVA_IA_DATA || !NARRATIVA_IA_DATA.adjetivos) return;
+  const a = NARRATIVA_IA_DATA.adjetivos[idx];
+  if (!a) return;
+  const fromDate = NARRATIVA_IA_DATA.from_date;
+  const toDate = NARRATIVA_IA_DATA.to_date;
+
+  const stopwords = new Set(['para','sobre','como','entre','desde','hasta','este','esta','estos','estas','donde','cuando','pero','sino','porque','aunque','según','tras','ante','bajo','contra','hacia','mediante','durante','también','sido','está','están','tiene','tienen','puede','pueden','hacer','hace','todo','toda','todos','todas','otro','otra','otros','otras','mismo','misma','mucho','poco','algo','nada','cada','muy','más','bien','solo','parte','forma','tipo','gran','buena','mala','nueva','nuevo','usado','empleado','utilizado','aplicado','referido','relacionado','relación','respecto','menciones','contexto']);
+  const ctxWords = (a.contexto || '').toLowerCase().replace(/[.,;:!?()]/g,' ').split(/\s+/).filter(w => w.length > 3 && !stopwords.has(w));
+  const searchTerms = [a.adjetivo.toLowerCase(), ...ctxWords];
+
+  const periodMentions = ALL_MENTIONS.filter(m => m.date >= fromDate && m.date <= toDate);
+  const scored = periodMentions.map(m => {
+    const text = ((m.full_text||'')+' '+(m.content||'')+' '+(m.title||'')).toLowerCase();
+    let hits = 0;
+    searchTerms.forEach(t => { if (text.includes(t)) hits++; });
+    return { m, hits };
+  }).filter(x => x.hits > 0).sort((a,b) => b.hits - a.hits);
+
+  const targetCount = a.conteo || scored.length;
+  const matches = scored.slice(0, targetCount).map(x => x.m);
+
+  document.getElementById('drawerTitle').textContent = a.adjetivo.toUpperCase();
+  document.getElementById('drawerSubtitle').textContent = `${matches.length} menciones con tono "${a.adjetivo}" (${fromDate} → ${toDate})`;
+  renderDrawerMentions(matches, searchTerms);
+  document.getElementById('drawerOverlay').classList.add('open');
+  document.getElementById('drawer').classList.add('open');
 }
 
 </script>

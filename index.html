@@ -1394,6 +1394,177 @@
   .narrativa-ia-adj-tag { display:inline-block; padding:4px 12px; border:1px solid var(--accent); border-radius:4px; font-size:11px; color:var(--accent); letter-spacing:1px; cursor:pointer; transition:background 0.2s; }
   .narrativa-ia-adj-tag:hover { background:rgba(0,212,255,0.15); }
   .narrativa-ia-adj-ctx { font-size:10px; color:var(--text-dim); margin-top:6px; }
+  .narrativa-ia-ejes { list-style:none; padding:4px 0 0 12px; margin:4px 0 0; }
+  .narrativa-ia-ejes li { padding:2px 0; font-size:10px; color:var(--text-dim); border-bottom:none; }
+  .narrativa-ia-eje-bullet { color:#e05555; margin-right:4px; font-size:8px; }
+  .narrativa-ia-eje-count { color:#8ba3b8; font-size:9px; }
+  .narrativa-ia-eje-detalle { font-style:italic; }
+
+  /* ══════════ PAGE 7: X.COM ANALYSIS ══════════ */
+  #page7 .xa-grid { display:grid; gap:16px; }
+  #page7 .xa-row1 { display:grid; grid-template-columns:220px 1fr; gap:16px; }
+  #page7 .xa-row2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  #page7 .xa-row3 { display:grid; grid-template-columns:2fr 1fr; gap:16px; }
+  #page7 .xa-row4 { display:grid; grid-template-columns:1fr; gap:16px; }
+
+  /* Gauge IO */
+  #page7 .xa-gauge { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; padding:12px 0; }
+  #page7 .xa-gauge-label { font-family:var(--font-mono); font-size:9px; color:var(--text-dim); letter-spacing:2px; }
+  #page7 .xa-gauge-number { font-family:var(--font-display); font-size:80px; line-height:1; letter-spacing:4px; transition:all 0.5s; }
+  #page7 .xa-gauge-pct { font-size:28px; color:var(--text-dim); }
+  #page7 .xa-gauge-status { font-family:var(--font-mono); font-size:10px; padding:3px 10px; border:1px solid; letter-spacing:2px; margin-top:4px; }
+  #page7 .xa-gauge-bar { width:100%; margin-top:12px; }
+  #page7 .xa-gauge-track { height:8px; position:relative; overflow:visible; background:linear-gradient(90deg,var(--red) 0%,var(--orange) 30%,var(--yellow) 55%,var(--green) 100%); opacity:0.6; border-radius:4px; }
+  #page7 .xa-gauge-pin { position:absolute; top:-5px; width:2px; height:18px; background:#fff; transform:translateX(-50%); box-shadow:0 0 8px #fff; transition:left 0.5s; }
+  #page7 .xa-gauge-labels { display:flex; justify-content:space-between; margin-top:6px; }
+  #page7 .xa-gauge-labels span { font-family:var(--font-mono); font-size:8px; color:var(--text-faint); }
+
+  /* KPI strip */
+  #page7 .xa-kpi-strip { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:8px; }
+  #page7 .xa-kpi { background:var(--bg-card); border:1px solid var(--border-dim); padding:12px 14px; position:relative; }
+  #page7 .xa-kpi::after { content:''; position:absolute; bottom:0; left:0; right:0; height:2px; }
+  #page7 .xa-kpi.accent::after { background:var(--accent); }
+  #page7 .xa-kpi.green::after { background:var(--green); }
+  #page7 .xa-kpi.yellow::after { background:var(--yellow); }
+  #page7 .xa-kpi.red::after { background:var(--red); }
+  #page7 .xa-kpi.purple::after { background:var(--purple); }
+  #page7 .xa-kpi.orange::after { background:var(--orange); }
+  #page7 .xa-kpi-label { font-family:var(--font-mono); font-size:9px; color:var(--text-dim); letter-spacing:2px; }
+  #page7 .xa-kpi-val { font-family:var(--font-display); font-size:32px; color:var(--text-main); letter-spacing:2px; }
+  #page7 .xa-kpi-sub { font-family:var(--font-mono); font-size:10px; color:var(--text-dim); }
+
+  /* Top handles table */
+  #page7 .xa-handle-list { max-height:440px; overflow-y:auto; }
+  #page7 .xa-handle-item { display:grid; grid-template-columns:30px 1fr 80px 60px; align-items:center; gap:8px; padding:8px 10px; border-bottom:1px solid var(--border-dim); transition:background 0.2s; }
+  #page7 .xa-handle-item:hover { background:var(--bg-hover); }
+  #page7 .xa-handle-rank { font-family:var(--font-display); font-size:18px; color:var(--text-dim); text-align:center; }
+  #page7 .xa-handle-rank.r1 { color:var(--accent); }
+  #page7 .xa-handle-rank.r2 { color:var(--yellow); }
+  #page7 .xa-handle-rank.r3 { color:var(--green); }
+  #page7 .xa-handle-info { overflow:hidden; }
+  #page7 .xa-handle-name { font-family:var(--font-ui); font-size:13px; color:var(--text-main); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  #page7 .xa-handle-sub { font-family:var(--font-mono); font-size:9px; color:var(--text-dim); }
+  #page7 .xa-handle-bar { height:6px; background:var(--bg-card); border-radius:3px; overflow:hidden; }
+  #page7 .xa-handle-bar-fill { height:100%; border-radius:3px; transition:width 0.5s; }
+  #page7 .xa-handle-val { font-family:var(--font-mono); font-size:11px; text-align:right; }
+
+  /* Diffusion clusters */
+  #page7 .xa-diff-item { background:var(--bg-card); border:1px solid var(--border-dim); border-left:3px solid var(--red); padding:12px 14px; margin-bottom:10px; }
+  #page7 .xa-diff-text { font-family:var(--font-ui); font-size:12px; color:var(--text-main); line-height:1.5; margin-bottom:8px; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+  #page7 .xa-diff-handles { font-family:var(--font-mono); font-size:10px; color:var(--accent); }
+  #page7 .xa-diff-meta { font-family:var(--font-mono); font-size:9px; color:var(--text-dim); margin-top:4px; }
+  #page7 .xa-diff-empty { font-family:var(--font-mono); font-size:11px; color:var(--green); padding:20px; text-align:center; border:1px dashed var(--green); border-radius:4px; opacity:0.7; }
+
+  /* Heatmap */
+  #page7 .xa-heatmap { display:grid; gap:2px; }
+  #page7 .xa-heatmap-row { display:grid; grid-template-columns:100px repeat(24,1fr); gap:2px; align-items:center; }
+  #page7 .xa-heatmap-label { font-family:var(--font-mono); font-size:9px; color:var(--text-dim); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  #page7 .xa-heatmap-cell { aspect-ratio:1; border-radius:2px; min-height:14px; transition:all 0.3s; position:relative; }
+  #page7 .xa-heatmap-cell:hover { transform:scale(1.4); z-index:2; box-shadow:0 0 8px rgba(0,212,255,0.4); }
+  /* heatmap tooltip via data-tip — see unified tooltip block below */
+  #page7 .xa-heatmap-hours { display:grid; grid-template-columns:100px repeat(24,1fr); gap:2px; margin-bottom:4px; }
+  #page7 .xa-heatmap-hours span { font-family:var(--font-mono); font-size:7px; color:var(--text-faint); text-align:center; }
+
+  /* Bursts */
+  #page7 .xa-burst-item { display:grid; grid-template-columns:50px 1fr 80px; gap:10px; align-items:center; padding:10px 12px; border-bottom:1px solid var(--border-dim); }
+  #page7 .xa-burst-handles { font-family:var(--font-display); font-size:28px; color:var(--yellow); text-align:center; }
+  #page7 .xa-burst-info { overflow:hidden; }
+  #page7 .xa-burst-time { font-family:var(--font-mono); font-size:11px; color:var(--text-main); }
+  #page7 .xa-burst-accounts { font-family:var(--font-mono); font-size:9px; color:var(--text-dim); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  #page7 .xa-burst-type { font-family:var(--font-mono); font-size:9px; padding:2px 8px; border:1px solid; text-align:center; }
+  #page7 .xa-burst-type.homogenea { color:var(--red); border-color:var(--red); }
+  #page7 .xa-burst-type.semi_coordinada { color:var(--yellow); border-color:var(--yellow); }
+  #page7 .xa-burst-type.heterogenea { color:var(--green); border-color:var(--green); }
+  #page7 .xa-burst-empty { font-family:var(--font-mono); font-size:11px; color:var(--text-dim); padding:20px; text-align:center; }
+
+  /* Hourly chart */
+  #page7 .xa-hourly-chart { display:flex; align-items:flex-end; gap:3px; height:120px; padding:0 4px; }
+  #page7 .xa-hourly-bar { flex:1; background:var(--accent); opacity:0.7; border-radius:2px 2px 0 0; min-width:4px; transition:all 0.3s; position:relative; }
+  #page7 .xa-hourly-bar:hover { opacity:1; box-shadow:0 0 8px var(--accent-glow); }
+  #page7 .xa-hourly-labels { display:flex; gap:3px; padding:4px 4px 0; }
+  #page7 .xa-hourly-labels span { flex:1; font-family:var(--font-mono); font-size:7px; color:var(--text-faint); text-align:center; }
+
+  /* Daily timeline */
+  #page7 .xa-daily-chart { display:flex; align-items:flex-end; gap:4px; height:90px; padding:0 4px; }
+  #page7 .xa-daily-bar { flex:1; border-radius:2px 2px 0 0; min-width:6px; transition:all 0.3s; position:relative; cursor:default; }
+  #page7 .xa-daily-bar:hover { opacity:1; box-shadow:0 0 8px rgba(0,212,255,0.3); }
+  #page7 .xa-daily-labels { display:flex; gap:4px; padding:4px 4px 0; }
+  #page7 .xa-daily-labels span { flex:1; font-family:var(--font-mono); font-size:7px; color:var(--text-faint); text-align:center; }
+
+  /* Coordination type cards */
+  #page7 .xa-type-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
+  #page7 .xa-type-card { background:var(--bg-card); border:1px solid var(--border-dim); padding:14px; text-align:center; position:relative; }
+  #page7 .xa-type-card::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; }
+  #page7 .xa-type-card.type-a::before { background:var(--red); }
+  #page7 .xa-type-card.type-b::before { background:var(--orange); }
+  #page7 .xa-type-card.type-c::before { background:var(--yellow); }
+  #page7 .xa-type-card.type-d::before { background:var(--green); }
+  #page7 .xa-type-icon { font-size:24px; margin-bottom:6px; }
+  #page7 .xa-type-label { font-family:var(--font-mono); font-size:9px; color:var(--text-dim); letter-spacing:1px; margin-bottom:4px; }
+  #page7 .xa-type-val { font-family:var(--font-display); font-size:28px; }
+  #page7 .xa-type-desc { font-family:var(--font-mono); font-size:8px; color:var(--text-faint); margin-top:4px; }
+
+  /* Insight bar */
+  #page7 .xa-insight { font-family:var(--font-mono); font-size:11px; color:var(--text-dim); padding:10px 14px; background:var(--accent-dim); border:1px solid var(--accent-brd); border-radius:4px; margin-top:8px; line-height:1.6; }
+  #page7 .xa-insight .hl { color:var(--accent); }
+  #page7 .xa-insight .hl-y { color:var(--yellow); }
+  #page7 .xa-insight .hl-g { color:var(--green); }
+  #page7 .xa-insight .hl-r { color:var(--red); }
+
+  /* Section label */
+  #page7 .xa-section { font-family:var(--font-mono); font-size:10px; color:var(--text-dim); letter-spacing:3px; padding:6px 0 4px; border-bottom:1px solid var(--border-dim); margin-bottom:10px; }
+
+  /* Loading */
+  #page7 .xa-loading { font-family:var(--font-mono); font-size:11px; color:var(--text-dim); text-align:center; padding:40px; animation:pulse 1.5s infinite; }
+  @keyframes pulse { 0%,100%{opacity:0.4} 50%{opacity:1} }
+
+  /* Responsive */
+  @media (max-width:900px) {
+    #page7 .xa-row1 { grid-template-columns:1fr; }
+    #page7 .xa-row2 { grid-template-columns:1fr; }
+    #page7 .xa-row3 { grid-template-columns:1fr; }
+    #page7 .xa-kpi-strip { grid-template-columns:repeat(2,1fr); }
+    #page7 .xa-type-grid { grid-template-columns:repeat(2,1fr); }
+    #page7 .xa-gauge-number { font-size:56px; }
+  }
+
+  /* Scrollbars page7 */
+  #page7 .xa-handle-list::-webkit-scrollbar,
+  #page7 #xaDiffusionList::-webkit-scrollbar,
+  #page7 #xaBurstList::-webkit-scrollbar { width:4px; }
+  #page7 .xa-handle-list::-webkit-scrollbar-track,
+  #page7 #xaDiffusionList::-webkit-scrollbar-track,
+  #page7 #xaBurstList::-webkit-scrollbar-track { background:var(--bg-deep); }
+  #page7 .xa-handle-list::-webkit-scrollbar-thumb,
+  #page7 #xaDiffusionList::-webkit-scrollbar-thumb,
+  #page7 #xaBurstList::-webkit-scrollbar-thumb { background:var(--accent); border-radius:2px; }
+  #page7 .xa-handle-list::-webkit-scrollbar-thumb:hover,
+  #page7 #xaDiffusionList::-webkit-scrollbar-thumb:hover,
+  #page7 #xaBurstList::-webkit-scrollbar-thumb:hover { background:var(--text-main); }
+
+  /* Tooltips page7 — barras */
+  #page7 .xa-daily-bar,
+  #page7 .xa-hourly-bar { position:relative; }
+  #page7 .xa-daily-bar::after,
+  #page7 .xa-hourly-bar::after {
+    content:attr(data-tip); display:none; position:absolute; bottom:calc(100% + 6px); left:50%;
+    transform:translateX(-50%); white-space:nowrap; z-index:10; pointer-events:none;
+    font-family:var(--font-mono); font-size:9px; color:var(--accent);
+    background:var(--bg-panel); border:1px solid var(--accent-brd);
+    padding:4px 8px; box-shadow:0 4px 12px rgba(0,0,0,0.7); border-radius:2px;
+  }
+  #page7 .xa-daily-bar:hover::after,
+  #page7 .xa-hourly-bar:hover::after { display:block; }
+
+  /* Heatmap tooltip override */
+  #page7 .xa-heatmap-cell::after {
+    content:attr(data-tip); display:none; position:absolute; bottom:calc(100% + 4px); left:50%;
+    transform:translateX(-50%); white-space:nowrap; z-index:10; pointer-events:none;
+    font-family:var(--font-mono); font-size:8px; color:var(--accent);
+    background:var(--bg-panel); border:1px solid var(--accent-brd);
+    padding:3px 6px; box-shadow:0 4px 12px rgba(0,0,0,0.7); border-radius:2px;
+  }
+  #page7 .xa-heatmap-cell:hover::after { display:block; }
 </style>
 </head>
 <body>
@@ -1425,6 +1596,7 @@
           <button class="page-menu-item" onclick="switchPage(3)" style="display:none">PÁG. 03 / MENCIONES</button>
           <button class="page-menu-item" onclick="switchPage(5)" style="display:none">PÁG. 03 / G TRENDS</button>
           <button class="page-menu-item" onclick="switchPage(6)">PÁG. 03 / NARRATIVA</button>
+          <button class="page-menu-item" onclick="switchPage(7)">PÁG. 04 / X.COM</button>
         </div>
       </div>
       <div class="live-badge"><div class="live-dot"></div>LIVE · BBDD ACTIVA</div>
@@ -2214,6 +2386,145 @@
 
   </div><!-- /page6 -->
 
+  <!-- ══════════ PAGE 7: X.COM ANALYSIS ══════════ -->
+  <div id="page7" class="page-section">
+    <div class="xa-grid">
+
+      <!-- ROW 1: Gauge IO + KPIs + Daily timeline -->
+      <div class="xa-row1">
+        <!-- Left: IO Gauge -->
+        <div class="panel" style="border-top:2px solid var(--accent)">
+          <div class="xa-gauge">
+            <div class="xa-gauge-label">ÍNDICE DE ORGANICIDAD</div>
+            <div id="xaIONumber" class="xa-gauge-number" style="color:var(--green)">—<span class="xa-gauge-pct">%</span></div>
+            <div id="xaIOStatus" class="xa-gauge-status" style="color:var(--green);border-color:var(--green)">CARGANDO</div>
+            <div class="xa-gauge-bar">
+              <div class="xa-gauge-track"><div id="xaIOPin" class="xa-gauge-pin" style="left:50%"></div></div>
+              <div class="xa-gauge-labels"><span>0% MANIPULADA</span><span>100% ORGÁNICA</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: KPIs + daily + insight -->
+        <div style="display:flex;flex-direction:column;gap:16px">
+          <div class="xa-kpi-strip">
+            <div class="xa-kpi accent">
+              <div class="xa-kpi-label">MENCIONES X</div>
+              <div id="xaKpiTotal" class="xa-kpi-val">—</div>
+              <div id="xaKpiTotalSub" class="xa-kpi-sub">período seleccionado</div>
+            </div>
+            <div class="xa-kpi purple">
+              <div class="xa-kpi-label">HANDLES ÚNICOS</div>
+              <div id="xaKpiHandles" class="xa-kpi-val">—</div>
+              <div id="xaKpiHandlesSub" class="xa-kpi-sub">cuentas distintas</div>
+            </div>
+            <div class="xa-kpi red">
+              <div class="xa-kpi-label">DIFUSIÓN INTER-CUENTAS</div>
+              <div id="xaKpiDiffusion" class="xa-kpi-val">0</div>
+              <div id="xaKpiDiffusionSub" class="xa-kpi-sub">clusters copypaste</div>
+            </div>
+            <div class="xa-kpi orange">
+              <div class="xa-kpi-label">RÁFAGAS DETECTADAS</div>
+              <div id="xaKpiBursts" class="xa-kpi-val">0</div>
+              <div id="xaKpiBurstsSub" class="xa-kpi-sub">3+ cuentas en 30 min</div>
+            </div>
+          </div>
+
+          <!-- Daily timeline -->
+          <div class="panel" style="padding:12px 14px">
+            <div class="xa-section">ACTIVIDAD DIARIA EN X</div>
+            <div id="xaDailyChart" class="xa-daily-chart"></div>
+            <div id="xaDailyLabels" class="xa-daily-labels"></div>
+          </div>
+
+          <div id="xaInsightMain" class="xa-insight">// Cargando análisis de coordinación...</div>
+        </div>
+      </div>
+
+      <!-- ROW 2: Top Handles + Heatmap -->
+      <div class="xa-row2">
+        <!-- Top Handles -->
+        <div class="panel">
+          <div class="panel-title" style="font-size:20px;letter-spacing:3px;margin-bottom:12px">🏆 TOP AMPLIFICADORES</div>
+          <div class="xa-section">RANKING POR VOLUMEN DE MENCIONES</div>
+          <div id="xaHandleList" class="xa-handle-list">
+            <div class="xa-loading">// Cargando handles...</div>
+          </div>
+        </div>
+
+        <!-- Heatmap Horario -->
+        <div class="panel">
+          <div class="panel-title" style="font-size:20px;letter-spacing:3px;margin-bottom:12px">🕐 MAPA DE ACTIVIDAD</div>
+          <div class="xa-section">DISTRIBUCIÓN HORARIA (TOP 10 HANDLES × 24HS)</div>
+          <div id="xaHeatmap" style="overflow-x:auto">
+            <div class="xa-loading">// Cargando heatmap...</div>
+          </div>
+          <div style="margin-top:14px">
+            <div class="xa-section">DISTRIBUCIÓN HORARIA GLOBAL</div>
+            <div id="xaHourlyChart" class="xa-hourly-chart"></div>
+            <div id="xaHourlyLabels" class="xa-hourly-labels"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ROW 3: Difusión + Ráfagas -->
+      <div class="xa-row2">
+        <!-- Difusión Exacta -->
+        <div class="panel">
+          <div class="panel-title" style="font-size:20px;letter-spacing:3px;margin-bottom:12px">🔴 DIFUSIÓN EXACTA</div>
+          <div class="xa-section">MISMO CONTENIDO · DISTINTAS CUENTAS</div>
+          <div id="xaDiffusionList" style="max-height:380px;overflow-y:auto">
+            <div class="xa-loading">// Analizando contenido...</div>
+          </div>
+        </div>
+
+        <!-- Ráfagas Coordinadas -->
+        <div class="panel">
+          <div class="panel-title" style="font-size:20px;letter-spacing:3px;margin-bottom:12px">⚡ RÁFAGAS COORDINADAS</div>
+          <div class="xa-section">3+ CUENTAS EN VENTANA DE 30 MINUTOS</div>
+          <div id="xaBurstList" style="max-height:380px;overflow-y:auto">
+            <div class="xa-loading">// Detectando ráfagas...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ROW 4: Coordination Types -->
+      <div class="xa-row4">
+        <div class="panel">
+          <div class="panel-title" style="font-size:20px;letter-spacing:3px;margin-bottom:12px">📊 CLASIFICACIÓN DE COORDINACIÓN</div>
+          <div id="xaTypeGrid" class="xa-type-grid">
+            <div class="xa-type-card type-a">
+              <div class="xa-type-icon">🤖</div>
+              <div class="xa-type-label">TIPO A · AUTOCOPIA</div>
+              <div id="xaTypeA" class="xa-type-val" style="color:var(--red)">0</div>
+              <div class="xa-type-desc">Misma cuenta repite contenido</div>
+            </div>
+            <div class="xa-type-card type-b">
+              <div class="xa-type-icon">🔗</div>
+              <div class="xa-type-label">TIPO B · RED COPYPASTE</div>
+              <div id="xaTypeB" class="xa-type-val" style="color:var(--orange)">0</div>
+              <div class="xa-type-desc">Mismo texto entre cuentas</div>
+            </div>
+            <div class="xa-type-card type-c">
+              <div class="xa-type-icon">📡</div>
+              <div class="xa-type-label">TIPO C · SINCRONIZADAS</div>
+              <div id="xaTypeC" class="xa-type-val" style="color:var(--yellow)">0</div>
+              <div class="xa-type-desc">Timing coordinado sin copypaste</div>
+            </div>
+            <div class="xa-type-card type-d">
+              <div class="xa-type-icon">🌿</div>
+              <div class="xa-type-label">TIPO D · ORGÁNICAS</div>
+              <div id="xaTypeD" class="xa-type-val" style="color:var(--green)">0</div>
+              <div class="xa-type-desc">Conversación natural</div>
+            </div>
+          </div>
+          <div id="xaInsightTypes" class="xa-insight" style="margin-top:12px">// Clasificación pendiente...</div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- /page7 -->
+
   <footer>
     <span>// WAR ROOM DIGITAL · INTELIGENCIA NARRATIVA, OPORTUNIDADES Y RIESGO POLÍTICO</span>
     <span>FUENTE: BRAND24 + INGESTA AUTOMATIZADA + GOOGLE TRENDS · IA ESTRATEGICA</span>
@@ -2435,6 +2746,7 @@ function switchPage(n) {
   if (n === 3 && !p3Initialized) { p3Initialized = true; p3Init(); }
   // page5 uses live Google Trends embed — no JS load needed
   if (n === 6) loadNarrativaIA();
+  if (n === 7 && !xaInitialized) { xaInitialized = true; xaLoadData(); }
 }
 function togglePageMenu() {
   document.getElementById('pageNav').classList.toggle('open');
@@ -2510,6 +2822,7 @@ function applyFilter() {
   if (p3Initialized) p3LoadData();
   loadBriefing();
   // page5 uses live Google Trends embed — no reload needed
+  if (xaInitialized) xaLoadData();
 }
 function resetFilter() {
   const _localToday = (d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`)(new Date());
@@ -4756,10 +5069,23 @@ function renderNarrativaIA(data) {
     document.getElementById('niaPositivas').innerHTML = '<div class="narrativa-ia-loading">Sin narrativas positivas en crecimiento</div>';
   }
 
+  // Negativas en Crecimiento (con ejes de negatividad)
   const neg = data.negativas_crecieron || [];
   if (neg.length) {
     document.getElementById('niaNegativas').innerHTML = '<ul class="narrativa-ia-narr-list">' +
-      neg.map(n => `<li><strong>${esc(n.nombre)}</strong> — ${n.conteo_actual||0} menciones <span class="narrativa-ia-delta narrativa-ia-delta-up">▲ ${n.delta_pct||0}%</span><br><span style="font-size:10px;color:var(--text-dim)">${esc(n.descripcion)}</span></li>`).join('') +
+      neg.map(n => {
+        let h = `<li><strong>${esc(n.nombre)}</strong> — ${n.conteo_actual||0} menciones <span class="narrativa-ia-delta narrativa-ia-delta-up">▲ ${n.delta_pct||0}%</span><br><span style="font-size:10px;color:var(--text-dim)">${esc(n.descripcion)}</span>`;
+        const ejes = n.ejes || [];
+        if (ejes.length) {
+          h += '<ul class="narrativa-ia-ejes">';
+          ejes.forEach(e => {
+            h += `<li><span class="narrativa-ia-eje-bullet">●</span><strong>${esc(e.eje)}</strong> <span class="narrativa-ia-eje-count">(${e.menciones||0} menciones)</span> — <span class="narrativa-ia-eje-detalle">${esc(e.detalle)}</span></li>`;
+          });
+          h += '</ul>';
+        }
+        h += '</li>';
+        return h;
+      }).join('') +
       '</ul>';
   } else {
     document.getElementById('niaNegativas').innerHTML = '<div class="narrativa-ia-loading">Sin narrativas negativas en crecimiento</div>';
@@ -4840,6 +5166,291 @@ function openDrawerAdjetivo(idx) {
   document.getElementById('drawerTitle').textContent = a.adjetivo.toUpperCase();
   document.getElementById('drawerSubtitle').textContent = `${matches.length} menciones con tono "${a.adjetivo}" (${fromDate} → ${toDate})`;
   renderDrawerMentions(matches, searchTerms);
+  document.getElementById('drawerOverlay').classList.add('open');
+  document.getElementById('drawer').classList.add('open');
+}
+
+// ══════════ PAGE 7: X.COM ANALYSIS ══════════
+let xaInitialized = false;
+let xaData = null;
+
+async function xaLoadData() {
+  const from = document.getElementById('dateFrom').value;
+  const to   = document.getElementById('dateTo').value;
+  try {
+    const resp = await fetch(
+      `${CONFIG.apiUrl}/api/v1/xanalysis?project_id=${CONFIG.projectId}&from_date=${from}&to_date=${to}`,
+      { headers: { Accept:'application/json', 'ngrok-skip-browser-warning':'true' }, mode:'cors' }
+    );
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    xaData = await resp.json();
+    xaRenderAll();
+  } catch(err) {
+    console.error('xaLoadData error:', err);
+    document.getElementById('xaInsightMain').innerHTML = `// Error cargando datos: ${err.message}`;
+  }
+}
+
+function xaRenderAll() {
+  if (!xaData) return;
+  const s = xaData.summary;
+
+  // ── IO Gauge ──
+  const io = s.organicity_index;
+  const ioEl = document.getElementById('xaIONumber');
+  let ioColor, ioStatus;
+  if (io >= 85) { ioColor = 'var(--green)'; ioStatus = '◎ CONVERSACIÓN ORGÁNICA'; }
+  else if (io >= 60) { ioColor = 'var(--yellow)'; ioStatus = '◈ COORDINACIÓN MODERADA'; }
+  else if (io >= 35) { ioColor = 'var(--orange)'; ioStatus = '⚠ COORDINACIÓN ALTA'; }
+  else { ioColor = 'var(--red)'; ioStatus = '⛔ ALTAMENTE MANIPULADA'; }
+  ioEl.innerHTML = `${io}<span class="xa-gauge-pct">%</span>`;
+  ioEl.style.color = ioColor;
+  ioEl.style.textShadow = `0 0 30px ${ioColor}`;
+  const stEl = document.getElementById('xaIOStatus');
+  stEl.textContent = ioStatus;
+  stEl.style.color = ioColor;
+  stEl.style.borderColor = ioColor;
+  document.getElementById('xaIOPin').style.left = io + '%';
+
+  // ── KPIs ──
+  document.getElementById('xaKpiTotal').textContent = s.total.toLocaleString();
+  document.getElementById('xaKpiTotalSub').textContent = `${s.with_handle} con handle resuelto`;
+  document.getElementById('xaKpiHandles').textContent = s.unique_handles.toLocaleString();
+  document.getElementById('xaKpiHandlesSub').textContent = `ratio ${(s.unique_handles/Math.max(s.total,1)).toFixed(2)} handles/mención`;
+  document.getElementById('xaKpiDiffusion').textContent = s.diffusion_clusters;
+  document.getElementById('xaKpiDiffusionSub').textContent = `${s.diffusion_mentions} menciones afectadas`;
+  document.getElementById('xaKpiBursts').textContent = s.burst_count;
+
+  // ── Daily chart ──
+  xaRenderDaily();
+
+  // ── Main insight ──
+  const topH = xaData.top_handles[0];
+  const topName = topH ? `@${topH.handle}` : '—';
+  const topCount = topH ? topH.mentions : 0;
+  document.getElementById('xaInsightMain').innerHTML =
+    `⚡ Organicidad <span class="hl-g">${io}%</span> — ` +
+    `<span class="hl">${s.total}</span> menciones de <span class="hl">${s.unique_handles}</span> cuentas · ` +
+    `Top amplificador: <span class="hl-y">${topName}</span> (${topCount} menciones) · ` +
+    `Difusión: <span class="${s.diffusion_clusters > 0 ? 'hl-r' : 'hl-g'}">${s.diffusion_clusters} clusters</span> · ` +
+    `Ráfagas: <span class="hl-y">${s.burst_count}</span>`;
+
+  // ── Top Handles ──
+  xaRenderHandles();
+
+  // ── Heatmap ──
+  xaRenderHeatmap();
+
+  // ── Hourly chart ──
+  xaRenderHourly();
+
+  // ── Diffusion ──
+  xaRenderDiffusion();
+
+  // ── Bursts ──
+  xaRenderBursts();
+
+  // ── Coordination types ──
+  xaRenderTypes();
+}
+
+function xaRenderDaily() {
+  const daily = xaData.daily;
+  if (!daily.length) return;
+  const max = Math.max(...daily.map(d => d.total)) || 1;
+  document.getElementById('xaDailyChart').innerHTML = daily.map(d => {
+    const h = Math.max(4, (d.total / max) * 100);
+    return `<div class="xa-daily-bar" style="height:${h}%;background:var(--accent);opacity:0.7" data-tip="${d.date}: ${d.total} menciones, ${d.handles} handles"></div>`;
+  }).join('');
+  document.getElementById('xaDailyLabels').innerHTML = daily.map(d =>
+    `<span>${d.date.slice(5)}</span>`
+  ).join('');
+}
+
+function xaRenderHandles() {
+  const handles = xaData.top_handles;
+  if (!handles.length) {
+    document.getElementById('xaHandleList').innerHTML = '<div class="xa-loading">// Sin datos de handles</div>';
+    return;
+  }
+  const maxMentions = handles[0].mentions;
+  const colors = ['var(--accent)','var(--yellow)','var(--green)','var(--purple)','var(--orange)'];
+  document.getElementById('xaHandleList').innerHTML = handles.slice(0, 20).map((h, i) => {
+    const pct = (h.mentions / maxMentions * 100).toFixed(1);
+    const color = colors[Math.min(i, colors.length - 1)];
+    const rankCls = i < 3 ? ` r${i+1}` : '';
+    const sentBar = (() => {
+      const total = h.pos + h.neu + h.neg || 1;
+      const pP = (h.pos / total * 100).toFixed(0);
+      const pNe = (h.neg / total * 100).toFixed(0);
+      return `<span style="color:var(--green)">${pP}%↑</span> <span style="color:var(--red)">${pNe}%↓</span>`;
+    })();
+    return `<div class="xa-handle-item" onclick="xaOpenHandle('${h.handle}','${(h.display_name||'').replace(/'/g,"\\'")}',${h.mentions})" style="cursor:pointer">
+      <div class="xa-handle-rank${rankCls}">${i+1}</div>
+      <div class="xa-handle-info">
+        <div class="xa-handle-name">@${h.handle} <span style="color:var(--text-dim);font-size:10px">${h.display_name || ''}</span></div>
+        <div class="xa-handle-sub"><span style="color:${h.diversity_ratio<0.3?'var(--red)':h.diversity_ratio<0.7?'var(--yellow)':'var(--green)'}">diversidad ${(h.diversity_ratio*100).toFixed(0)}%</span> · ${sentBar} · ${h.first_date} → ${h.last_date}</div>
+      </div>
+      <div><div class="xa-handle-bar"><div class="xa-handle-bar-fill" style="width:${pct}%;background:${color}"></div></div></div>
+      <div class="xa-handle-val" style="color:${color}">${h.mentions}</div>
+    </div>`;
+  }).join('');
+}
+
+function xaRenderHeatmap() {
+  const heatmap = xaData.heatmap;
+  const handles = Object.keys(heatmap);
+  if (!handles.length) {
+    document.getElementById('xaHeatmap').innerHTML = '<div class="xa-loading">// Sin datos para heatmap</div>';
+    return;
+  }
+  // Find global max for color scaling
+  let globalMax = 0;
+  handles.forEach(h => { for (let hr = 0; hr < 24; hr++) globalMax = Math.max(globalMax, heatmap[h][hr] || 0); });
+  globalMax = globalMax || 1;
+
+  // Header row (hours)
+  let html = '<div class="xa-heatmap">';
+  html += '<div class="xa-heatmap-hours"><span></span>';
+  for (let hr = 0; hr < 24; hr++) html += `<span>${hr}</span>`;
+  html += '</div>';
+
+  handles.forEach(handle => {
+    html += '<div class="xa-heatmap-row">';
+    html += `<div class="xa-heatmap-label">@${handle}</div>`;
+    for (let hr = 0; hr < 24; hr++) {
+      const val = heatmap[handle][hr] || 0;
+      const intensity = val / globalMax;
+      let bg;
+      if (val === 0) bg = 'var(--bg-card)';
+      else if (intensity < 0.25) bg = 'rgba(0,212,255,0.15)';
+      else if (intensity < 0.5) bg = 'rgba(0,212,255,0.35)';
+      else if (intensity < 0.75) bg = 'rgba(0,212,255,0.6)';
+      else bg = 'rgba(0,212,255,0.9)';
+      html += `<div class="xa-heatmap-cell" style="background:${bg}" data-tip="@${handle} ${hr}:00 → ${val} menciones"></div>`;
+    }
+    html += '</div>';
+  });
+  html += '</div>';
+  document.getElementById('xaHeatmap').innerHTML = html;
+}
+
+function xaRenderHourly() {
+  const hourly = xaData.hourly;
+  // Fill all 24 hours
+  const data = Array.from({length:24}, (_,i) => {
+    const h = hourly.find(x => x.hour === i);
+    return h ? h.count : 0;
+  });
+  const max = Math.max(...data) || 1;
+  document.getElementById('xaHourlyChart').innerHTML = data.map((v, i) => {
+    const h = Math.max(2, (v / max) * 100);
+    return `<div class="xa-hourly-bar" style="height:${h}%" data-tip="${i}:00 → ${v} menciones"></div>`;
+  }).join('');
+  document.getElementById('xaHourlyLabels').innerHTML = data.map((_,i) =>
+    `<span>${i}</span>`
+  ).join('');
+}
+
+function xaRenderDiffusion() {
+  const clusters = xaData.diffusion;
+  const el = document.getElementById('xaDiffusionList');
+  if (!clusters.length) {
+    el.innerHTML = '<div class="xa-diff-empty">✓ NO SE DETECTÓ COPYPASTE ENTRE CUENTAS<br><span style="font-size:9px;margin-top:4px;display:inline-block">Todos los contenidos de X son originales en el período analizado</span></div>';
+    return;
+  }
+  el.innerHTML = clusters.map(c => {
+    const spreadLabel = c.spread_minutes != null
+      ? (c.spread_minutes < 60 ? `${Math.round(c.spread_minutes)} min` : `${(c.spread_minutes/60).toFixed(1)} hs`)
+      : '—';
+    return `<div class="xa-diff-item">
+      <div class="xa-diff-text">"${c.text_preview}"</div>
+      <div class="xa-diff-handles">👥 ${c.handles.map(h => '@' + h).join(' · ')}</div>
+      <div class="xa-diff-meta">${c.cnt} menciones · ${c.handle_count} cuentas · propagación: ${spreadLabel} · ${c.first_seen?.slice(0,16) || ''}</div>
+    </div>`;
+  }).join('');
+}
+
+function xaRenderBursts() {
+  const bursts = xaData.bursts;
+  const el = document.getElementById('xaBurstList');
+  if (!bursts.length) {
+    el.innerHTML = '<div class="xa-burst-empty">// No se detectaron ráfagas con 3+ cuentas en 30 min</div>';
+    return;
+  }
+  // Deduplicate overlapping bursts: keep top 10 by distinct_handles
+  const seen = new Set();
+  const unique = bursts.filter(b => {
+    const key = b.handles.sort().join(',');
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  }).slice(0, 10);
+
+  el.innerHTML = unique.map(b => {
+    const typeLabel = {homogenea:'HOMOGÉNEA', semi_coordinada:'SEMI-COORD.', heterogenea:'HETEROGÉNEA'}[b.burst_type] || b.burst_type;
+    return `<div class="xa-burst-item">
+      <div class="xa-burst-handles">${b.distinct_handles}</div>
+      <div class="xa-burst-info">
+        <div class="xa-burst-time">${b.window_start?.slice(0,16) || ''} → ${b.window_end?.slice(11,16) || ''}</div>
+        <div class="xa-burst-accounts">${b.handles.map(h => '@' + h).join(' · ')}</div>
+      </div>
+      <div class="xa-burst-type ${b.burst_type}">${typeLabel}</div>
+    </div>`;
+  }).join('');
+}
+
+function xaRenderTypes() {
+  const s = xaData.summary;
+  const total = s.total || 1;
+
+  // Type A: autocopy mentions
+  const typeA = s.autocopy_mentions;
+  // Type B: diffusion mentions (copypaste network)
+  const typeB = s.diffusion_mentions;
+  // Type C: unique mentions involved in bursts (deduplicated)
+  // Count unique handles in bursts, estimate mentions involved
+  const burstHandles = new Set();
+  xaData.bursts.forEach(b => (b.handles || []).forEach(h => burstHandles.add(h)));
+  // Estimate: burst-involved mentions = sum of mentions from handles that appear in bursts
+  const burstHandleCount = burstHandles.size;
+  const avgMentionsPerHandle = total / Math.max(s.unique_handles, 1);
+  const estBurstMentions = Math.round(burstHandleCount * avgMentionsPerHandle);
+  const typeC = Math.max(0, Math.min(estBurstMentions - typeA - typeB, Math.round(total * 0.3)));
+  // Type D: organic
+  const typeD = Math.max(0, total - typeA - typeB - typeC);
+
+  document.getElementById('xaTypeA').textContent = typeA;
+  document.getElementById('xaTypeB').textContent = typeB;
+  document.getElementById('xaTypeC').textContent = typeC;
+  document.getElementById('xaTypeD').textContent = typeD.toLocaleString();
+
+  const pctOrg = ((typeD / total) * 100).toFixed(1);
+  const pctCoord = (((typeA + typeB + typeC) / total) * 100).toFixed(1);
+  document.getElementById('xaInsightTypes').innerHTML =
+    `📊 <span class="hl-g">${pctOrg}%</span> conversación orgánica · ` +
+    `<span class="${pctCoord > 10 ? 'hl-r' : 'hl'}">${pctCoord}%</span> coordinada · ` +
+    `Autocopia: <span class="${typeA > 0 ? 'hl-r' : 'hl-g'}">${typeA}</span> · ` +
+    `Copypaste: <span class="${typeB > 0 ? 'hl-r' : 'hl-g'}">${typeB}</span> · ` +
+    `Sincronizadas: <span class="hl-y">${typeC}</span> · ` +
+    `Orgánicas: <span class="hl-g">${typeD.toLocaleString()}</span>`;
+}
+
+function xaOpenHandle(handle, displayName, count) {
+  const from = document.getElementById('dateFrom').value;
+  const to   = document.getElementById('dateTo').value;
+  const handleLower = handle.toLowerCase();
+  const matches = ALL_MENTIONS.filter(m => {
+    if (m.date < from || m.date > to) return false;
+    if (m.category !== 'X (Twitter)') return false;
+    const url = (m.url || '').toLowerCase();
+    return url.includes('twitter.com/' + handleLower + '/status/') ||
+           url.includes('x.com/' + handleLower + '/status/');
+  });
+  document.getElementById('drawerTitle').textContent = `@${handle}`;
+  document.getElementById('drawerSubtitle').textContent =
+    `${displayName} · ${matches.length} menciones en el período (${from} → ${to})`;
+  renderDrawerMentions(matches, [handle, displayName].filter(Boolean));
   document.getElementById('drawerOverlay').classList.add('open');
   document.getElementById('drawer').classList.add('open');
 }

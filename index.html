@@ -2427,7 +2427,7 @@
             <div class="xa-kpi orange">
               <div class="xa-kpi-label">RÁFAGAS DETECTADAS</div>
               <div id="xaKpiBursts" class="xa-kpi-val">0</div>
-              <div id="xaKpiBurstsSub" class="xa-kpi-sub">3+ cuentas en 30 min</div>
+              <div id="xaKpiBurstsSub" class="xa-kpi-sub">20+ cuentas en 15 min</div>
             </div>
           </div>
 
@@ -5385,7 +5385,7 @@ function xaRenderBursts() {
   const bursts = xaData.bursts;
   const el = document.getElementById('xaBurstList');
   if (!bursts.length) {
-    el.innerHTML = '<div class="xa-burst-empty">// No se detectaron ráfagas con 3+ cuentas en 30 min</div>';
+    el.innerHTML = '<div class="xa-burst-empty">// No se detectaron ráfagas con 20+ cuentas en 15 min</div>';
     return;
   }
   // Deduplicate overlapping bursts: keep top 10 by distinct_handles
@@ -5481,80 +5481,135 @@ function xaOpenTypeC() {
   const sentCol = {positive:'var(--green)',neutral:'var(--neutral)',negative:'var(--red)'};
   const body = document.getElementById('drawerBody');
 
-  // Deduplicate bursts by window
-  const seen = new Set();
-  const bursts = xaData.bursts.filter(b => {
-    const key = `${b.window_start}|${b.window_end}`;
-    if (seen.has(key)) return false;
-    seen.add(key);
-    return true;
-  }).sort((a,b) => (b.window_start || '').localeCompare(a.window_start || ''));
-
-  let totalMatches = 0;
+  const bursts = xaData.bursts;
+  let totalMentions = 0;
   let html = '';
 
   bursts.forEach((burst, idx) => {
     const handles = (burst.handles || []).map(h => h.toLowerCase());
     const handleSet = new Set(handles);
     const typeLabel = {homogenea:'HOMOGÉNEA', semi_coordinada:'SEMI-COORD.', heterogenea:'HETEROGÉNEA'}[burst.burst_type] || burst.burst_type;
-
-    // Find mentions matching this burst's handles AND within the 30-min window
     const wStartStr = burst.window_start || '';
     const wEndStr = burst.window_end || '';
-    const matches = ALL_MENTIONS.filter(m => {
-      if (m.category !== 'X (Twitter)') return false;
-      const url = (m.url || '').toLowerCase();
-      const handleMatch = [...handleSet].some(h =>
-        url.includes('twitter.com/' + h + '/status/') ||
-        url.includes('x.com/' + h + '/status/')
-      );
-      if (!handleMatch) return false;
-      const mDt = m.date + ' ' + (m.time || '00:00');
-      return mDt >= wStartStr.slice(0,16) && mDt <= wEndStr.slice(0,16);
-    }).sort((a,b) => (a.date + a.time).localeCompare(b.date + b.time));
-
-    totalMatches += matches.length;
-
     const wStart = wStartStr.slice(0,16) || '?';
     const wEnd = wEndStr.slice(11,16) || '?';
+    const wDate = wStartStr.slice(0,10);
     const handlesStr = handles.map(h => '@' + h).join(' · ');
+    const nHandles = burst.distinct_handles || handles.length;
+    const nMentions = burst.mention_count || 0;
+    totalMentions += nMentions;
 
-    html += `<div style="margin:${idx>0?'20px':'0'} 0 10px 0;padding:10px 12px;background:rgba(255,214,0,0.08);border-left:3px solid var(--yellow);border-radius:4px">
-      <div style="font-family:var(--font-display);font-size:14px;letter-spacing:1px;color:var(--yellow);margin-bottom:4px">
-        RÁFAGA ${idx+1} · ${typeLabel}
+    const bp = burst.pos || 0, bn = burst.neu || 0, br = burst.neg || 0;
+    const bTotal = bp + bn + br;
+    const pPos = bTotal ? Math.round(bp/bTotal*100) : 0;
+    const pNeu = bTotal ? Math.round(bn/bTotal*100) : 0;
+    const pNeg = bTotal ? Math.round(br/bTotal*100) : 0;
+
+    const uid = 'burst_' + idx;
+
+    html += `<div style="margin:${idx>0?'12px':'0'} 0 0 0;border:1px solid rgba(255,214,0,0.15);border-radius:6px;overflow:hidden">
+      <div onclick="document.getElementById('${uid}').style.display=document.getElementById('${uid}').style.display==='none'?'block':'none';this.querySelector('.burst-arrow').textContent=document.getElementById('${uid}').style.display==='none'?'▸':'▾'"
+           style="padding:10px 12px;background:rgba(255,214,0,0.08);cursor:pointer;display:flex;align-items:center;gap:8px">
+        <span class="burst-arrow" style="color:var(--yellow);font-size:12px;width:12px">▸</span>
+        <div style="flex:1">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+            <span style="font-family:var(--font-display);font-size:13px;letter-spacing:1px;color:var(--yellow)">
+              RÁFAGA ${idx+1}
+            </span>
+            <span style="font-family:var(--font-mono);font-size:10px;color:var(--text-dim)">
+              ${wDate} · ${wStart.slice(11)} → ${wEnd}
+            </span>
+            <span style="font-family:var(--font-mono);font-size:10px;padding:1px 6px;border-radius:3px;background:rgba(255,255,255,0.05);color:var(--text-faint)">
+              ${typeLabel}
+            </span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;margin-top:4px;font-family:var(--font-mono);font-size:10px">
+            <span style="color:var(--text-dim)">${nHandles} cuentas · ${nMentions} menciones</span>
+            <span style="color:var(--green)">${pPos}%+</span>
+            <span style="color:var(--neutral)">${pNeu}%=</span>
+            <span style="color:var(--red)">${pNeg}%-</span>
+          </div>
+        </div>
       </div>
-      <div style="font-family:var(--font-mono);font-size:11px;color:var(--text-dim)">
-        ${wStart} → ${wEnd} · ${burst.distinct_handles || handles.length} cuentas · ${matches.length} menciones
-      </div>
-      <div style="font-family:var(--font-mono);font-size:10px;color:var(--text-faint);margin-top:4px">
-        ${handlesStr}
+      <div id="${uid}" style="display:none;padding:8px 12px;border-top:1px solid rgba(255,214,0,0.1)">
+        <div style="font-family:var(--font-mono);font-size:10px;color:var(--text-faint);margin-bottom:8px;line-height:1.6">
+          ${handlesStr}
+        </div>
+        <div id="${uid}_mentions">
+          <div style="text-align:center;font-family:var(--font-mono);font-size:10px;color:var(--text-faint);padding:8px">
+            Click para cargar menciones...
+          </div>
+        </div>
       </div>
     </div>`;
-
-    matches.forEach(m => {
-      let preview = m.content || m.full_text || '';
-      html += `<div class="drawer-mention">
-        <div class="drawer-mention-header">
-          <div style="width:6px;height:6px;border-radius:50%;background:${sentCol[getSentiment(m)]||sentCol.neutral};flex-shrink:0"></div>
-          <div class="drawer-mention-domain">${m.domain}</div>
-          <div class="drawer-mention-time">${formatDate(m.date)} · ${m.time}</div>
-        </div>
-        <div class="drawer-mention-title">${m.title||(m.full_text?m.full_text.substring(0,90)+'…':'Sin título')}</div>
-        <div class="drawer-mention-preview">${preview}</div>
-        <div class="drawer-mention-footer">
-          <span class="mention-cat">${m.category}</span>
-          <a class="drawer-mention-link" href="${m.url}" target="_blank" onclick="event.stopPropagation()">↗ ABRIR FUENTE</a>
-        </div>
-      </div>`;
-    });
   });
+
+  window._typeCBursts = bursts;
 
   document.getElementById('drawerTitle').textContent = 'TIPO C · SINCRONIZADAS';
   document.getElementById('drawerSubtitle').textContent =
-    `${bursts.length} ráfagas · ${totalMatches} menciones (${from} → ${to})`;
+    `${bursts.length} ráfagas · ${totalMentions} menciones (${from} → ${to})`;
   body.innerHTML = html || '<div class="drawer-empty">Sin ráfagas detectadas en el período</div>';
   document.getElementById('drawerOverlay').classList.add('open');
   document.getElementById('drawer').classList.add('open');
+
+  bursts.forEach((burst, idx) => {
+    const uid = 'burst_' + idx;
+    const container = document.getElementById(uid);
+    if (!container) return;
+    const parent = container.parentElement;
+    const header = parent.querySelector('[onclick]');
+    const origClick = header.getAttribute('onclick');
+    header.setAttribute('onclick', origClick + `;xaLoadBurstMentions(${idx})`);
+  });
+}
+
+function xaLoadBurstMentions(idx) {
+  const uid = 'burst_' + idx;
+  const el = document.getElementById(uid + '_mentions');
+  if (!el || el.dataset.loaded === '1') return;
+  el.dataset.loaded = '1';
+
+  const burst = window._typeCBursts[idx];
+  const handles = (burst.handles || []).map(h => h.toLowerCase());
+  const handleSet = new Set(handles);
+  const wStartStr = burst.window_start || '';
+  const wEndStr = burst.window_end || '';
+  const sentCol = {positive:'var(--green)',neutral:'var(--neutral)',negative:'var(--red)'};
+
+  const matches = ALL_MENTIONS.filter(m => {
+    if (m.category !== 'X (Twitter)') return false;
+    const url = (m.url || '').toLowerCase();
+    const handleMatch = [...handleSet].some(h =>
+      url.includes('twitter.com/' + h + '/status/') ||
+      url.includes('x.com/' + h + '/status/')
+    );
+    if (!handleMatch) return false;
+    const mDt = m.date + ' ' + (m.time || '00:00');
+    return mDt >= wStartStr.slice(0,16) && mDt <= wEndStr.slice(0,16);
+  }).sort((a,b) => (a.date + a.time).localeCompare(b.date + b.time));
+
+  if (matches.length === 0) {
+    el.innerHTML = '<div style="text-align:center;font-family:var(--font-mono);font-size:10px;color:var(--text-faint);padding:8px">Sin menciones encontradas en esta ventana</div>';
+    return;
+  }
+
+  el.innerHTML = matches.map(m => {
+    const preview = m.content || m.full_text || '';
+    return `<div class="drawer-mention">
+      <div class="drawer-mention-header">
+        <div style="width:6px;height:6px;border-radius:50%;background:${sentCol[getSentiment(m)]||sentCol.neutral};flex-shrink:0"></div>
+        <div class="drawer-mention-domain">${m.domain}</div>
+        <div class="drawer-mention-time">${formatDate(m.date)} · ${m.time}</div>
+      </div>
+      <div class="drawer-mention-title">${m.title||(m.full_text?m.full_text.substring(0,90)+'…':'Sin título')}</div>
+      <div class="drawer-mention-preview">${preview}</div>
+      <div class="drawer-mention-footer">
+        <span class="mention-cat">${m.category}</span>
+        <a class="drawer-mention-link" href="${m.url}" target="_blank" onclick="event.stopPropagation()">↗ ABRIR FUENTE</a>
+      </div>
+    </div>`;
+  }).join('');
 }
 
 </script>

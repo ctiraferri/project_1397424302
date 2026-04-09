@@ -2498,7 +2498,7 @@
               <div class="xa-type-icon">🤖</div>
               <div class="xa-type-label">TIPO A · AUTOCOPIA</div>
               <div id="xaTypeA" class="xa-type-val" style="color:var(--red)">0</div>
-              <div class="xa-type-desc">Misma cuenta repite contenido</div>
+              <div id="xaTypeADetail" class="xa-type-desc">Misma cuenta repite contenido</div>
             </div>
             <div class="xa-type-card type-b">
               <div class="xa-type-icon">🔗</div>
@@ -2676,7 +2676,7 @@
 // CONFIG
 // ══════════════════════════════════════════
 const CONFIG = {
-  apiUrl: 'https://warroom-b24.catconsultores.com.ar',
+  apiUrl: location.protocol === 'file:' ? 'https://warroom-b24.catconsultores.com.ar' : '',
   projectId:   1397424302,
   clientSlug:  'larreta',
 };
@@ -5414,8 +5414,17 @@ function xaRenderTypes() {
   const s = xaData.summary;
   const total = s.total || 1;
 
-  // Type A: autocopy mentions
+  // Type A: autocopy mentions + account detail
   const typeA = s.autocopy_mentions;
+  const autocopyList = xaData.autocopy || [];
+  const typeAAccounts = autocopyList.length;
+  const detailEl = document.getElementById('xaTypeADetail');
+  if (typeA > 0 && typeAAccounts > 0) {
+    const lines = autocopyList.map(a => `@${a.handle}: ${a.total_copies}`).join(' · ');
+    detailEl.innerHTML = `<span style="color:var(--red)">${typeAAccounts} cuenta${typeAAccounts > 1 ? 's' : ''}</span><br><span style="font-size:10px;opacity:0.7">${lines}</span>`;
+  } else {
+    detailEl.textContent = 'Misma cuenta repite contenido';
+  }
   // Type B: diffusion mentions (copypaste network)
   const typeB = s.diffusion_mentions;
   // Type C: unique mentions involved in bursts (deduplicated)
@@ -5466,30 +5475,84 @@ function xaOpenHandle(handle, displayName, count) {
 }
 
 function xaOpenTypeC() {
-  if (!xaData || !xaData.bursts) return;
+  if (!xaData || !xaData.bursts || xaData.bursts.length === 0) return;
   const from = document.getElementById('dateFrom').value;
   const to   = document.getElementById('dateTo').value;
-  const burstHandles = new Set();
-  xaData.bursts.forEach(b => (b.handles || []).forEach(h => burstHandles.add(h.toLowerCase())));
-  const diffusionHandles = new Set();
-  (xaData.diffusion_clusters || []).forEach(c => (c.handles || []).forEach(h => diffusionHandles.add(h.toLowerCase())));
-  const autocopyHandles = new Set();
-  (xaData.autocopy || []).forEach(a => { if (a.handle) autocopyHandles.add(a.handle.toLowerCase()); });
-  const typeCHandles = new Set([...burstHandles].filter(h => !diffusionHandles.has(h) && !autocopyHandles.has(h)));
-  const targetHandles = typeCHandles.size > 0 ? typeCHandles : burstHandles;
-  const matches = ALL_MENTIONS.filter(m => {
-    if (m.date < from || m.date > to) return false;
-    if (m.category !== 'X (Twitter)') return false;
-    const url = (m.url || '').toLowerCase();
-    return [...targetHandles].some(h =>
-      url.includes('twitter.com/' + h + '/status/') ||
-      url.includes('x.com/' + h + '/status/')
-    );
+  const sentCol = {positive:'var(--green)',neutral:'var(--neutral)',negative:'var(--red)'};
+  const body = document.getElementById('drawerBody');
+
+  // Deduplicate bursts by window
+  const seen = new Set();
+  const bursts = xaData.bursts.filter(b => {
+    const key = `${b.window_start}|${b.window_end}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  }).sort((a,b) => (b.window_start || '').localeCompare(a.window_start || ''));
+
+  let totalMatches = 0;
+  let html = '';
+
+  bursts.forEach((burst, idx) => {
+    const handles = (burst.handles || []).map(h => h.toLowerCase());
+    const handleSet = new Set(handles);
+    const typeLabel = {homogenea:'HOMOGÉNEA', semi_coordinada:'SEMI-COORD.', heterogenea:'HETEROGÉNEA'}[burst.burst_type] || burst.burst_type;
+
+    // Find mentions matching this burst's handles AND within the 30-min window
+    const wStartStr = burst.window_start || '';
+    const wEndStr = burst.window_end || '';
+    const matches = ALL_MENTIONS.filter(m => {
+      if (m.category !== 'X (Twitter)') return false;
+      const url = (m.url || '').toLowerCase();
+      const handleMatch = [...handleSet].some(h =>
+        url.includes('twitter.com/' + h + '/status/') ||
+        url.includes('x.com/' + h + '/status/')
+      );
+      if (!handleMatch) return false;
+      const mDt = m.date + ' ' + (m.time || '00:00');
+      return mDt >= wStartStr.slice(0,16) && mDt <= wEndStr.slice(0,16);
+    }).sort((a,b) => (a.date + a.time).localeCompare(b.date + b.time));
+
+    totalMatches += matches.length;
+
+    const wStart = wStartStr.slice(0,16) || '?';
+    const wEnd = wEndStr.slice(11,16) || '?';
+    const handlesStr = handles.map(h => '@' + h).join(' · ');
+
+    html += `<div style="margin:${idx>0?'20px':'0'} 0 10px 0;padding:10px 12px;background:rgba(255,214,0,0.08);border-left:3px solid var(--yellow);border-radius:4px">
+      <div style="font-family:var(--font-display);font-size:14px;letter-spacing:1px;color:var(--yellow);margin-bottom:4px">
+        RÁFAGA ${idx+1} · ${typeLabel}
+      </div>
+      <div style="font-family:var(--font-mono);font-size:11px;color:var(--text-dim)">
+        ${wStart} → ${wEnd} · ${burst.distinct_handles || handles.length} cuentas · ${matches.length} menciones
+      </div>
+      <div style="font-family:var(--font-mono);font-size:10px;color:var(--text-faint);margin-top:4px">
+        ${handlesStr}
+      </div>
+    </div>`;
+
+    matches.forEach(m => {
+      let preview = m.content || m.full_text || '';
+      html += `<div class="drawer-mention">
+        <div class="drawer-mention-header">
+          <div style="width:6px;height:6px;border-radius:50%;background:${sentCol[getSentiment(m)]||sentCol.neutral};flex-shrink:0"></div>
+          <div class="drawer-mention-domain">${m.domain}</div>
+          <div class="drawer-mention-time">${formatDate(m.date)} · ${m.time}</div>
+        </div>
+        <div class="drawer-mention-title">${m.title||(m.full_text?m.full_text.substring(0,90)+'…':'Sin título')}</div>
+        <div class="drawer-mention-preview">${preview}</div>
+        <div class="drawer-mention-footer">
+          <span class="mention-cat">${m.category}</span>
+          <a class="drawer-mention-link" href="${m.url}" target="_blank" onclick="event.stopPropagation()">↗ ABRIR FUENTE</a>
+        </div>
+      </div>`;
+    });
   });
+
   document.getElementById('drawerTitle').textContent = 'TIPO C · SINCRONIZADAS';
   document.getElementById('drawerSubtitle').textContent =
-    `${matches.length} menciones de ${targetHandles.size} cuentas con timing coordinado (${from} → ${to})`;
-  renderDrawerMentions(matches, []);
+    `${bursts.length} ráfagas · ${totalMatches} menciones (${from} → ${to})`;
+  body.innerHTML = html || '<div class="drawer-empty">Sin ráfagas detectadas en el período</div>';
   document.getElementById('drawerOverlay').classList.add('open');
   document.getElementById('drawer').classList.add('open');
 }

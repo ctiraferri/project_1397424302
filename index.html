@@ -78,6 +78,8 @@
   .header-subject .sub   { font-size:12px; color:var(--text-dim); font-family:var(--font-mono); }
   .header-right { display:flex; align-items:center; gap:16px; }
   .live-badge { display:flex; align-items:center; gap:7px; font-family:var(--font-mono); font-size:11px; color:var(--green); letter-spacing:1px; }
+  .logout-btn { display:flex; align-items:center; gap:6px; padding:6px 14px; font-family:'Rajdhani',sans-serif; font-size:12px; font-weight:600; letter-spacing:1px; text-transform:uppercase; text-decoration:none; color:var(--text-dim); border:1px solid var(--border); border-radius:4px; cursor:pointer; transition:all 0.2s; }
+  .logout-btn:hover { color:var(--accent); border-color:var(--accent); }
   .live-dot { width:7px; height:7px; border-radius:50%; background:var(--green); animation:blink 1.4s ease-in-out infinite; box-shadow:0 0 8px var(--green); }
   @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
   /* PAGE NAV DROPDOWN */
@@ -1600,6 +1602,7 @@
         </div>
       </div>
       <div class="live-badge"><div class="live-dot"></div>LIVE · BBDD ACTIVA</div>
+      <a href="/logout" class="logout-btn" title="Cerrar sesión">⏻ SALIR</a>
     </div>
   </header>
 
@@ -1785,7 +1788,7 @@
           <div class="info-badge" style="position:static;float:right;margin:-4px -4px 0 0" data-calc="aceleracion">?</div>
           <div class="mini-stat-label">ACELERACIÓN</div>
           <div class="mini-stat-val warn" id="accelRate">—</div>
-          <div style="font-family:var(--font-mono);font-size:9px;color:var(--text-dim);margin-top:2px">sem. reciente vs ant.</div>
+          <div style="font-family:var(--font-mono);font-size:9px;color:var(--text-dim);margin-top:2px" id="accelRateLabel">— vs —</div>
         </div>
       </div>
       <div>
@@ -1881,8 +1884,8 @@
               <div class="rank-header">
                 <span>TOP INFLUENCERS</span>
                 <div class="rank-sort">
-                  <button class="sort-btn active" id="sortReach2"     onclick="o_lpInd01SortBy('reach')">REACH</button>
-                  <button class="sort-btn"         id="sortFollowers2" onclick="o_lpInd01SortBy('followers')">FOLLOWERS</button>
+                  <button class="sort-btn"         id="sortReach2"     onclick="o_lpInd01SortBy('reach')">REACH</button>
+                  <button class="sort-btn active"  id="sortFollowers2" onclick="o_lpInd01SortBy('followers')">FOLLOWERS</button>
                   <button class="sort-btn"         id="sortSov2"       onclick="o_lpInd01SortBy('sov')">SoV %</button>
                   <button class="sort-btn"         id="sortEff2"       onclick="o_lpInd01SortBy('eff')">ALCANCE</button>
                 </div>
@@ -2219,8 +2222,8 @@
               <div class="rank-header">
                 <span>TOP INFLUENCERS</span>
                 <div class="rank-sort">
-                  <button class="sort-btn active" id="p3-sortReach"     onclick="p3Ind01SortBy('reach')">REACH</button>
-                  <button class="sort-btn"         id="p3-sortFollowers" onclick="p3Ind01SortBy('followers')">FOLLOWERS</button>
+                  <button class="sort-btn"         id="p3-sortReach"     onclick="p3Ind01SortBy('reach')">REACH</button>
+                  <button class="sort-btn active"  id="p3-sortFollowers" onclick="p3Ind01SortBy('followers')">FOLLOWERS</button>
                   <button class="sort-btn"         id="p3-sortSov"       onclick="p3Ind01SortBy('sov')">SoV %</button>
                   <button class="sort-btn"         id="p3-sortEff"       onclick="p3Ind01SortBy('eff')">ALCANCE</button>
                 </div>
@@ -2560,8 +2563,8 @@
     </div>
     <div class="lp-modal-controls">
       <div class="lp-modal-sort-label">ORDENAR:</div>
-      <button class="lp-modal-sort-btn active" onclick="lpModalSort('reach',this)">REACH ↓</button>
-      <button class="lp-modal-sort-btn" onclick="lpModalSort('followers',this)">FOLLOWERS</button>
+      <button class="lp-modal-sort-btn" onclick="lpModalSort('reach',this)">REACH</button>
+      <button class="lp-modal-sort-btn active" onclick="lpModalSort('followers',this)">FOLLOWERS ↓</button>
       <button class="lp-modal-sort-btn" onclick="lpModalSort('eff',this)">ALCANCE</button>
       <button class="lp-modal-sort-btn" onclick="lpModalSort('sov',this)">SoV %</button>
       <div class="lp-modal-plat-filter">
@@ -2579,8 +2582,8 @@
             <th class="col-mob-hide">#</th>
             <th onclick="lpModalSort('name',this)">PERFIL ↕</th>
             <th onclick="lpModalSort('plat',this)">RED ↕</th>
-            <th onclick="lpModalSort('reach',this)" class="sorted">REACH ↓</th>
-            <th onclick="lpModalSort('followers',this)">FOLLOWERS ↕</th>
+            <th onclick="lpModalSort('reach',this)">REACH ↕</th>
+            <th onclick="lpModalSort('followers',this)" class="sorted">FOLLOWERS ↓</th>
             <th onclick="lpModalSort('eff',this)">ALCANCE ↕</th>
             <th onclick="lpModalSort('sov',this)" class="col-mob-hide">SoV % ↕</th>
             <th class="col-mob-hide">MENS.</th>
@@ -2788,15 +2791,21 @@ async function loadData() {
     }));
     DATA_LOADED = true;
 
-    // Default: últimos 7 días usando fecha LOCAL (evita desfase UTC en Argentina)
-    const _localToday = (d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`)(new Date());
-    const _localFrom  = (d => { d.setDate(d.getDate()-7); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; })(new Date());
+    // Default: últimos 7 días terminando en la última fecha con datos (evita arrastrar días vacíos antes de la ingesta diaria)
+    const _fmt = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    let _lastData = '';
+    for (const m of ALL_MENTIONS) { if (m.date && m.date > _lastData) _lastData = m.date; }
+    if (!_lastData) _lastData = _fmt(new Date());
+    const [_ly, _lm, _ld] = _lastData.split('-').map(Number);
+    const _fromDate = new Date(_ly, _lm - 1, _ld);
+    _fromDate.setDate(_fromDate.getDate() - 6);
+    const _localFrom = _fmt(_fromDate);
     document.getElementById('dateFrom').value = _localFrom;
-    document.getElementById('dateTo').value   = _localToday;
-    document.getElementById('dateFrom').max   = _localToday;
-    document.getElementById('dateTo').max     = _localToday;
+    document.getElementById('dateTo').value   = _lastData;
+    document.getElementById('dateFrom').max   = _lastData;
+    document.getElementById('dateTo').max     = _lastData;
 
-    filteredData = ALL_MENTIONS.filter(m => m.date >= _localFrom && m.date <= _localToday);
+    filteredData = ALL_MENTIONS.filter(m => m.date >= _localFrom && m.date <= _lastData);
     overlay.style.display = 'none';
     renderKeywords();
     updateAll();
@@ -2826,14 +2835,20 @@ function applyFilter() {
   if (xaInitialized) xaLoadData();
 }
 function resetFilter() {
-  const _localToday = (d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`)(new Date());
-  const _localFrom  = (d => { d.setDate(d.getDate()-7); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; })(new Date());
+  const _fmt = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  let _lastData = '';
+  for (const m of ALL_MENTIONS) { if (m.date && m.date > _lastData) _lastData = m.date; }
+  if (!_lastData) _lastData = _fmt(new Date());
+  const [_ly, _lm, _ld] = _lastData.split('-').map(Number);
+  const _fromDate = new Date(_ly, _lm - 1, _ld);
+  _fromDate.setDate(_fromDate.getDate() - 6);
+  const _localFrom = _fmt(_fromDate);
   document.getElementById('dateFrom').value = _localFrom;
-  document.getElementById('dateTo').value   = _localToday;
+  document.getElementById('dateTo').value   = _lastData;
   activeKw = null;
   document.querySelectorAll('.kw-tag').forEach(t => t.classList.remove('active'));
   document.getElementById('feedFilter').textContent = '';
-  filteredData = ALL_MENTIONS.filter(m => m.date >= _localFrom && m.date <= _localToday);
+  filteredData = ALL_MENTIONS.filter(m => m.date >= _localFrom && m.date <= _lastData);
   updateAll();
   if (oldP2Initialized) oldP2LoadData();
   if (p3Initialized) p3LoadData();
@@ -3012,24 +3027,32 @@ function updateAll() {
   document.getElementById('accelAvg').textContent = avgDay;
   document.getElementById('accelSources').textContent = domains || '—';
 
-  // Aceleración — inmune al filtro de fechas, siempre calcula sobre ALL_MENTIONS
+  // Aceleración — compara el rango seleccionado vs un período anterior de igual longitud
   {
-    const _allDates = [...new Set(ALL_MENTIONS.map(m=>m.date))].sort();
-    if (_allDates.length > 0) {
-      const _last  = _allDates[_allDates.length - 1];
-      const _refTs = new Date(_last).getTime();
-      const _w1from = new Date(_refTs - 7*86400000).toISOString().slice(0,10);
-      const _w2from = new Date(_refTs - 14*86400000).toISOString().slice(0,10);
-      const _recent = ALL_MENTIONS.filter(m => m.date > _w1from && m.date <= _last).length;
-      const _prev   = ALL_MENTIONS.filter(m => m.date > _w2from && m.date <= _w1from).length;
+    const from = document.getElementById('dateFrom').value;
+    const to   = document.getElementById('dateTo').value;
+    const rateEl = document.getElementById('accelRate');
+    const lblEl  = document.getElementById('accelRateLabel');
+    if (from && to && from <= to) {
+      const fromTs = new Date(from).getTime();
+      const toTs   = new Date(to).getTime();
+      const N = Math.round((toTs - fromTs) / 86400000) + 1;
+      const prevToTs   = fromTs - 86400000;
+      const prevFromTs = prevToTs - (N - 1) * 86400000;
+      const prevFrom = new Date(prevFromTs).toISOString().slice(0,10);
+      const prevTo   = new Date(prevToTs).toISOString().slice(0,10);
+      const _recent = ALL_MENTIONS.filter(m => m.date >= from     && m.date <= to).length;
+      const _prev   = ALL_MENTIONS.filter(m => m.date >= prevFrom && m.date <= prevTo).length;
       if (_prev > 0) {
         const delta = Math.round((_recent - _prev) / _prev * 100);
-        document.getElementById('accelRate').textContent = (delta >= 0 ? '+' : '') + delta + '%';
+        rateEl.textContent = (delta >= 0 ? '+' : '') + delta + '%';
       } else {
-        document.getElementById('accelRate').textContent = _recent > 0 ? '+∞%' : '—';
+        rateEl.textContent = _recent > 0 ? '+∞%' : '—';
       }
+      lblEl.textContent = `${N}d vs ${N}d ant.`;
     } else {
-      document.getElementById('accelRate').textContent = '—';
+      rateEl.textContent = '—';
+      lblEl.textContent  = '— vs —';
     }
   }
 
@@ -3416,8 +3439,8 @@ const CALCS = {
   },
   aceleracion: {
     title: 'ACELERACIÓN DE CONVERSACIÓN',
-    formula: 'Δ% = (sem_actual − sem_anterior) / sem_anterior × 100',
-    body: 'Compara el volumen de la semana más reciente vs la semana anterior. Indica si la conversación está creciendo (+), decreciendo (−) o estable. Valores >50% activan alerta de pico.'
+    formula: 'Δ% = (período_actual − período_anterior) / período_anterior × 100',
+    body: 'Compara el volumen de menciones del rango de fechas seleccionado vs un período de igual longitud inmediatamente anterior. Ej: si el filtro abarca 7 días, compara esos 7 días contra los 7 días previos. Indica si la conversación está creciendo (+), decreciendo (−) o estable. Valores >50% activan alerta de pico.'
   },
 };
 
@@ -3499,9 +3522,9 @@ let oldP2Initialized = false;
 let oldP2Data        = null;
 let o_lpInfData     = [];
 let o_lpGroups      = [];
-let o_lpSortKey     = 'reach';
+let o_lpSortKey     = 'followers';
 // removed
-let o_lpModalSortKey = 'reach', o_lpModalSortDir = -1;
+let o_lpModalSortKey = 'followers', o_lpModalSortDir = -1;
 let o_lpModalPlatFilter = 'all', o_lpModalDataset = null;
 let lpOldDonutChart  = null;
 
@@ -3786,8 +3809,8 @@ function o_lpRenderCards03() {
     return;
   }
 
-  const hiPool = [...o_lpInfData.filter(r => r.followers > 500000)].sort((a,b)=>b.followers-a.followers);
-  const loPool = [...o_lpInfData.filter(r => r.followers >= 10000 && r.followers <= 500000)].sort((a,b)=>b.followers-a.followers);
+  const hiPool = [...o_lpInfData.filter(r => r.followers > 500000)].sort((a,b)=>b.mentions-a.mentions);
+  const loPool = [...o_lpInfData.filter(r => r.followers >= 10000 && r.followers <= 500000)].sort((a,b)=>b.mentions-a.mentions);
 
   o_lpRenderCardsTier(hiPool, 'cardsGrid03hi', 'tierLabel500k', 'tier-hi');
   o_lpRenderCardsTier(loPool, 'cardsGrid03', 'tierLabel10k', 'tier-lo');
@@ -3956,7 +3979,7 @@ function o_lpRenderSparkline(series) {
 function o_lpOpenModal01() {
   // Populate shared modal variables (p3's) so the modal buttons work
   lpModalDataset = o_lpInfData;
-  lpModalSortKey='reach'; lpModalSortDir=-1; lpModalPlatFilter='all';
+  lpModalSortKey='followers'; lpModalSortDir=-1; lpModalPlatFilter='all';
   document.getElementById('lpModalTitle').textContent = 'TODOS LOS INFLUENCERS — FUENTES AMPLIFICADORAS';
   document.getElementById('lpModalTitle').style.color = 'var(--accent)';
   document.querySelectorAll('#p2ModalOverlay .lp-plat-btn').forEach(b=>b.classList.remove('active'));
@@ -3967,7 +3990,7 @@ function o_lpOpenModal01() {
 }
 function o_lpOpenModal02(group) {
   lpModalDataset = group.rows;
-  lpModalSortKey='reach'; lpModalSortDir=-1; lpModalPlatFilter='all';
+  lpModalSortKey='followers'; lpModalSortDir=-1; lpModalPlatFilter='all';
   document.getElementById('lpModalTitle').textContent = `${group.icon} ${group.label.toUpperCase()} — PERFILES`;
   document.getElementById('lpModalTitle').style.color = group.color;
   document.querySelector('#p2ModalOverlay .lp-modal-plat-filter').style.display='none';
@@ -3993,9 +4016,9 @@ let p3Initialized = false;
 let p3Data        = null;
 let lpInfData     = [];
 let lpGroups      = [];
-let lpSortKey     = 'reach';
+let lpSortKey     = 'followers';
 // removed
-let lpModalSortKey = 'reach', lpModalSortDir = -1;
+let lpModalSortKey = 'followers', lpModalSortDir = -1;
 let lpModalPlatFilter = 'all', lpModalDataset = null;
 let lpDonutChart  = null;
 
@@ -4640,8 +4663,8 @@ function p3RenderCards03() {
     return;
   }
 
-  const hiPool = [...lpInfData.filter(r => r.followers > 500000)].sort((a,b)=>b.followers-a.followers);
-  const loPool = [...lpInfData.filter(r => r.followers >= 10000 && r.followers <= 500000)].sort((a,b)=>b.followers-a.followers);
+  const hiPool = [...lpInfData.filter(r => r.followers > 500000)].sort((a,b)=>b.mentions-a.mentions);
+  const loPool = [...lpInfData.filter(r => r.followers >= 10000 && r.followers <= 500000)].sort((a,b)=>b.mentions-a.mentions);
 
   p3RenderCardsTier(hiPool, 'p3-cardsGrid03hi', 'p3-tierLabel500k', 'tier-hi');
   p3RenderCardsTier(loPool, 'p3-cardsGrid03', 'p3-tierLabel10k', 'tier-lo');
@@ -4709,7 +4732,7 @@ function lpOpenModal01() {
   lpModalDataset = lpInfData;
   document.getElementById('lpModalTitle').textContent = 'TODOS LOS INFLUENCERS — FUENTES AMPLIFICADORAS';
   document.getElementById('lpModalTitle').style.color = 'var(--accent)';
-  lpModalSortKey='reach'; lpModalSortDir=-1; lpModalPlatFilter='all';
+  lpModalSortKey='followers'; lpModalSortDir=-1; lpModalPlatFilter='all';
   document.querySelectorAll('#p2ModalOverlay .lp-plat-btn').forEach(b=>b.classList.remove('active'));
   document.querySelector('#p2ModalOverlay .lp-plat-btn.all')?.classList.add('active');
   document.querySelector('#p2ModalOverlay .lp-modal-plat-filter').style.display='';
@@ -4720,7 +4743,7 @@ function lpOpenModal02(group) {
   lpModalDataset = group.rows;
   document.getElementById('lpModalTitle').textContent = `${group.icon} ${group.label.toUpperCase()} — PERFILES`;
   document.getElementById('lpModalTitle').style.color = group.color;
-  lpModalSortKey='reach'; lpModalSortDir=-1; lpModalPlatFilter='all';
+  lpModalSortKey='followers'; lpModalSortDir=-1; lpModalPlatFilter='all';
   document.querySelector('#p2ModalOverlay .lp-modal-plat-filter').style.display='none';
   document.getElementById('p2ModalOverlay').classList.add('open');
   lpRenderModal();
@@ -4920,6 +4943,32 @@ function buildCloud(terms, maxShow, from, to) {
   }).join('');
 }
 
+function _findNarrativasForIds(ids) {
+  if (!NARRATIVA_IA_DATA) return [];
+  const links = [];
+  ['positivas_crecieron','negativas_crecieron','negativas_desaparecieron'].forEach(section => {
+    (NARRATIVA_IA_DATA[section] || []).forEach(n => {
+      const nIds = new Set((n.mention_ids || []).map(String));
+      const overlap = [...ids].filter(id => nIds.has(id)).length;
+      if (overlap > 0) {
+        const sent = (n.sentimiento || 'NEU').toUpperCase();
+        links.push({ nombre: n.nombre, overlap, sent, section });
+      }
+    });
+  });
+  links.sort((a,b) => b.overlap - a.overlap);
+  return links;
+}
+
+function _renderNarrLinks(links) {
+  if (!links.length) return '';
+  const chips = links.map(l => {
+    const cls = l.sent === 'POS' ? '#00ff88' : l.sent === 'NEG' ? '#ff3b5c' : '#8ba3b8';
+    return `<span style="display:inline-block;margin:2px 4px;padding:2px 8px;border-radius:10px;font-size:9px;background:${cls}22;color:${cls};border:1px solid ${cls}44">${l.nombre} (${l.overlap})</span>`;
+  }).join('');
+  return `<div style="padding:6px 12px;font-size:9px;color:var(--text-dim);border-bottom:1px solid var(--border)"><span style="color:var(--accent)">NARRATIVAS ASOCIADAS:</span> ${chips}</div>`;
+}
+
 async function openTermMentions(term, from, to) {
   document.getElementById('drawerTitle').textContent = term.toUpperCase();
   document.getElementById('drawerSubtitle').textContent = 'Cargando menciones…';
@@ -4927,13 +4976,23 @@ async function openTermMentions(term, from, to) {
   document.getElementById('drawer').classList.add('open');
   try {
     const url = `${CONFIG.apiUrl}/api/v1/term_mentions?project_id=${CONFIG.projectId}&term=${encodeURIComponent(term)}&from_date=${from}&to_date=${to}`;
-    const resp = await fetch(url, { headers: { Accept: 'application/json', 'ngrok-skip-browser-warning': 'true' }, mode: 'cors' });
+    // Lazy-load NARRATIVA_IA_DATA si el usuario todavía no visitó página 6 (sin esto, _findNarrativasForIds devuelve [])
+    const [resp] = await Promise.all([
+      fetch(url, { headers: { Accept: 'application/json', 'ngrok-skip-browser-warning': 'true' }, mode: 'cors' }),
+      NARRATIVA_IA_DATA ? Promise.resolve() : loadNarrativaIA(),
+    ]);
     const data = await resp.json();
     const ids = new Set((data.mention_ids || []).map(String));
     const matches = ALL_MENTIONS.filter(m => m.date >= from && m.date <= to && ids.has(String(m.mention_id)));
     document.getElementById('drawerSubtitle').textContent =
       `${matches.length} mención${matches.length !== 1 ? 'es' : ''} · ${from} → ${to}`;
+    // Mostrar narrativas asociadas antes de las menciones
+    const narrLinks = _findNarrativasForIds(ids);
+    const body = document.getElementById('drawerBody');
     renderDrawerMentions(matches, [term]);
+    if (narrLinks.length) {
+      body.insertAdjacentHTML('afterbegin', _renderNarrLinks(narrLinks));
+    }
   } catch(e) {
     document.getElementById('drawerSubtitle').textContent = 'Error cargando menciones';
   }
@@ -5044,6 +5103,21 @@ async function narrativaIAPrev() {
 }
 function narrativaIANext() { if (_narrativaIAOffset > 0) { _narrativaIAOffset--; loadNarrativaIA(); } }
 
+function _getTermChips(narrative) {
+  const nIds = new Set((narrative.mention_ids || []).map(String));
+  if (!nIds.size || !NARRATIVA_DATA?.weeks?.[0]?.terms) return '';
+  const week = NARRATIVA_DATA.weeks[0];
+  const matched = week.terms
+    .filter(t => (t.mention_ids || []).some(id => nIds.has(String(id))))
+    .map(t => ({ term: t.term, overlap: (t.mention_ids || []).filter(id => nIds.has(String(id))).length }))
+    .sort((a,b) => b.overlap - a.overlap)
+    .slice(0, 5);
+  if (!matched.length) return '';
+  return '<div style="margin-top:4px">' +
+    matched.map(t => `<span style="display:inline-block;margin:1px 3px;padding:1px 6px;border-radius:8px;font-size:8px;background:var(--accent)22;color:var(--accent);border:1px solid var(--accent)44">${t.term} ${t.overlap}</span>`).join('') +
+    '</div>';
+}
+
 function renderNarrativaIA(data) {
   const esc = s => (s||'').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 
@@ -5073,7 +5147,7 @@ function renderNarrativaIA(data) {
   const pos = data.positivas_crecieron || [];
   if (pos.length) {
     document.getElementById('niaPositivas').innerHTML = '<ul class="narrativa-ia-narr-list">' +
-      pos.map(n => `<li><strong>${esc(n.nombre)}</strong> — ${n.conteo_actual||0} menciones <span class="narrativa-ia-delta narrativa-ia-delta-up">▲ ${n.delta_pct||0}%</span><br><span style="font-size:10px;color:var(--text-dim)">${esc(n.descripcion)}</span></li>`).join('') +
+      pos.map(n => `<li><strong>${esc(n.nombre)}</strong> — ${n.conteo_actual||0} menciones <span class="narrativa-ia-delta narrativa-ia-delta-up">▲ ${n.delta_pct||0}%</span>${_getTermChips(n)}<br><span style="font-size:10px;color:var(--text-dim)">${esc(n.descripcion)}</span></li>`).join('') +
       '</ul>';
   } else {
     document.getElementById('niaPositivas').innerHTML = '<div class="narrativa-ia-loading">Sin narrativas positivas en crecimiento</div>';
@@ -5084,7 +5158,7 @@ function renderNarrativaIA(data) {
   if (neg.length) {
     document.getElementById('niaNegativas').innerHTML = '<ul class="narrativa-ia-narr-list">' +
       neg.map(n => {
-        let h = `<li><strong>${esc(n.nombre)}</strong> — ${n.conteo_actual||0} menciones <span class="narrativa-ia-delta narrativa-ia-delta-up">▲ ${n.delta_pct||0}%</span><br><span style="font-size:10px;color:var(--text-dim)">${esc(n.descripcion)}</span>`;
+        let h = `<li><strong>${esc(n.nombre)}</strong> — ${n.conteo_actual||0} menciones <span class="narrativa-ia-delta narrativa-ia-delta-up">▲ ${n.delta_pct||0}%</span>${_getTermChips(n)}<br><span style="font-size:10px;color:var(--text-dim)">${esc(n.descripcion)}</span>`;
         const ejes = n.ejes || [];
         if (ejes.length) {
           h += '<ul class="narrativa-ia-ejes">';
@@ -5108,7 +5182,7 @@ function renderNarrativaIA(data) {
       desap.map(n => {
         const pct = n.delta_pct != null ? n.delta_pct : (n.conteo_anterior ? Math.round(((n.conteo_actual||0) - n.conteo_anterior) / n.conteo_anterior * 100) : -100);
         const label = (n.conteo_actual||0) === 0 ? 'desapareció' : `pasó de ${n.conteo_anterior||0} a ${n.conteo_actual||0}`;
-        return `<li><strong>${esc(n.nombre)}</strong> <span class="narrativa-ia-delta narrativa-ia-delta-down" style="color:#00ff88">▼ ${Math.abs(pct)}%</span> — ${label}<br><span style="font-size:10px;color:var(--text-dim)">${esc(n.descripcion)}</span></li>`;
+        return `<li><strong>${esc(n.nombre)}</strong> <span class="narrativa-ia-delta narrativa-ia-delta-down" style="color:#00ff88">▼ ${Math.abs(pct)}%</span> — ${label}${_getTermChips(n)}<br><span style="font-size:10px;color:var(--text-dim)">${esc(n.descripcion)}</span></li>`;
       }).join('') +
       '</ul>';
   } else {

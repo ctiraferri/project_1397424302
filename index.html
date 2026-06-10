@@ -318,7 +318,7 @@
 
   /* DRAWER */
   .drawer-overlay {
-    position:fixed; inset:0; z-index:100;
+    position:fixed; inset:0; z-index:900;
     background:rgba(7,10,15,0.7);
     backdrop-filter:blur(4px);
     opacity:0; pointer-events:none;
@@ -326,7 +326,7 @@
   }
   .drawer-overlay.open { opacity:1; pointer-events:all; }
   .drawer {
-    position:fixed; top:0; right:0; bottom:0; z-index:101;
+    position:fixed; top:0; right:0; bottom:0; z-index:901;
     width:480px; max-width:95vw;
     background:var(--bg-panel);
     border-left:1px solid var(--border);
@@ -537,8 +537,8 @@
   #page2 .page-subtitle { font-family:var(--font-mono); font-size:9px; letter-spacing:2px; color:var(--text-dim); }
   #page2 .page-period { font-family:var(--font-mono); font-size:9px; letter-spacing:2px; color:var(--text-faint); text-align:right; }
   #page2 .listening-grid { position:relative; z-index:1; display:grid; grid-template-columns:1fr; gap:16px; }
-  #page2 .row-1 { display:grid; grid-template-columns:3fr 2fr; gap:16px; }
-  #page2 .row-3 { display:grid; grid-template-columns:3fr 2fr; gap:16px; }
+  #page2 .row-1 { display:grid; grid-template-columns:minmax(0,3fr) minmax(0,2fr); gap:16px; }
+  #page2 .row-3 { display:grid; grid-template-columns:minmax(0,3fr) minmax(0,2fr); gap:16px; }
   #page2 .panel { background:var(--bg-panel); border:1px solid var(--border); padding:16px 18px; }
   #page2 .panel-header { display:flex; align-items:center; gap:8px; margin-bottom:14px; padding-bottom:10px; border-bottom:1px solid var(--border-dim); }
   #page2 .panel-title { font-family:var(--font-mono); font-size:10px; letter-spacing:3px; color:var(--text-dim); flex:1; }
@@ -654,8 +654,8 @@
   #page2 .eff-score.high { color:var(--green); text-shadow:0 0 12px rgba(0,255,136,0.4); }
   #page2 .eff-score.mid  { color:var(--yellow); }
   #page2 .eff-score.low  { color:var(--red); }
-  #page2 .eff-bar-wrap { height:2px; background:var(--border-dim); width:100%; }
-  #page2 .eff-bar-fill { height:100%; }
+  #page2 .eff-bar-wrap { height:3px; background:rgba(255,255,255,0.07); width:100%; border-radius:2px; overflow:hidden; }
+  #page2 .eff-bar-fill { height:100%; border-radius:2px; transition:width 0.4s; }
   .cards-grid.tier-hi .eff-score { color: var(--accent); }
   .cards-grid.tier-hi .eff-bar-fill { background: var(--accent); }
   .cards-grid.tier-hi .eff-card.rank1 { border-top-color: var(--accent); }
@@ -947,8 +947,8 @@
   #page3 .eff-score.high { color:var(--green); text-shadow:0 0 12px rgba(0,255,136,0.4); }
   #page3 .eff-score.mid  { color:var(--yellow); }
   #page3 .eff-score.low  { color:var(--red); }
-  #page3 .eff-bar-wrap { height:2px; background:var(--border-dim); width:100%; }
-  #page3 .eff-bar-fill { height:100%; }
+  #page3 .eff-bar-wrap { height:3px; background:rgba(255,255,255,0.07); width:100%; border-radius:2px; overflow:hidden; }
+  #page3 .eff-bar-fill { height:100%; border-radius:2px; transition:width 0.4s; }
   #page3 .eff-sub { font-family:var(--font-mono); font-size:9px; color:var(--text-dim); line-height:1.4; }
   #page3 .eff-men-inline { font-size:55%; opacity:0.5; font-weight:400; letter-spacing:0; }
   #page3 .eff-interp { font-family:var(--font-mono); font-size:8px; letter-spacing:1px; padding:2px 5px; display:inline-block; margin-top:2px; }
@@ -1241,8 +1241,8 @@
   #page4 .eff-score.high { color:var(--green); text-shadow:0 0 12px rgba(0,255,136,0.4); }
   #page4 .eff-score.mid  { color:var(--yellow); }
   #page4 .eff-score.low  { color:var(--red); }
-  #page4 .eff-bar-wrap { height:2px; background:var(--border-dim); width:100%; }
-  #page4 .eff-bar-fill { height:100%; }
+  #page4 .eff-bar-wrap { height:3px; background:rgba(255,255,255,0.07); width:100%; border-radius:2px; overflow:hidden; }
+  #page4 .eff-bar-fill { height:100%; border-radius:2px; transition:width 0.4s; }
   #page4 .eff-sub { font-family:var(--font-mono); font-size:9px; color:var(--text-dim); line-height:1.4; }
   #page4 .eff-men-inline { font-size:55%; opacity:0.5; font-weight:400; letter-spacing:0; }
   #page4 .eff-interp { font-family:var(--font-mono); font-size:8px; letter-spacing:1px; padding:2px 5px; display:inline-block; margin-top:2px; }
@@ -1803,7 +1803,7 @@
 
     <!-- TÉRMINOS ASOCIADOS -->
     <div class="panel" id="narrativaPanel">
-      <div class="panel-title">TÉRMINOS ASOCIADOS</div>
+      <div class="panel-title">TÉRMINOS ASOCIADOS<div class="info-badge" style="position:static;margin-left:4px" data-calc="narrativa">?</div></div>
       <div class="narrativa-section" id="narrativaBody">
         <div style="font-family:var(--font-mono);font-size:9px;color:var(--text-dim);">Cargando...</div>
       </div>
@@ -2363,7 +2363,7 @@
         </div>
       </div>
 
-      <div class="narrativa-ia-card">
+      <div class="narrativa-ia-card" style="display:none">
         <div class="narrativa-ia-card-header narrativa-ia-hdr-green">BUENAS NOTICIAS: CRÍTICAS EN RETROCESO</div>
         <div class="narrativa-ia-card-body" id="niaDesaparecieron">
           <div class="narrativa-ia-loading">—</div>
@@ -2371,7 +2371,7 @@
       </div>
 
       <!-- Adjetivos Calificativos -->
-      <div class="narrativa-ia-card">
+      <div class="narrativa-ia-card" style="display:none">
         <div class="narrativa-ia-card-header narrativa-ia-hdr-accent">ADJETIVOS CALIFICATIVOS INTERPRETADOS EN LAS NARRATIVAS</div>
         <div class="narrativa-ia-card-body" id="niaAdjetivos">
           <div class="narrativa-ia-loading">—</div>
@@ -2496,14 +2496,15 @@
       <div class="xa-row4">
         <div class="panel">
           <div class="panel-title" style="font-size:20px;letter-spacing:3px;margin-bottom:12px">📊 CLASIFICACIÓN DE COORDINACIÓN</div>
+          <div class="info-badge" data-calc="coordinacion">?</div>
           <div id="xaTypeGrid" class="xa-type-grid">
-            <div class="xa-type-card type-a">
+            <div class="xa-type-card type-a" onclick="xaOpenTypeA()" style="cursor:pointer" title="Ver cuentas con autocopia">
               <div class="xa-type-icon">🤖</div>
               <div class="xa-type-label">TIPO A · AUTOCOPIA</div>
               <div id="xaTypeA" class="xa-type-val" style="color:var(--red)">0</div>
               <div id="xaTypeADetail" class="xa-type-desc">Misma cuenta repite contenido</div>
             </div>
-            <div class="xa-type-card type-b">
+            <div class="xa-type-card type-b" onclick="xaOpenTypeB()" style="cursor:pointer" title="Ver clusters de copypaste">
               <div class="xa-type-icon">🔗</div>
               <div class="xa-type-label">TIPO B · RED COPYPASTE</div>
               <div id="xaTypeB" class="xa-type-val" style="color:var(--orange)">0</div>
@@ -2567,6 +2568,7 @@
       <button class="lp-modal-sort-btn active" onclick="lpModalSort('followers',this)">FOLLOWERS ↓</button>
       <button class="lp-modal-sort-btn" onclick="lpModalSort('eff',this)">ALCANCE</button>
       <button class="lp-modal-sort-btn" onclick="lpModalSort('sov',this)">SoV %</button>
+      <button class="lp-modal-sort-btn" onclick="lpModalSort('mentions',this)">MENS.</button>
       <div class="lp-modal-plat-filter">
         <button class="lp-plat-btn all active" onclick="lpFilterPlat('all',this)">TODOS</button>
         <button class="lp-plat-btn fb" onclick="lpFilterPlat('facebook.com',this)">FB</button>
@@ -2586,7 +2588,7 @@
             <th onclick="lpModalSort('followers',this)" class="sorted">FOLLOWERS ↓</th>
             <th onclick="lpModalSort('eff',this)">ALCANCE ↕</th>
             <th onclick="lpModalSort('sov',this)" class="col-mob-hide">SoV % ↕</th>
-            <th class="col-mob-hide">MENS.</th>
+            <th onclick="lpModalSort('mentions',this)" class="col-mob-hide">MENS. ↕</th>
           </tr>
         </thead>
         <tbody id="lpModalTbody"></tbody>
@@ -3397,6 +3399,11 @@ document.getElementById('modalOverlay').addEventListener('click', function(e) {
 // CALC TOOLTIP
 // ══════════════════════════════════════════
 const CALCS = {
+  narrativa: {
+    title: 'COLOR DE LOS TÉRMINOS',
+    formula: 'Color = sentimiento dominante de las menciones que contienen el término',
+    body: 'Cada término se colorea según el sentimiento dominante de las menciones que lo contienen, medido sobre el total de menciones de ese término en el período filtrado:<br><br>① <b style="color:#ff3b5c">Rojo</b>: las negativas superan el 40%.<br>② <b style="color:#00ff88">Verde</b>: las positivas superan el 40%.<br>③ <b style="color:#8ba3b8">Gris</b>: las negativas quedan entre 20% y 40% (sin que las positivas lleguen al 40%) — clima mixto con carga negativa.<br>④ <b style="color:#00d4ff">Celeste</b>: ninguna categoría supera esos umbrales (término neutro o equilibrado).<br><br>El tamaño de cada término refleja su frecuencia: a más menciones, más grande.'
+  },
   ics2: {
     title: 'ÍNDICE DE CLIMA SOCIAL (ICS 2.0)',
     formula: 'ICS = Volumen×0.30 + Negatividad×0.40 + Polarización×0.30',
@@ -3441,6 +3448,11 @@ const CALCS = {
     title: 'ACELERACIÓN DE CONVERSACIÓN',
     formula: 'Δ% = (período_actual − período_anterior) / período_anterior × 100',
     body: 'Compara el volumen de menciones del rango de fechas seleccionado vs un período de igual longitud inmediatamente anterior. Ej: si el filtro abarca 7 días, compara esos 7 días contra los 7 días previos. Indica si la conversación está creciendo (+), decreciendo (−) o estable. Valores >50% activan alerta de pico.'
+  },
+  coordinacion: {
+    title: 'CLASIFICACIÓN DE COORDINACIÓN',
+    formula: '% Coordinada = (Autocopia + Copypaste + Sincronizadas) / Total × 100',
+    body: 'Solo aplica a menciones de X/Twitter. Cada tweet se asigna a un único tipo según el patrón detectado:<br><br>① <b>Autocopia</b>: la misma cuenta repite el mismo texto varias veces.<br>② <b>Copypaste</b>: cuentas distintas publican un texto idéntico (red de copia textual).<br>③ <b>Sincronizadas</b>: ráfagas de 20+ cuentas posteando en una ventana de 15 min sobre el mismo tema, sin copiar texto entre sí (timing coordinado).<br>④ <b>Orgánicas</b>: el resto, conversación natural sin patrón coordinado.<br><br>Los porcentajes son sobre el total de menciones de X del período filtrado. % Orgánica + % Coordinada = 100%. Si coordinada supera 10%, el cartel se resalta en rojo (señal de manipulación significativa).'
   },
 };
 
@@ -3795,7 +3807,7 @@ function o_lpRenderCardsTier(items, gridId, labelId, tierClass) {
       </div>
       <div class="eff-name" title="${r.name}">${r.name}</div>
       <div class="eff-score">${o_lpFmtK(r.followers)} <span class="eff-men-inline">/ ${r.mentions} Men.</span></div>
-      <div class="eff-bar-wrap"><div class="eff-bar-fill" style="width:${barPct}%"></div></div>
+      <div class="eff-bar-wrap" title="Followers proporcional al máximo del nivel · ${barPct}% de ${o_lpFmtK(maxFollowers)}"><div class="eff-bar-fill" style="width:${barPct}%"></div></div>
     </div>`;
   }).join('');
 }
@@ -4646,7 +4658,7 @@ function p3RenderCardsTier(items, gridId, labelId, tierClass) {
       </div>
       <div class="eff-name" title="${r.name}">${r.name}</div>
       <div class="eff-score">${lpFmtK(r.followers)} <span class="eff-men-inline">/ ${r.mentions} Men.</span></div>
-      <div class="eff-bar-wrap"><div class="eff-bar-fill" style="width:${barPct}%"></div></div>
+      <div class="eff-bar-wrap" title="Followers proporcional al máximo del nivel · ${barPct}% de ${lpFmtK(maxFollowers)}"><div class="eff-bar-fill" style="width:${barPct}%"></div></div>
     </div>`;
   }).join('');
 }
@@ -4782,9 +4794,10 @@ function lpRenderModal() {
   document.getElementById('lpModalCount').textContent      = rows.length;
   document.getElementById('lpModalAvgReach').textContent   = lpFmtK(Math.round(avgR));
   document.getElementById('lpModalAvgEff').textContent     = avgEff.toFixed(2)+'x';
+  const escAttr = s => String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;');
   document.getElementById('lpModalTbody').innerHTML = rows.map((r,i) => {
     const effCls = r.eff>=2?'lp-eff-high':r.eff>=0.5?'lp-eff-mid':'lp-eff-low';
-    return `<tr>
+    return `<tr data-name="${escAttr(r.name)}" data-dom="${escAttr(r.domain)}" onclick="lpOpenProfileDrawer(this.dataset.name, this.dataset.dom)" title="Click para ver menciones">
       <td class="col-mob-hide" style="color:var(--text-faint);width:32px;text-align:center">${i+1}</td>
       <td style="color:var(--text-main);max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${r.name}">${r.name}</td>
       <td>${lpPlatChip(r.domain)}</td>
@@ -4795,6 +4808,63 @@ function lpRenderModal() {
       <td class="col-mob-hide" style="color:var(--text-dim);text-align:center">${r.mentions}</td>
     </tr>`;
   }).join('');
+}
+
+// Open drawer with mentions of a specific influencer profile (from IND.02 modal)
+function lpOpenProfileDrawer(profileName, domain) {
+  const from = document.getElementById('dateFrom').value;
+  const to   = document.getElementById('dateTo').value;
+  const handle = (profileName || '').toLowerCase().replace(/^@/, '').trim();
+  const dom = (domain || '').toLowerCase();
+  const profLower = (profileName || '').toLowerCase().trim();
+  const matches = ALL_MENTIONS.filter(m => {
+    if (m.date < from || m.date > to) return false;
+    if ((m.domain||'').toLowerCase() !== dom) return false;
+    const url    = (m.url   || '').toLowerCase();
+    const title  = (m.title || '').toLowerCase();
+    const author = (m.tweet_author || '').toLowerCase().replace(/^@/, '').trim();
+
+    // 1) Author field (X principalmente)
+    if (handle && author && author === handle) return true;
+
+    // 2) URL handle match (X y TikTok suelen tener handle en URL)
+    if (url && handle) {
+      if (dom === 'x.com' || dom === 'twitter.com') {
+        if (url.includes('twitter.com/' + handle + '/status/') ||
+            url.includes('x.com/' + handle + '/status/')) return true;
+      } else if (dom === 'tiktok.com') {
+        if (url.includes('tiktok.com/@' + handle + '/') ||
+            url.includes('tiktok.com/' + handle + '/')) return true;
+      } else if (dom === 'instagram.com') {
+        if (url.includes('instagram.com/' + handle + '/')) return true;
+      } else if (dom === 'facebook.com') {
+        if (url.includes('facebook.com/' + handle + '/') ||
+            url.includes('facebook.com/' + handle + '?') ||
+            url.includes('facebook.com/' + handle)) return true;
+      } else if (dom === 'youtube.com') {
+        if (url.includes('youtube.com/@' + handle) ||
+            url.includes('youtube.com/c/' + handle) ||
+            url.includes('youtube.com/user/' + handle) ||
+            url.includes('youtube.com/channel/' + handle)) return true;
+      }
+    }
+
+    // 3) Title match — Brand24 guarda nombre de página en title para FB/IG
+    if (profLower && title) {
+      if (title === profLower) return true;
+      if ((dom === 'facebook.com' || dom === 'instagram.com' || dom === 'tiktok.com')
+          && profLower.length >= 4
+          && title.includes(profLower)) return true;
+    }
+
+    return false;
+  });
+  document.getElementById('drawerTitle').textContent = profileName || '—';
+  document.getElementById('drawerSubtitle').textContent =
+    `${domain} · ${matches.length} mencion${matches.length===1?'':'es'} en el período (${from} → ${to})`;
+  renderDrawerMentions(matches, [handle, profileName].filter(Boolean));
+  document.getElementById('drawerOverlay').classList.add('open');
+  document.getElementById('drawer').classList.add('open');
 }
 
 // ── Términos Asociados ────────────────────────────────────────
@@ -5489,7 +5559,7 @@ function xaRenderTypes() {
   const total = s.total || 1;
 
   // Type A: autocopy mentions + account detail
-  const typeA = s.autocopy_mentions;
+  const typeA = Number(s.autocopy_mentions) || 0;
   const autocopyList = xaData.autocopy || [];
   const typeAAccounts = autocopyList.length;
   const detailEl = document.getElementById('xaTypeADetail');
@@ -5500,7 +5570,7 @@ function xaRenderTypes() {
     detailEl.textContent = 'Misma cuenta repite contenido';
   }
   // Type B: diffusion mentions (copypaste network)
-  const typeB = s.diffusion_mentions;
+  const typeB = Number(s.diffusion_mentions) || 0;
   // Type C: unique mentions involved in bursts (deduplicated)
   // Count unique handles in bursts, estimate mentions involved
   const burstHandles = new Set();
@@ -5520,13 +5590,17 @@ function xaRenderTypes() {
 
   const pctOrg = ((typeD / total) * 100).toFixed(1);
   const pctCoord = (((typeA + typeB + typeC) / total) * 100).toFixed(1);
+  const totalCoord = typeA + typeB + typeC;
+  const verLink = totalCoord > 0
+    ? ` · <span onclick="xaOpenCoordAll()" style="cursor:pointer;color:var(--accent);font-weight:bold;border-bottom:1px dashed var(--accent);padding-bottom:1px">VER ${totalCoord} COORDINADAS →</span>`
+    : '';
   document.getElementById('xaInsightTypes').innerHTML =
     `📊 <span class="hl-g">${pctOrg}%</span> conversación orgánica · ` +
     `<span class="${pctCoord > 10 ? 'hl-r' : 'hl'}">${pctCoord}%</span> coordinada · ` +
     `Autocopia: <span class="${typeA > 0 ? 'hl-r' : 'hl-g'}">${typeA}</span> · ` +
     `Copypaste: <span class="${typeB > 0 ? 'hl-r' : 'hl-g'}">${typeB}</span> · ` +
     `Sincronizadas: <span class="hl-y">${typeC}</span> · ` +
-    `Orgánicas: <span class="hl-g">${typeD.toLocaleString()}</span>`;
+    `Orgánicas: <span class="hl-g">${typeD.toLocaleString()}</span>` + verLink;
 }
 
 function xaOpenHandle(handle, displayName, count) {
@@ -5544,6 +5618,135 @@ function xaOpenHandle(handle, displayName, count) {
   document.getElementById('drawerSubtitle').textContent =
     `${displayName} · ${matches.length} menciones en el período (${from} → ${to})`;
   renderDrawerMentions(matches, [handle, displayName].filter(Boolean));
+  document.getElementById('drawerOverlay').classList.add('open');
+  document.getElementById('drawer').classList.add('open');
+}
+
+// ── Drill-down: Coordination types A/B + unified ─────────────
+function xaTogglePanel(uid, headerEl) {
+  const el = document.getElementById(uid);
+  if (!el) return;
+  const isOpen = el.style.display === 'block';
+  el.style.display = isOpen ? 'none' : 'block';
+  const arrow = headerEl.querySelector('.xa-arrow');
+  if (arrow) arrow.textContent = isOpen ? '▸' : '▾';
+}
+
+function xaRenderTypeAItems(prefix) {
+  const esc = s => (s||'').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const list = (xaData && xaData.autocopy) || [];
+  if (!list.length) return '<div style="padding:20px;text-align:center;color:var(--text-faint);font-family:var(--font-mono);font-size:11px">// No se detectó autocopia en el período</div>';
+  return list.map((a, idx) => {
+    const uid = `${prefix}_${idx}`;
+    const samples = (a.samples || []).filter(Boolean);
+    return `<div style="margin:${idx>0?'10px':'0'} 0 0 0;border:1px solid rgba(255,59,92,0.2);border-radius:6px;overflow:hidden">
+      <div onclick="xaTogglePanel('${uid}', this)" style="padding:10px 12px;background:rgba(255,59,92,0.08);cursor:pointer;display:flex;align-items:center;gap:8px">
+        <span class="xa-arrow" style="color:var(--red);font-size:12px;width:12px">▸</span>
+        <div style="flex:1">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+            <a href="https://x.com/${esc(a.handle)}" target="_blank" onclick="event.stopPropagation()" style="font-family:var(--font-display);font-size:13px;letter-spacing:1px;color:var(--red);text-decoration:none">@${esc(a.handle)}</a>
+            <span style="font-family:var(--font-mono);font-size:10px;color:var(--text-dim)">${a.total_copies} copia${a.total_copies==1?'':'s'} · ${a.unique_repeated} texto${a.unique_repeated==1?'':'s'} repetido${a.unique_repeated==1?'':'s'}</span>
+          </div>
+        </div>
+      </div>
+      <div id="${uid}" style="display:none;padding:8px 12px;border-top:1px solid rgba(255,59,92,0.1)">
+        ${samples.length ? samples.map(t => `<div style="padding:8px;margin-bottom:6px;background:rgba(255,255,255,0.02);border-left:2px solid var(--red);font-size:11px;color:var(--text-main);line-height:1.5">${esc(t)}</div>`).join('') : '<div style="font-family:var(--font-mono);font-size:10px;color:var(--text-faint);padding:6px">(sin texto disponible)</div>'}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function xaRenderTypeBItems(prefix) {
+  const esc = s => (s||'').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const list = (xaData && xaData.diffusion) || [];
+  if (!list.length) return '<div style="padding:20px;text-align:center;color:var(--text-faint);font-family:var(--font-mono);font-size:11px">// No se detectó red copypaste en el período</div>';
+  return list.map((c, idx) => {
+    const uid = `${prefix}_${idx}`;
+    const handles = (c.handles || []).filter(Boolean);
+    const fStart = (c.first_seen || '').slice(0,16);
+    const fEnd = (c.last_seen || '').slice(0,16);
+    const spread = Math.round(Number(c.spread_minutes || 0));
+    return `<div style="margin:${idx>0?'10px':'0'} 0 0 0;border:1px solid rgba(255,140,0,0.2);border-radius:6px;overflow:hidden">
+      <div onclick="xaTogglePanel('${uid}', this)" style="padding:10px 12px;background:rgba(255,140,0,0.08);cursor:pointer;display:flex;align-items:center;gap:8px">
+        <span class="xa-arrow" style="color:var(--orange);font-size:12px;width:12px">▸</span>
+        <div style="flex:1">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+            <span style="font-family:var(--font-display);font-size:13px;letter-spacing:1px;color:var(--orange)">CLUSTER ${idx+1}</span>
+            <span style="font-family:var(--font-mono);font-size:10px;color:var(--text-dim)">${c.cnt} copias · ${c.handle_count} cuentas · spread ${spread} min</span>
+          </div>
+          <div style="font-family:var(--font-mono);font-size:10px;color:var(--text-faint);margin-top:3px">${fStart} → ${fEnd}</div>
+        </div>
+      </div>
+      <div id="${uid}" style="display:none;padding:8px 12px;border-top:1px solid rgba(255,140,0,0.1)">
+        <div style="padding:8px;margin-bottom:8px;background:rgba(255,255,255,0.02);border-left:2px solid var(--orange);font-size:11px;color:var(--text-main);line-height:1.5">${esc(c.text_preview) || '(sin preview)'}</div>
+        <div style="font-family:var(--font-mono);font-size:10px;color:var(--text-faint);line-height:1.7">
+          ${handles.map(h => `<a href="https://x.com/${esc(h)}" target="_blank" style="color:var(--accent);text-decoration:none;margin-right:8px">@${esc(h)}</a>`).join('')}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function xaOpenTypeA() {
+  if (!xaData) return;
+  const typeA = Number(xaData.summary && xaData.summary.autocopy_mentions) || 0;
+  const acCount = (xaData.autocopy || []).length;
+  const from = document.getElementById('dateFrom').value;
+  const to   = document.getElementById('dateTo').value;
+  document.getElementById('drawerTitle').textContent = 'TIPO A · AUTOCOPIA';
+  document.getElementById('drawerSubtitle').textContent = `${acCount} cuenta${acCount===1?'':'s'} · ${typeA} mencion${typeA===1?'':'es'} repetidas (${from} → ${to})`;
+  document.getElementById('drawerBody').innerHTML = xaRenderTypeAItems('ac');
+  document.getElementById('drawerOverlay').classList.add('open');
+  document.getElementById('drawer').classList.add('open');
+}
+
+function xaOpenTypeB() {
+  if (!xaData) return;
+  const typeB = Number(xaData.summary && xaData.summary.diffusion_mentions) || 0;
+  const dfCount = (xaData.diffusion || []).length;
+  const from = document.getElementById('dateFrom').value;
+  const to   = document.getElementById('dateTo').value;
+  document.getElementById('drawerTitle').textContent = 'TIPO B · RED COPYPASTE';
+  document.getElementById('drawerSubtitle').textContent = `${dfCount} cluster${dfCount===1?'':'s'} · ${typeB} mencion${typeB===1?'':'es'} replicadas (${from} → ${to})`;
+  document.getElementById('drawerBody').innerHTML = xaRenderTypeBItems('df');
+  document.getElementById('drawerOverlay').classList.add('open');
+  document.getElementById('drawer').classList.add('open');
+}
+
+function xaOpenCoordAll() {
+  if (!xaData) return;
+  const s = xaData.summary || {};
+  const typeA = Number(s.autocopy_mentions) || 0;
+  const typeB = Number(s.diffusion_mentions) || 0;
+  const total = s.total || 1;
+  const burstHandlesSet = new Set();
+  (xaData.bursts || []).forEach(b => (b.handles || []).forEach(h => burstHandlesSet.add(h)));
+  const avgMpH = total / Math.max(s.unique_handles, 1);
+  const estBurstMentions = Math.round(burstHandlesSet.size * avgMpH);
+  const typeC = Math.max(0, Math.min(estBurstMentions - typeA - typeB, Math.round(total * 0.3)));
+  const totalCoord = typeA + typeB + typeC;
+  const from = document.getElementById('dateFrom').value;
+  const to   = document.getElementById('dateTo').value;
+  const bursts = xaData.bursts || [];
+  const acCount = (xaData.autocopy || []).length;
+  const dfCount = (xaData.diffusion || []).length;
+
+  let html = '';
+  html += `<div style="font-family:var(--font-display);font-size:13px;letter-spacing:2px;color:var(--red);margin:0 0 10px 0">🤖 AUTOCOPIA · ${typeA} mens. · ${acCount} cuenta${acCount===1?'':'s'}</div>`;
+  html += xaRenderTypeAItems('uac');
+  html += `<div style="font-family:var(--font-display);font-size:13px;letter-spacing:2px;color:var(--orange);margin:24px 0 10px 0">🔗 COPYPASTE · ${typeB} mens. · ${dfCount} cluster${dfCount===1?'':'s'}</div>`;
+  html += xaRenderTypeBItems('udf');
+  html += `<div style="font-family:var(--font-display);font-size:13px;letter-spacing:2px;color:var(--yellow);margin:24px 0 10px 0">📡 SINCRONIZADAS · ~${typeC} mens. · ${bursts.length} ráfaga${bursts.length===1?'':'s'}</div>`;
+  if (!bursts.length) {
+    html += '<div style="padding:20px;text-align:center;color:var(--text-faint);font-family:var(--font-mono);font-size:11px">// No se detectaron ráfagas sincronizadas</div>';
+  } else {
+    html += `<div style="padding:10px 12px;background:rgba(255,214,0,0.05);border:1px solid rgba(255,214,0,0.2);border-radius:6px;font-family:var(--font-mono);font-size:11px;color:var(--text-dim);line-height:1.6;margin-bottom:8px">Las ráfagas tienen vista detallada con tweets reales (se cargan al expandir).</div>
+    <button onclick="closeDrawer();xaOpenTypeC()" style="background:rgba(255,214,0,0.1);border:1px solid var(--yellow);color:var(--yellow);font-family:var(--font-mono);font-size:11px;padding:8px 14px;cursor:pointer;letter-spacing:1px">VER ${bursts.length} RÁFAGA${bursts.length===1?'':'S'} CON TWEETS →</button>`;
+  }
+
+  document.getElementById('drawerTitle').textContent = `MENCIONES COORDINADAS · ${totalCoord}`;
+  document.getElementById('drawerSubtitle').textContent = `A: ${typeA} · B: ${typeB} · C: ~${typeC} — ${from} → ${to}`;
+  document.getElementById('drawerBody').innerHTML = html;
   document.getElementById('drawerOverlay').classList.add('open');
   document.getElementById('drawer').classList.add('open');
 }
